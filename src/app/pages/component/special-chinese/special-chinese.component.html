@@ -1,0 +1,42 @@
+<div class="searchContent">
+  <div>
+    <span>廠別：</span>
+    <select [(ngModel)]="searchInfo.PlantCode" class="searchSelect">
+      <option *ngFor="let item of plant" value={{item.PlantCode}}>{{item.Plant}}</option>
+    </select>
+  </div>
+  <div>
+    <span>特殊架構：</span>
+    <input [(ngModel)]="searchInfo.Material_No" class="searchInput" type="text">
+  </div>
+  <div>
+    <span>產品系列：</span>
+    <input [(ngModel)]="searchInfo.Project_Code" class="searchInput" type="text">
+  </div>
+  <button (click)="search()" class="searchButton" nzSize="small" nz-button nzType="primary">搜索</button>
+  <div class="add"><img src="assets/imgs/add.png" alt=""></div>
+</div>
+
+<div class="tableContent">
+  <nz-table nzBordered="false" #headerTable [nzData]="showTableData" [nzFrontPagination]="false" [nzPageSize]="50"
+    [nzScroll]="{ y: tableScrollHeight }">
+    <thead>
+      <tr>
+        <th *ngFor="let item of tableHead" nzWidth={{item.width}}>{{item.name}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of headerTable.data">
+        <td>{{item.data}}</td>
+        <td>{{item.data}}</td>
+        <td>{{item.data}}</td>
+        <td>{{item.data}}</td>
+        <td>{{item.data}}</td>
+        <td>{{item.data}}</td>
+        <td>
+          <img class="delete" src="assets/imgs/delete.png" alt="图片跑路了">
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>

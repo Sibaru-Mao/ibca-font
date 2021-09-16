@@ -1,0 +1,23 @@
+<div class="base">
+  <div class="content">
+    <!-- <div class="searchContent">
+      <div>
+        <span>廠別：</span>
+        <select [(ngModel)]="searchInfo.PlantCode" class="searchSelect">
+          <option *ngFor="let item of plant" value={{item.PlantCode}}>{{item.Plant}}</option>
+        </select>
+      </div>
+      <div>
+        <span>特殊架構：</span>
+        <input [(ngModel)]="searchInfo.Material_No" class="searchInput" type="text">
+      </div>
+      <div>
+        <span>產品系列：</span>
+        <input [(ngModel)]="searchInfo.Project_Code" class="searchInput" type="text">
+      </div>
+      <button (click)="search()" class="searchButton" nzSize="small" nz-button nzType="primary">搜索</button>
+      <div class="add"><img src="assets/imgs/add.png" alt=""></div>
+    </div> -->
+    <app-special-chinese [id]=0></app-special-chinese>
+  </div>
+</div>

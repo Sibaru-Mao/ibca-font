@@ -1,0 +1,84 @@
+.content {
+  height: 13.8%;
+  position: relative;
+  margin-bottom: 4px;
+}
+
+.box {
+  height: 83%;
+  background-color: rgba(126, 183, 230, 100);
+  border-radius: 5px;
+  cursor: pointer;
+  position: relative;
+}
+
+.seleceBox {
+  background-color: #2979FF;
+}
+
+.icon {
+  width: 40%;
+  height: 100%;
+  display: inline-block;
+  vertical-align: top;
+  position: relative;
+}
+
+.icon>img {
+  width: 25px;
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
+.info {
+  width: 60%;
+  height: 100%;
+  display: inline-block;
+  padding-left: 5px;
+  position: relative;
+}
+
+.info>div {
+  position: absolute;
+  width: 60px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.infoFont {
+  font-size: 12px;
+}
+
+.infoNumb {
+  font-size: 24px;
+}
+
+
+.info div:nth-child(1) {
+  font-size: 16px;
+}
+
+.triangle {
+  width: 0;
+  height: 0;
+  position: absolute;
+  left: 101%;
+  top: 50%;
+  border-left: 6px solid #2979FF;
+  border-top:5px solid transparent;
+  border-bottom: 5px solid transparent;
+  transform: translate(0, -50%);
+}
+
+.subscript {
+  position: absolute;
+  height: 15px;
+  top: 95%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

@@ -1,0 +1,51 @@
+<div class="content">
+
+  <div class="select">
+    <div class="plantContent">
+      <div class="plant" (mouseover)='chang(1,key)' (mouseout)='chang(0,key)'
+        *ngFor="let item of plantName;let key=index">
+        <span (click)="choicePlant(key,item.status)">
+          <!-- 勾选框,通过status控制是否勾选 -->
+          <div class="dot" [ngStyle]="{'border-color': item.status?'#489C9C':'rgba(187, 187, 187, 100)'}"
+            [ngClass]="{'choice': item.status}">
+          </div>
+          <!-- 勾选框end -->
+          <!-- 厂区文字 -->
+          <span class="dot-word">{{item.Plant}}</span>
+          <!-- 厂区文字end -->
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="search">
+    <div class="searchContent">
+      <div>
+        <span>Project code：</span>
+        <input [(ngModel)]="searchInfo.Project_Code" class="searchInput" type="text">
+      </div>
+      <div>
+        <span>電池料號：</span>
+        <input [(ngModel)]="searchInfo.Battery_PN" class="searchInput" type="text">
+      </div>
+      <div>
+        <span>年份：</span>
+        <select [(ngModel)]="searchInfo.Demand_Year" class="searchSelect">
+          <option *ngFor="let item of year" value={{item.Demand_Year}}>{{item.Demand_Year}}</option>
+        </select>
+      </div>
+      <div>
+        <span>出货方式：</span>
+        <select [(ngModel)]="searchInfo.Transport_Mode_Desc" class="searchSelect">
+          <option *ngFor="let item of deliveryMode" value="{{item.Transport_Mode_Desc}}">
+            {{item.Transport_Mode_Desc}}
+          </option>
+        </select>
+      </div>
+      <div>
+        <button (click)="sendSearch()" class="searchButton" nzSize="small" nz-button nzType="primary">搜索</button>
+      </div>
+    </div>
+  </div>
+
+</div>

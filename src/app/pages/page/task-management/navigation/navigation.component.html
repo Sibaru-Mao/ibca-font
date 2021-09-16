@@ -1,0 +1,15 @@
+<div class="content" *ngFor="let item of tab;let i=index">
+  <div class="box" [ngClass]="{'seleceBox': item.status}" (click)="selectTab(i)">
+    <div class="icon">
+      <img src={{item.img}} alt="">
+    </div>
+    <div class="info" [ngStyle]="{'color': item.status?'#FFFFFF':'#333333'}">
+      <div>
+        <span class="infoFont">{{item.taskName}}</span><br>
+        <span class="infoNumb">{{item.qty}}</span>
+      </div>
+    </div>
+    <div *ngIf="item.status" class="triangle"></div>
+  </div>
+  <img *ngIf="i!=0&&i!=6" class="subscript" src="assets/imgs/subscript.png" alt="">
+</div>

@@ -1,0 +1,59 @@
+<div class="base">
+
+  <!-- 头部勾选框和搜索栏 -->
+  <header>
+    <div class="headerLeft">{{title}}列表</div>
+    <div class="headerRight">
+      <div><span>(特急)</span><span>6~24小時</span></div>
+      <div><span>(加急)</span><span>1個工作日</span></div>
+      <div><span>(正常)</span><span>2個工作日</span></div>
+    </div>
+  </header>
+
+  <!-- 右侧tabel -->
+  <div class="rightContent">
+    <div class="tableCotent">
+      <nz-table nzBordered="false" #headerTable [nzData]="showTableData" [nzFrontPagination]="false" [nzPageSize]="50"
+        [nzScroll]="{ y: tableScrollHeight }">
+        <thead>
+          <tr>
+            <th *ngFor="let item of tableHead">{{item}}</th>
+            <th *ngIf="index!=6" nzWidth="120px">操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of headerTable.data">
+
+            <td style="color: {{data.Urgent_Color}};">{{data.Urgent_Desc}}</td> <!-- 緊急狀態 -->
+            <td style="color: {{data.Progress_Color}};">{{data.Progress_Desc}}</td><!-- 进度 -->
+            <td>{{data.Plant}}</td><!-- 廠別 -->
+            <td (click)="goToInfo(data.Task_SN,0)"><u>{{data.Task_SN}}</u></td><!-- 任務編碼 -->
+            <td>{{data.Item_Time}} </td><!-- 項次 -->
+
+            <td *ngIf="index!=2&&index!=3&&index!=4&&index!=5&&index!=6">{{data.PIC}} </td><!-- 責任人 -->
+            <td *ngIf="index!=4">{{data.Project_Code}} </td><!-- 產品系列 -->
+            <td *ngIf="index!=1&&index!=2&&index!=3&&index!=5&&index!=6">{{data.Project_Code}}</td><!-- Project code -->
+            <td>{{data.Material_No}} </td><!-- 特殊架構 -->
+            <td>{{data.Battery_PN}} </td><!-- 電池料號 -->
+
+            <td>{{data.Demand_Year}} </td><!-- 需求年份 -->
+            <td>{{data.Shipment_Books_Desc}} </td><!-- 出貨賬冊 -->
+            <td *ngIf="index==4">{{data.Transport_Mode_Desc}}</td><!-- 運輸方式 -->
+            <td *ngIf="index!=1&&index!=2&&index!=3&&index!=4">{{data.Entrust_No}} </td><!-- 委託單號 -->
+            <td *ngIf="index!=4">{{data.Transport_Mode_Desc}}</td><!-- 運輸方式 -->
+
+            <td *ngIf="index==4">{{data.Entrust_No}}</td><!-- 委託單號 -->
+            <td *ngIf="index!=1&&index!=2&&index!=3&&index!=4&&index!=6">溝通記錄</td><!-- 溝通記錄 -->
+            <td *ngIf="index!=6">
+              <img (click)=" goToInfo(data.Task_SN, 1) " style="margin-right: 5px;" class="operate"
+                src="assets/imgs/delete.png" alt="图片跑路了">
+              <img (click)=" goToInfo(data.Task_SN, 2) " class="operate" src="assets/imgs/edit.png" alt="图片跑路了">
+            </td>
+
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+  </div>
+
+</div>

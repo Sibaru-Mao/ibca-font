@@ -1,0 +1,38 @@
+<div class="header">
+  <!-- logo部分 -->
+  <div class="logo">
+    <img src="assets/imgs/logo.png" title="退出" alt="圖片丟啦..." (click)="logout()">
+  </div>
+  <!-- 標題 -->
+  <div class="title">{{'电池鉴定书数位管理平台'|translate}}</div>
+
+  <!-- 导航栏 -->
+  <!-- <div class="navigationBar">
+    <div (click)="selectNavigate(item)" *ngFor="let item of navigationBar">
+      <div class="navigation" [ngClass]="{'selected': item.status}">{{item.name}}</div>
+    </div>
+  </div> -->
+
+  <div class="navigationBar">
+    <div *ngFor="let item of navigationBar">
+      <div class="navigation" [routerLink]="item.link" routerLinkActive="selected">{{item.name}} </div>
+    </div>
+  </div>
+
+  <div class="info">
+    <!-- 用戶信息 -->
+    <div class="user">
+      <div>Xuewei_Yao</div>
+      <div>Ver.20210727</div>
+    </div>
+
+    <!-- 語言交換 -->
+    <div class="languageSelect">
+      <select [(ngModel)]="language" id="selected_search" (change)="changeLanguage()">
+        <option value="tc">{{'tc'|translate}}</option>
+        <option value="en">{{'en'|translate}}</option>
+      </select>
+    </div>
+  </div>
+
+</div>

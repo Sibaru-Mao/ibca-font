@@ -1,0 +1,10 @@
+{
+  "tc": "TC",
+  "en": "EN",
+  "系統健康監控中心": "SystemHealthMonitoringCenter",
+  "維護入口": "Maintain",
+  "健康監控覆蓋率": "HealthMonitorCoverage",
+  "單位：個": "Unit: PCs",
+  "Overall系統健康狀況": "OverallSystemHealthStatus",
+  "未監控：": "UnMonitor:"
+}
