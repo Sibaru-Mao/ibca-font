@@ -27,7 +27,7 @@
             <td style="color: {{data.Urgent_Color}};">{{data.Urgent_Desc}}</td> <!-- 緊急狀態 -->
             <td style="color: {{data.Progress_Color}};">{{data.Progress_Desc}}</td><!-- 进度 -->
             <td>{{data.Plant}}</td><!-- 廠別 -->
-            <td (click)="goToInfo(data.Task_SN,0)"><u>{{data.Task_SN}}</u></td><!-- 任務編碼 -->
+            <td (click)="goToInfo(data.Task_SN,0,data.Transport_Mode)"><u>{{data.Task_SN}}</u></td><!-- 任務編碼 -->
             <td>{{data.Item_Time}} </td><!-- 項次 -->
 
             <td *ngIf="index!=2&&index!=3&&index!=4&&index!=5&&index!=6">{{data.PIC}} </td><!-- 責任人 -->
@@ -45,9 +45,10 @@
             <td *ngIf="index==4">{{data.Entrust_No}}</td><!-- 委託單號 -->
             <td *ngIf="index!=1&&index!=2&&index!=3&&index!=4&&index!=6">溝通記錄</td><!-- 溝通記錄 -->
             <td *ngIf="index!=6">
-              <img (click)=" goToInfo(data.Task_SN, 1) " style="margin-right: 5px;" class="operate"
+              <img (click)=" goToInfo(data.Task_SN, 1,data.Transport_Mode) " style="margin-right: 5px;" class="operate"
                 src="assets/imgs/delete.png" alt="图片跑路了">
-              <img (click)=" goToInfo(data.Task_SN, 2) " class="operate" src="assets/imgs/edit.png" alt="图片跑路了">
+              <img (click)=" goToInfo(data.Task_SN, 2,data.Transport_Mode) " class="operate" src="assets/imgs/edit.png"
+                alt="图片跑路了">
             </td>
 
           </tr>

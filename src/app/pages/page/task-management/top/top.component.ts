@@ -30,9 +30,9 @@ export class TopComponent implements OnInit {
 
   async ngOnInit() {
     await this.initPlantYearDelivery()
-    setTimeout(() => {
-      this.sendSearch()
-    },150);
+    // setTimeout(() => {
+    this.sendSearch()
+    // },150);
   }
 
   // 初始化plantName、year、deliveryMode
@@ -40,7 +40,7 @@ export class TopComponent implements OnInit {
     this.plantName = [{ Plant: 'ALL', PlantCode: 'ALL', status: true }]
     let plant = await this.http.getPlant()
     this.plantName.push(...plant)
-    sessionStorage.setItem('plant',JSON.stringify(this.plantName))
+    sessionStorage.setItem('plant', JSON.stringify(this.plantName))
 
     this.plantName.forEach(e => { e['status'] = true })
 

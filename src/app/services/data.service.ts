@@ -1,4 +1,3 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { HttpService } from './http.service';
 import { Injectable } from '@angular/core';
 
@@ -51,5 +50,25 @@ export class DataService {
     return await this.http.get(`v_task_Lists/targetinfo?Task_SN=${task}`)
   }
 
+  async getManInfo() {
+    return await this.http.get('v_role_Permissions/permission')
+  }
+
+  async delete(data) {
+    let ChineseProduct = await this.http.get(`manual_ProductNames/deleteproductname?id=${data.id}`)
+    let special = await this.http.get(`/manual_SpecialSKUs/deletespecialsku?id=${data.id}`)
+    let deleteInfo = await this.http.get(`v_task_Lists/deletetargetinfo?Task_SN=${data.Task_SN}&Transport_Mode=${data.Transport_Mode}&Delete_Reason=${data.Delete_Reason}`)
+    return { ChineseProduct, special, deleteInfo }
+  }
+
+  async getSpecialData(data) {
+    return await this.http.get(`manual_SpecialSKUs/getskubycondition?Plant=${data.PlantCode}
+    &Project_Code=${data.Project_Code}&Material_No=${data.Material_No}`)
+  }
+
+  async getChineseProduct(data) {
+    return await this.http.get(`manual_ProductNames/getproductbycondition?Plant=${data.PlantCode}
+    &ProductName_ZH=${data.Project_Code}&ProductName_EN=${data.Material_No}`)
+  }
 
 }

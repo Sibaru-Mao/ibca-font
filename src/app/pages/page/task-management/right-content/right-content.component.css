@@ -115,17 +115,26 @@ header div {
   border-radius: 10px;
 }
 
+::ng-deep .ant-table-expanded-row-fixed {
+  background-color: #1F2D31;
+  /* height: 300px; */
+}
+
+::ng-deep .ant-empty-description {
+  color: #FFFFFF;
+}
+
 .operate {
   display: inline-block;
   width: 50px;
   cursor: pointer;
 }
 
-u{
+u {
   color: #3BAEE5;
   cursor: pointer;
 }
 
-u:hover{
+u:hover {
   color: lightblue;
 }

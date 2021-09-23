@@ -1,6 +1,8 @@
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { DataService } from './../../../../services/data.service';
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, } from '@angular/router';
+
 
 @Component({
   selector: 'app-information',
@@ -10,13 +12,18 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class InformationComponent implements OnInit {
   @Input() pageType: number = 0
 
-  constructor(private http: DataService, private route: ActivatedRoute, private router: Router) { }
+  constructor(
+    private http: DataService,
+    private route: ActivatedRoute,
+    private message: NzMessageService
+  ) { }
 
-  checkOptionsThree: any = [
-    { label: '空運', value: 'Apple', disabled: false, checked: false },
-    { label: '海運', value: 'Pear', },
-    { label: '公路', value: 'Orange' },
-    { label: '鐵路', value: 'red' }
+  isVisible = false;
+  transportWay: any = [
+    { label: '空運', value: 1, disabled: true, checked: false },
+    { label: '海運', value: 2, disabled: true },
+    { label: '公路', value: 3, disabled: true },
+    { label: '鐵路', value: 4, disabled: true }
   ]
 
   unexpectStart: any = [
@@ -116,79 +123,81 @@ export class InformationComponent implements OnInit {
     ]
   }
 
-  condition = { task: '', num: 0 }
+  condition: any = { task: '', num: 0, index: 0 }
 
   info = {
-    Battery_SN: 1,
-    Button_Battery: 1,
+    Battery_SN: 0,
+    Button_Battery: 0,
     Complete_Time: 0,
-    Consignor: " ",
-    Currents_Device: 1,
+    Consignor: "",
+    Currents_Device: 0,
     Dangerous_Label: null,
-    Demand_Year: " ",
-    Entrust_Explain: " ",
-    Exhaust_Device: 1,
-    LithiumBattery_Label: 1,
-    Manufacturer: " ",
-    Packages_Qty: 1,
-    Placement_Mode: 1,
-    Plant: " ",
-    ProductName_EN: " ",
+    Demand_Year: "",
+    Entrust_Explain: "",
+    Exhaust_Device: 0,
+    LithiumBattery_Label: 0,
+    Manufacturer: "",
+    Packages_Qty: 0,
+    Placement_Mode: 0,
+    Plant: "",
+    ProductName_EN: "",
     ProductName_ZH: "",
     Reference_SN: null,
-    Sample_Dispose: 3,
-    Sample_Photo: 1,
-    Short_Circuit: " ",
-    Site: " ",
-    Special_Require: 1,
-    Task_SN: " ",
-    Transport_Report: { 1: 1, 2: 2 },
-    UN383_SN: " ",
+    Sample_Dispose: 0,
+    Sample_Photo: 0,
+    Short_Circuit: "",
+    Site: "",
+    Special_Require: 0,
+    Task_SN: "",
+    Transport_Report: { 1: 0, 2: 0, 3: 0, 4: 0 },
+    UN383_SN: "",
     Unexpected_Start: [],
-    Update_Time: " ",
-    Urgent: 1,
+    Update_Time: "",
+    Urgent: 0,
     Verification_Code: null,
-    Wh_Logo: 1,
-    id: 2
+    Wh_Logo: 0,
+    id: 0
   }
 
   targetInfo = {
-    Battery_PN: " ",
-    Communication_Record: " ",
-    Demand_Year: " ",
-    Entrust_No: " ",
-    Material_No: " ",
-    Plant: " ",
-    Project_Code: " ",
-    Shipment_Books: 1,
-    Shipment_Books_Desc: " ",
-    Task_Status: 1,
-    Task_Status_Desc: " ",
-    Task_Type: 1,
-    Task_Type_Desc: " ",
-    Testimonials_SN: " ",
-    Transport_Mode: [1]
+    Battery_PN: "",
+    Communication_Record: "",
+    Demand_Year: "",
+    Entrust_No: "",
+    Material_No: "",
+    Plant: "",
+    Project_Code: "",
+    Shipment_Books: 0,
+    Shipment_Books_Desc: "",
+    Task_Status: 0,
+    Task_Status_Desc: "",
+    Task_Type: 0,
+    Task_Type_Desc: "",
+    Testimonials_SN: "",
+    Transport_Mode: []
   }
-
-  editData: {
-
-  }
+  Delete_Reason: string
 
   plant = JSON.parse(sessionStorage.getItem('plant'))
   searchInfo: string
+  permission: any = JSON.parse(sessionStorage.getItem('man')).Permission
+  specialEdit: number = 0
 
   async ngOnInit() {
     await this.getTaskStatus()
-    this.route.params.subscribe(res => { this.condition = JSON.parse(JSON.stringify(res)) })
+    this.route.params.subscribe(res => {
+      this.condition = JSON.parse(JSON.stringify(res))
+      this.condition.index = Number(this.condition.index)
+      this.condition.num = Number(this.condition.num)
+      this.condition.Transport_Mode = Number(this.condition.Transport_Mode)
+      this.specialEdit = this.permission['HOMEPAGE' + this.condition.index].Special_Edit
+    })
     await this.getTargetInfo(this.condition['task'])
     await this.getInfo(this.condition['task'])
     this.plant.splice(0, 1)
-    console.log(this.pageType, 222222);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
-    //Add '${implements OnChanges}' to the class.
     console.log(this.pageType, 333333);
   }
 
@@ -211,33 +220,65 @@ export class InformationComponent implements OnInit {
   // 获取任务信息并处理数据
   async getTargetInfo(task) {
     let data = (await this.http.getTargetInfo(task))[0]
+    console.log(data, '任务信息');
     if (data) {
       this.targetInfo = data
       this.targetInfo.Transport_Mode.forEach(e => {
-        this.checkOptionsThree[e - 1].disabled = true
-        this.checkOptionsThree[e - 1].checked = true
+        this.transportWay[e - 1].checked = true
       });
     }
-    console.log(this.targetInfo, 333333);
   }
 
   // 获取任务信息以外的信息，并处理数据
   async getInfo(task) {
     let data = (await this.http.getInfo(task))[0]
+    console.log(data, '其他信息');
     if (data) {
-      this.info = (await this.http.getInfo(task))[0]
+      this.info = data
       this.info.Unexpected_Start.forEach(e => {
         this.unexpectStart[e - 1].disabled = true
         this.unexpectStart[e - 1].checked = true
       });
+
     }
-    console.log(this.info, 222222)
   }
 
   search() {
     console.log(111);
-
   }
 
+  showModal(): void {
+    this.isVisible = true;
+  }
+
+  close(): void {
+    this.isVisible = false;
+  }
+
+  async delete() {
+    let data = {
+      Task_SN: this.info.Task_SN,
+      Transport_Mode: this.condition.Transport_Mode,
+      Delete_Reason: this.Delete_Reason,
+      id: this.info.id
+    }
+    let info = await this.http.delete(data)
+    let type = 1
+    if (info.ChineseProduct.hasOwnProperty('error')) {
+      this.message.create('error', '中文品名資料刪除失敗')
+      type = 0
+    }
+    if (info.special.hasOwnProperty('error')) {
+      this.message.create('error', '特殊資料刪除失敗')
+      type = 0
+    }
+    if (info.deleteInfo.hasOwnProperty('error')) {
+      this.message.create('error', '刪除原因提交失敗')
+      type = 0
+    }
+    if (type) this.message.create('success', '資料刪除成功')
+    this.close()
+    this.goBack()
+  }
 
 }

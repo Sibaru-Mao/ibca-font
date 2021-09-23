@@ -26,6 +26,7 @@ export class DataCenterComponent implements OnInit {
 
   plant: any = JSON.parse(sessionStorage.getItem('plant'))
   batteryPN: any = [{ name: '11', code: 1 }]
+  index: number
 
   constructor(private router: Router) { }
 
@@ -39,4 +40,7 @@ export class DataCenterComponent implements OnInit {
     this.router.navigate([item.link])
   }
 
+  getIndex(data) {
+    this.index = data
+  }
 }

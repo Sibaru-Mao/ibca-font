@@ -21,8 +21,6 @@ interface ItemData {
 })
 export class RightContentComponent implements OnInit {
   listOfData: ItemData[] = []
-  baseHead: any
-  allHead: any
   tableHead: Array<string> = []
   title: string
   index: number
@@ -30,6 +28,7 @@ export class RightContentComponent implements OnInit {
   tableData: any = []
   showTableData: any = []
   tableScrollHeight: string
+  permission: any
 
   constructor(
     private modalService: ModalService,
@@ -37,13 +36,8 @@ export class RightContentComponent implements OnInit {
     private https: HttpService,
     private message: NzMessageService,
     private router: Router
-  ) { }
-
-  async ngOnInit() {
-    this.tableScrollHeight = 0.66 * Number(sessionStorage.getItem('height')) + 'px'
-    this.baseHead = await this.getConfig()
-    this.allHead = JSON.parse(JSON.stringify(this.baseHead))
-    this.title = '獲取資料'
+  ) {
+    // 监听左侧导航栏状态，响应搜索事件
     this.modalService.getSubject().subscribe(async res => {
       if (!res) { console.log('rightContentModalService', res); return }
       if (res.type == 'navigation') {
@@ -57,35 +51,44 @@ export class RightContentComponent implements OnInit {
         await this.getTableData()
         this.handleShowData()
       }
+      // this.handleShowData()
     })
-    // await this.getTableData()
+  }
+
+  async ngOnInit() {
+    this.tableScrollHeight = 0.66 * Number(sessionStorage.getItem('height')) + 'px'
+    this.title = '獲取資料'
+    // 获取权限数据
+    this.permission = JSON.parse(sessionStorage.getItem('man')).Permission
+    console.log(this.permission);
   }
 
   // 根据左侧导航栏加载右侧表头的栏位
-  initTableHead(index: number) {
+  async initTableHead(index: number) {
+    let allHead = await this.getConfig()
     switch (index) {
       case 1:
-        this.tableHead = this.allHead[0]
+        this.tableHead = allHead[0]
         break;
 
       case 2:
-        this.tableHead = this.allHead[1]
+        this.tableHead = allHead[1]
         break;
 
       case 3:
-        this.tableHead = this.allHead[2]
+        this.tableHead = allHead[2]
         break;
 
       case 4:
-        this.tableHead = this.allHead[3]
+        this.tableHead = allHead[3]
         break;
 
       case 5:
-        this.tableHead = this.allHead[4]
+        this.tableHead = allHead[4]
         break;
 
       case 6:
-        this.tableHead = this.allHead[5]
+        this.tableHead = allHead[5]
         break;
 
       default:
@@ -100,6 +103,7 @@ export class RightContentComponent implements OnInit {
   // 获取table资料
   async getTableData() {
     this.tableData = await this.http.getTableData(this.tableContion)
+    console.log(this.tableData);
     // if (!this.tableData.hasOwnProperty('error')) {
     //   if (this.tableData.length > 0) this.message.create('success', '資料請求成功')
     //   else this.message.create('warning', '暫無資料')
@@ -111,12 +115,16 @@ export class RightContentComponent implements OnInit {
     return await this.https.getConfig('head')
   }
 
-  goToInfo(task, num) {
-    this.router.navigate(['home/information', { task, num }])
+  goToInfo(task, num, Transport_Mode) {
+    if (!num || (num > 0 && (this.permission['HOMEPAGE' + this.index].Edit == 1 || this.permission['HOMEPAGE' + this.index].Delete == 1))) {
+      this.router.navigate(['home/information', { task, num, index: this.index, Transport_Mode }])
+    } else {
+      if (num == 1) this.message.create('warning', '你沒有刪除權限')
+      if (num == 2) this.message.create('warning', '你沒有編輯權限')
+    }
   }
 
   handleShowData() {
     if (this.index) this.showTableData = this.tableData.filter(e => { return e.Task_Status == this.index })
   }
-
 }

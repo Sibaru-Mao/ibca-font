@@ -1,3 +1,4 @@
+import { DataService } from './../../../services/data.service';
 import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
 
 @Component({
@@ -15,27 +16,28 @@ export class SpecialChineseComponent implements OnInit {
     { name: '上傳人' }, { name: '上傳時間' },
     { name: '編輯' }
   ]
-  searchInfo: any = { PlantCode: '', Material_No: '', Project_Code: '' }
   plant: any = JSON.parse(sessionStorage.getItem('plant'))
+  man: any = JSON.parse(sessionStorage.getItem('man'))
+  searchInfo: any = { PlantCode: this.man.Plant, Material_No: '', Project_Code: '' }
 
-  constructor() { }
+  constructor(private http: DataService) { }
 
-  ngOnInit(): void {
+  async ngOnInit() {
+    // this.searchInfo.PlantCode = this.man.Plant
     this.tableScrollHeight = 0.69 * Number(sessionStorage.getItem('height')) + 'px'
     this.plant.splice(0, 1)
-    let data = { data: '掌上电脑/移动式电脑/无线信息终端/便携式计算机/便携式笔记本计算机' }
 
-    for (let index = 0; index < 100; index++) {
-      this.showTableData.push(data)
-    }
-
+    // let data = { data: '掌上电脑/移动式电脑/无线信息终端/便携式计算机/便携式笔记本计算机' }
+    // for (let index = 0; index < 100; index++) {
+    //   this.showTableData.push(data)
+    // }
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    this.initData()
+  async ngOnChanges(changes: SimpleChanges) {
+    await this.initData()
   }
 
-  initData() {
+  async initData() {
     switch (this.id) {
       case 0:
 
@@ -50,8 +52,29 @@ export class SpecialChineseComponent implements OnInit {
       default:
         break;
     }
+    await this.search()
   }
 
-  search() {
+  async search() {
+    let data = { PlantCode: '', Material_No: '', Project_Code: '' }
+    data.PlantCode = this.searchInfo.PlantCode
+    if (this.searchInfo.Material_No.length < 1)
+      data.Material_No = null
+    if (this.searchInfo.Project_Code.length < 1)
+      data.Project_Code = null
+    if (this.id)
+      this.showTableData = await this.http.getChineseProduct(data)
+    else this.showTableData = await this.http.getSpecialData(data)
+
+    console.log(this.showTableData,11111);
+
   }
+
+
+  // initShowTable() {
+  //   this.showTableData.forEach((e) => {
+
+  //   });
+  // }
+
 }

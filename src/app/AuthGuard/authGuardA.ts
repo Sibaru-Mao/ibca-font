@@ -1,3 +1,5 @@
+import { async } from '@angular/core/testing';
+import { DataService } from './../services/data.service';
 import { Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
@@ -11,7 +13,7 @@ import { KeycloakAuthGuard, KeycloakService } from 'keycloak-angular';
 })
 export class AuthGuard extends KeycloakAuthGuard {
 
-  constructor(protected readonly router: Router, protected readonly keycloak: KeycloakService) {
+  constructor(private http: DataService, protected readonly router: Router, protected readonly keycloak: KeycloakService) {
     super(router, keycloak);
   }
 
@@ -24,10 +26,15 @@ export class AuthGuard extends KeycloakAuthGuard {
     }
     // Get the roles required from the route.
     const requiredRoles = this.keycloak.getUserRoles();
-    this.keycloak.loadUserProfile();
-    this.keycloak.loadUserProfile().then(e => {
-      sessionStorage.setItem('user', JSON.stringify(e))
-    })
+    // this.keycloak.loadUserProfile();
+
+    // keycloak获取的用户登录信息
+    let user = await this.keycloak.loadUserProfile()
+    // 用户的个人和权限信息
+    let man = await this.http.getManInfo()
+    man = man.find(i => { return i.User_ID == user['username'].toUpperCase() })
+    sessionStorage.setItem('man', JSON.stringify(man))
+
     // Allow the user to to proceed if no additional roles are required to access the route.
     if (!(requiredRoles instanceof Array) || requiredRoles.length === 0) {
       return true;
