@@ -9,7 +9,6 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavigationComponent implements OnInit {
   baseTab = []
-  flowName = ['任務總數量', '獲取資料', '待RPA讀取', '填寫委托', '待接收', '檢驗中', '待上傳PDF']
   selectedImg = []
   tab = []
   contion: any = {}
@@ -24,7 +23,8 @@ export class NavigationComponent implements OnInit {
     this.modalService.getSubject().subscribe(async res => {
       if (!res) { console.log('navigationModalService:', res); return }
       if (res.type == 'tableContion') {
-        this.baseTab = await this.http.getNavigation(res.data)
+        if (this.baseTab.length < 1)
+          this.baseTab = await this.http.getNavigation(res.data)
         this.modalService.emitInfo({ type: 'navigation', data: { title: this.baseTab[this.index].taskName, index: this.index } })
         this.initImg()
       }
@@ -34,7 +34,7 @@ export class NavigationComponent implements OnInit {
   // 点击导航栏后的操作
   selectTab(nowIndex) {
     if (nowIndex == 0) { return }
-    this.index=nowIndex
+    this.index = nowIndex
     // 组件之间进行交互
     this.modalService.emitInfo({ type: 'navigation', data: { title: this.baseTab[nowIndex].taskName, index: nowIndex } })
     this.tab = this.clone(this.baseTab)

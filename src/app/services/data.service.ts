@@ -71,4 +71,24 @@ export class DataService {
     &ProductName_ZH=${data.Project_Code}&ProductName_EN=${data.Material_No}`)
   }
 
+  async getProductLine(data) {
+    return await this.http.get(`manual_SpecialSKUs/getmodelbysku?Plant=${data.Plant}&Material_No=${data.Material_No}`)
+  }
+
+  async addSpecialArchitecture(data) {
+    return this.http.post('manual_SpecialSKUs/maintainspecialsku', data)
+  }
+
+  async addChineseName(data) {
+    return await this.http.post('manual_ProductNames/maintainproductname', data)
+  }
+
+  async deleteChineseName(id) {
+    return await this.http.get(`manual_ProductNames/deleteproductname?id=${id}`)
+  }
+
+  async deleteSpecialArchitecture(id) {
+    return await this.http.get(`manual_SpecialSKUs/deletespecialsku?id=${id}`)
+  }
+
 }

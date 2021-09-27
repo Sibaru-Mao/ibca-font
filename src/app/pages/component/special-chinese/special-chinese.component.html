@@ -16,7 +16,7 @@
     <input [(ngModel)]="searchInfo.Project_Code" class="searchInput" type="text">
   </div>
   <button (click)="search()" class="searchButton" nzSize="small" nz-button nzType="primary">搜索</button>
-  <div class="add"><img src="assets/imgs/add.png" alt=""></div>
+  <div class="add" (click)="showModal()"><img src="assets/imgs/add.png" alt=""></div>
 </div>
 
 <div class="tableContent">
@@ -29,18 +29,46 @@
     </thead>
     <tbody>
       <tr *ngFor="let item of headerTable.data;let i=index">
-        <td>{{i}}</td>
+        <td>{{i+1}}</td>
         <td>{{item.Plant}}</td>
-        <td *ngIf="!id">{{item.Material_No}}</td>
-        <td *ngIf="id">{{item.ProductName_ZH}}</td>
         <td *ngIf="!id">{{item.Project_Code}}</td>
+        <td *ngIf="id">{{item.ProductName_ZH}}</td>
+        <td *ngIf="!id">{{item.Material_No}}</td>
         <td *ngIf="id">{{item.ProductName_EN}}</td>
         <td>{{item.User_ID }}</td>
         <td>{{item.Maintain_Time | date:'yyyy/M/dd' }}</td>
         <td>
-          <img class="delete" src="assets/imgs/delete.png" alt="图片跑路了">
+          <img nz-popconfirm nzPopconfirmTitle="確定刪除嗎?" nzPopconfirmPlacement="bottom" (nzOnConfirm)="delete(item.id)"
+            class="delete" src="assets/imgs/delete.png" alt="图片跑路了">
         </td>
       </tr>
     </tbody>
   </nz-table>
 </div>
+
+<!-- 删除的模态框 -->
+<nz-modal [(nzVisible)]="isVisible" [nzFooter]="null" nzWidth='26%'>
+  <ng-container *nzModalContent>
+    <div class="modalTitle">
+      <span>新增</span>
+      <img (click)="close()" src="assets/imgs/close.png" alt="">
+    </div>
+    <div class="modalBody">
+      <div>
+        廠別：
+        <div style="display: inline-block;margin-left: 50px;width: 120px;text-align: left;">{{man.Plant}}</div>
+      </div>
+      <div>
+        {{modalInputTitle[0]}} <input (change)="change()" [(ngModel)]="modalInput[0]" style="width: 140px;height: 24px;"
+          class="searchInput" type="text">
+      </div>
+      <div>
+        {{modalInputTitle[1]}} <input [(ngModel)]="modalInput[1] " style="width: 140px;height: 24px;"
+          class="searchInput" type="text">
+      </div>
+      <div style="text-align: center;">
+        <button (click)="saveData()" nz-button class="save" nzType="primary">确定</button>
+      </div>
+    </div>
+  </ng-container>
+</nz-modal>

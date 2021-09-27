@@ -1,5 +1,7 @@
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { DataService } from './../../../services/data.service';
 import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
+import { stat, Stats } from 'fs';
 
 @Component({
   selector: 'app-special-chinese',
@@ -19,18 +21,17 @@ export class SpecialChineseComponent implements OnInit {
   plant: any = JSON.parse(sessionStorage.getItem('plant'))
   man: any = JSON.parse(sessionStorage.getItem('man'))
   searchInfo: any = { PlantCode: this.man.Plant, Material_No: '', Project_Code: '' }
+  isVisible: boolean
+  modalInputTitle: any
+  modalInput: any = []
 
-  constructor(private http: DataService) { }
+  constructor(private http: DataService, private message: NzMessageService) { }
 
   async ngOnInit() {
+    this.isVisible = false
     // this.searchInfo.PlantCode = this.man.Plant
     this.tableScrollHeight = 0.69 * Number(sessionStorage.getItem('height')) + 'px'
     this.plant.splice(0, 1)
-
-    // let data = { data: '掌上电脑/移动式电脑/无线信息终端/便携式计算机/便携式笔记本计算机' }
-    // for (let index = 0; index < 100; index++) {
-    //   this.showTableData.push(data)
-    // }
   }
 
   async ngOnChanges(changes: SimpleChanges) {
@@ -40,10 +41,11 @@ export class SpecialChineseComponent implements OnInit {
   async initData() {
     switch (this.id) {
       case 0:
-
+        this.modalInputTitle = ['特殊架構：', '產品系列：']
         break;
 
       case 1:
+        this.modalInputTitle = ['成品中文品名：', 'Product  Name：']
         this.tableHead[2].name = '成品中文品名'
         this.tableHead[2].width = '400px'
         this.tableHead[1].name = 'Product  Name'
@@ -64,17 +66,81 @@ export class SpecialChineseComponent implements OnInit {
       data.Project_Code = null
     if (this.id)
       this.showTableData = await this.http.getChineseProduct(data)
-    else this.showTableData = await this.http.getSpecialData(data)
+    else
+      this.showTableData = await this.http.getSpecialData(data)
 
-    console.log(this.showTableData,11111);
-
+    if (this.showTableData.hasOwnProperty('error'))
+      this.message.create('error', '資料查詢失敗')
+    else
+      this.message.create('success', '資料查詢成功')
+    console.log(this.showTableData, 11111);
   }
 
+  showModal() {
+    this.isVisible = true
+  }
 
-  // initShowTable() {
-  //   this.showTableData.forEach((e) => {
+  close() {
+    this.isVisible = false
+    this.modalInput = []
+  }
 
-  //   });
-  // }
+  async change() {
+    if (!this.id) {
+      let data = { Plant: this.man.Plant, Material_No: this.modalInput[0] }
+      let productLine = await this.http.getProductLine(data)
+      if (productLine.length > 0)
+        this.modalInput[1] = productLine[0].ModelFamily
+      else this.modalInput[1] = ''
+      console.log(this.modalInput)
+    }
+  }
+
+  async saveData() {
+    let data
+    let status
+    if (this.id) {
+      data = {
+        Site: this.man.Site,
+        Plant: this.man.Plant,
+        ProductName_ZH: this.modalInput[0],
+        ProductName_EN: this.modalInput[1],
+        User_ID: this.man.User_ID
+      }
+      status = await this.http.addChineseName(data)
+    } else {
+      data = {
+        Site: this.man.Site,
+        Plant: this.man.Plant,
+        Project_Code: this.modalInput[0],
+        Material_No: this.modalInput[1],
+        User_ID: this.man.User_ID
+      }
+      status = await this.http.addSpecialArchitecture(data)
+    }
+    if (status.hasOwnProperty('error'))
+      this.message.create('error', '資料保存失敗')
+    else {
+      this.message.create('success', '資料保存成功')
+      await this.search()
+      this.close()
+    }
+  }
+
+  async delete(data) {
+    let status
+    if (this.id)
+      status = await this.http.deleteChineseName(data)
+    else
+      status = await this.http.deleteSpecialArchitecture(data)
+
+    if (status.hasOwnProperty('error'))
+      this.message.create('error', '資料刪除失敗')
+    else {
+      this.showTableData.find((e, i) => { if (e.id == data) this.showTableData.splice(i, 1) })
+      this.showTableData = JSON.parse(JSON.stringify(this.showTableData))
+      this.message.create('success', '資料刪除成功')
+    }
+  }
 
 }
