@@ -1,1 +1,32 @@
-<p>apply works!</p>
+<div class="base">
+  <div class="content">
+
+    <div class="navigationBar">
+      <!-- 嵌套导航 -->
+      <div style="display: inline-block;width: 8%;" *ngFor="let item of tab;let i=index">
+        <div class="navigation" (click)="getIndex(i)" [routerLink]="item.link" routerLinkActive="selected">
+          {{item.name}}
+        </div>
+      </div>
+
+      <!-- <div class="search" *ngIf="index<3">
+        <div>廠別：</div>
+        <select [(ngModel)]="searchInfo.plantCode" class="searchSelect">
+          <option *ngFor="let item of plant" value={{item.PlantCode}}>{{item.Plant}}</option>
+        </select>
+        <div>電池料號：</div>
+        <select [(ngModel)]="searchInfo.Battery_PN" class="searchSelect" style="width: 120px;">
+          <option *ngFor="let item of batteryPN" value={{item.code}}>{{item.name}}</option>
+        </select>
+        <button nzSize="small" class="searchButton" nz-button nzType="primary">搜索</button>
+      </div> -->
+    </div>
+
+    <div class="infoBase">
+      <div class="infoContent">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+
+  </div>
+</div>

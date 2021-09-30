@@ -44,6 +44,10 @@ import { DropReportComponent } from './pages/page/data-center/drop-report/drop-r
 import { BasicSettingsComponent } from './pages/page/data-center/basic-settings/basic-settings.component';
 import { SpecialArchitectureComponent } from './pages/page/data-center/special-architecture/special-architecture.component';
 import { ChineseNameComponent } from './pages/page/data-center/chinese-name/chinese-name.component';
+import { NewApplicationComponent } from './pages/page/apply/new-application/new-application.component';
+import { RepairComponent } from './pages/page/apply/repair/repair.component';
+import { PostponeComponent } from './pages/page/apply/postpone/postpone.component';
+import { TransportComponent } from './pages/page/apply/transport/transport.component';
 
 
 registerLocaleData(zh);
@@ -93,7 +97,11 @@ export function configureProvider(loader: ConfigServiceService): () => Promise<v
     BasicSettingsComponent,
     SpecialArchitectureComponent,
     ChineseNameComponent,
-    SpecialChineseComponent
+    SpecialChineseComponent,
+    NewApplicationComponent,
+    RepairComponent,
+    PostponeComponent,
+    TransportComponent
   ],
   imports: [
     BrowserModule,
