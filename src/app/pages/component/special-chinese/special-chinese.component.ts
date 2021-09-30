@@ -25,9 +25,13 @@ export class SpecialChineseComponent implements OnInit {
   modalInputTitle: any
   modalInput: any = []
 
+  name = `ddsss <br/> dd890903`
+
   constructor(private http: DataService, private message: NzMessageService) { }
 
   async ngOnInit() {
+    console.log(this.name, 33333333);
+
     this.isVisible = false
     // this.searchInfo.PlantCode = this.man.Plant
     this.tableScrollHeight = 0.69 * Number(sessionStorage.getItem('height')) + 'px'
