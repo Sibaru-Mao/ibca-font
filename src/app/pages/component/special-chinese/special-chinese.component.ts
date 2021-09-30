@@ -61,6 +61,7 @@ export class SpecialChineseComponent implements OnInit {
     await this.search()
   }
 
+  // 搜索方法
   async search() {
     let data = { PlantCode: '', Material_No: '', Project_Code: '' }
     data.PlantCode = this.searchInfo.PlantCode
@@ -80,10 +81,12 @@ export class SpecialChineseComponent implements OnInit {
     console.log(this.showTableData, 11111);
   }
 
+  // 打开模态框
   showModal() {
     this.isVisible = true
   }
 
+  // 关闭模态框
   close() {
     this.isVisible = false
     this.modalInput = []
