@@ -150,35 +150,35 @@
               </div>
               <div style="width: 90%;">
                 <div style="margin-bottom: 10px;">
-                  <label nz-checkbox nzDisabled=true [ngModel]="true">空運</label>
+                  <label nz-checkbox nzDisabled=true [ngModel]="info.Transport_Report[1].status">空運</label>
                   <div class="transportSelect">
                     <img class="asterisk" src="assets/imgs/asterisk.png" alt="">
                     空運報告份數：
-                    <input [(ngModel)]="info.Transport_Report[1]" class="transportInput" type="text">
+                    <input [(ngModel)]="info.Transport_Report[1].number" class="transportInput" type="text">
                   </div>
                 </div>
                 <div style="margin-bottom: 10px;">
-                  <label nz-checkbox nzDisabled=true [ngModel]="true">海運</label>
+                  <label nz-checkbox nzDisabled=true [ngModel]="info.Transport_Report[1].status">海運</label>
                   <div class="transportSelect">
                     <img class="asterisk" src="assets/imgs/asterisk.png" alt="">
                     海運報告份數：
-                    <input [(ngModel)]="info.Transport_Report[2]" class="transportInput" type="text">
+                    <input [(ngModel)]="info.Transport_Report[2].number" class="transportInput" type="text">
                   </div>
                 </div>
                 <div style="margin-bottom: 10px;">
-                  <label nz-checkbox nzDisabled=true [ngModel]="true">公路</label>
+                  <label nz-checkbox nzDisabled=true [ngModel]="info.Transport_Report[1].status">公路</label>
                   <div class="transportSelect">
                     <img class="asterisk" style="visibility: hidden;" src="assets/imgs/asterisk.png" alt="">
                     公路報告份數：
-                    <input [(ngModel)]="info.Transport_Report[3]" class="transportInput" type="text" disabled>
+                    <input [(ngModel)]="info.Transport_Report[3].number" class="transportInput" type="text" disabled>
                   </div>
                 </div>
                 <div style="margin-bottom: 10px;">
-                  <label nz-checkbox nzDisabled=true [ngModel]="true">鐵路</label>
+                  <label nz-checkbox nzDisabled=true [ngModel]="info.Transport_Report[1].status">鐵路</label>
                   <div class="transportSelect">
                     <img class="asterisk" style="visibility: hidden;" src="assets/imgs/asterisk.png" alt="">
                     鐵路報告份數：
-                    <input [(ngModel)]="info.Transport_Report[4]" class="transportInput" type="text" disabled>
+                    <input [(ngModel)]="info.Transport_Report[4].number" class="transportInput" type="text" disabled>
                   </div>
                 </div>
               </div>
@@ -358,7 +358,8 @@
         </div>
       </ng-container>
       <div style="text-align: center;margin-top: 20px;">
-        <button *ngIf="condition.num==2||pageType==1" nz-button style="width: 80px;" nzType="primary">保存</button>
+        <button *ngIf="condition.num==2||pageType==1" (click)="save()" nz-button style="width: 80px;"
+          nzType="primary">保存</button>
         <button (click)="showModal()" *ngIf="condition.num==1" nz-button style="width: 80px;" nzDanger
           nzType="primary">刪除</button>
       </div>
