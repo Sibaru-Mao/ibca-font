@@ -7,12 +7,6 @@
   <div class="title">{{'电池鉴定书数位管理平台'|translate}}</div>
 
   <!-- 导航栏 -->
-  <!-- <div class="navigationBar">
-    <div (click)="selectNavigate(item)" *ngFor="let item of navigationBar">
-      <div class="navigation" [ngClass]="{'selected': item.status}">{{item.name}}</div>
-    </div>
-  </div> -->
-
   <div class="navigationBar">
     <div *ngFor="let item of navigationBar">
       <div class="navigation" [routerLink]="item.link" routerLinkActive="selected">{{item.name}} </div>

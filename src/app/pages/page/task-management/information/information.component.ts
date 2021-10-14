@@ -21,18 +21,18 @@ export class InformationComponent implements OnInit {
   isVisible = false;
   transportWay: any = [
     { label: '空運', value: 1, disabled: true, checked: false },
-    { label: '海運', value: 2, disabled: true },
-    { label: '公路', value: 3, disabled: true },
-    { label: '鐵路', value: 4, disabled: true }
+    { label: '海運', value: 2, disabled: true, checked: false },
+    { label: '公路', value: 3, disabled: true, checked: false },
+    { label: '鐵路', value: 4, disabled: true, checked: false }
   ]
 
   unexpectStart: any = [
     { label: '開關帽', value: 1, disabled: false, checked: false },
-    { label: '開關鎖', value: 2 },
-    { label: '凹陷式開關', value: 3 },
-    { label: '觸發鎖', value: 4 },
-    { label: '熱敏式電滾斷路器', value: 5 },
-    { label: '其他', value: 6 }
+    { label: '開關鎖', value: 2, checked: false },
+    { label: '凹陷式開關', value: 3, checked: false },
+    { label: '觸發鎖', value: 4, checked: false },
+    { label: '熱敏式電滾斷路器', value: 5, checked: false },
+    { label: '其他', value: 6, checked: false }
   ]
 
   disabled: boolean = false
@@ -149,7 +149,12 @@ export class InformationComponent implements OnInit {
     Site: "",
     Special_Require: 0,
     Task_SN: "",
-    Transport_Report: { 1: 0, 2: 0, 3: 0, 4: 0 },
+    Transport_Report: {
+      "1": { "status": false, "number": 0 },
+      "2": { "status": false, "number": 0 },
+      "3": { "status": false, "number": 0 },
+      "4": { "status": false, "number": 0 }
+    },
     UN383_SN: "",
     Unexpected_Start: [],
     Update_Time: "",
@@ -223,9 +228,10 @@ export class InformationComponent implements OnInit {
     console.log(data, '任务信息');
     if (data) {
       this.targetInfo = data
-      this.targetInfo.Transport_Mode.forEach(e => {
-        this.transportWay[e - 1].checked = true
-      });
+      if (this.targetInfo.Transport_Mode)
+        this.targetInfo.Transport_Mode.forEach(e => {
+          this.transportWay[e - 1].checked = true
+        });
     }
   }
 
@@ -235,11 +241,11 @@ export class InformationComponent implements OnInit {
     console.log(data, '其他信息');
     if (data) {
       this.info = data
-      this.info.Unexpected_Start.forEach(e => {
-        this.unexpectStart[e - 1].disabled = true
-        this.unexpectStart[e - 1].checked = true
-      });
-
+      if (this.info.Unexpected_Start)
+        this.info.Unexpected_Start.forEach(e => {
+          // this.unexpectStart[e - 1].disabled = true
+          this.unexpectStart[e - 1].checked = true
+        });
     }
   }
 
@@ -279,6 +285,10 @@ export class InformationComponent implements OnInit {
     if (type) this.message.create('success', '資料刪除成功')
     this.close()
     this.goBack()
+  }
+
+  save() {
+    alert('111111')
   }
 
 }
