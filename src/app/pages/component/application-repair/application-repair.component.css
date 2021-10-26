@@ -1,0 +1,74 @@
+::ng-deep .ant-checkbox-wrapper span {
+  color: #FFFFFF;
+}
+
+::ng-deep .ant-modal-header {
+  background-color: #30494D;
+  border: none;
+}
+
+::ng-deep .ant-modal-title {
+  color: #ffffff;
+}
+
+::ng-deep .ant-modal-footer {
+  background-color: #30494D;
+  border: none;
+}
+
+::ng-deep .ant-modal-body {
+  padding-top: 5%;
+  color: #ffffff;
+}
+
+.content {
+  color: #ffffff;
+}
+
+.content>header {
+  color: #4EBBBB;
+  font-size: 16px;
+}
+
+.content>table {
+  margin-top: 5px;
+}
+
+.content>table td {
+  text-align: right;
+  padding-right: 5%;
+}
+
+.searchSelect {
+  width: 140px;
+  height: 25px;
+  font-size: 12px;
+  background-color: rgba(64, 78, 81, 100);
+  color: rgba(255, 255, 255, 100);
+  border: 1px solid rgba(81, 87, 88, 100);
+  outline: none;
+  display: inline-block;
+  margin-right: 20px;
+  text-align: center;
+}
+
+.newInput {
+  border: .1px solid rgba(64, 78, 81, 100);
+  border-radius: 3px;
+  outline: none;
+  text-align: center;
+  width: 140px;
+  background-color: rgba(64, 78, 81, 100);
+}
+
+
+
+.buttonContent {
+  text-align: center;
+}
+
+.sure {
+  background-color: #51B0B0;
+  width: 80px;
+  margin-top: 20px;
+}

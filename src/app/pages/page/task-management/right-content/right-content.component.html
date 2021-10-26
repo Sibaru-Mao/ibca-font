@@ -30,7 +30,8 @@
             <td (click)="goToInfo(data.Task_SN,0,data.Transport_Mode)"><u>{{data.Task_SN}}</u></td><!-- 任務編碼 -->
             <td>{{data.Item_Time}} </td><!-- 項次 -->
 
-            <td *ngIf="index!=2&&index!=3&&index!=4&&index!=5&&index!=6">{{data.PIC}} </td><!-- 責任人 -->
+            <td style=" white-space:pre-wrap" *ngIf="index!=2&&index!=3&&index!=4&&index!=5&&index!=6">{{data.PIC}}
+            </td><!-- 責任人 -->
             <td *ngIf="index!=4">{{data.Project_Code}} </td><!-- 產品系列 -->
             <td *ngIf="index!=1&&index!=2&&index!=3&&index!=5&&index!=6">{{data.Project_Code}}</td><!-- Project code -->
             <td>{{data.Material_No}} </td><!-- 特殊架構 -->

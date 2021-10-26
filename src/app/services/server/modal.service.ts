@@ -19,5 +19,7 @@ export class ModalService {
       this.renderSubject.next(msg)
     }
   }
-  
+
+
+
 }

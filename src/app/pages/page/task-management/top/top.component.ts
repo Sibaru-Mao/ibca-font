@@ -30,9 +30,7 @@ export class TopComponent implements OnInit {
 
   async ngOnInit() {
     await this.initPlantYearDelivery()
-    // setTimeout(() => {
     this.sendSearch()
-    // },150);
   }
 
   // 初始化plantName、year、deliveryMode
@@ -46,6 +44,7 @@ export class TopComponent implements OnInit {
 
     this.year = [{ Demand_Year: "all" }]
     this.year.push(...await this.http.getYear())
+    sessionStorage.setItem('year', JSON.stringify(this.year))
 
     this.deliveryMode = [{ Transport_Mode_Desc: "all", Transport_Mode: 'all' },]
     this.deliveryMode.push(...await this.http.getDliveryMode())

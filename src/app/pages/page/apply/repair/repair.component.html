@@ -1,1 +1,7 @@
-<p>repair works!</p>
+<div class="base">
+  <div class="content">
+    <app-application-repair #appRe title="维修品"></app-application-repair>
+    <div class="middle" [hidden]="!show"></div>
+    <app-information (saveNewData)="saveNewData()" pageType='2' [hidden]="!show"></app-information>
+  </div>
+</div>

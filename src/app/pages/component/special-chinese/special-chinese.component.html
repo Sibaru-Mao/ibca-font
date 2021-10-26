@@ -31,9 +31,9 @@
       <tr *ngFor="let item of headerTable.data;let i=index">
         <td>{{i+1}}</td>
         <td>{{item.Plant}}</td>
-        <td *ngIf="!id">{{item.Project_Code}}</td>
-        <td *ngIf="id">{{item.ProductName_ZH}}</td>
         <td *ngIf="!id">{{item.Material_No}}</td>
+        <td *ngIf="id">{{item.ProductName_ZH}}</td>
+        <td *ngIf="!id">{{item.Project_Code}}</td>
         <td *ngIf="id">{{item.ProductName_EN}}</td>
         <td>{{item.User_ID }}</td>
         <td>{{item.Maintain_Time | date:'yyyy/M/dd' }}</td>

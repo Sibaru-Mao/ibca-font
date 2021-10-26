@@ -48,6 +48,7 @@ import { NewApplicationComponent } from './pages/page/apply/new-application/new-
 import { RepairComponent } from './pages/page/apply/repair/repair.component';
 import { PostponeComponent } from './pages/page/apply/postpone/postpone.component';
 import { TransportComponent } from './pages/page/apply/transport/transport.component';
+import { ApplicationRepairComponent } from './pages/component/application-repair/application-repair.component';
 
 
 registerLocaleData(zh);
@@ -101,7 +102,8 @@ export function configureProvider(loader: ConfigServiceService): () => Promise<v
     NewApplicationComponent,
     RepairComponent,
     PostponeComponent,
-    TransportComponent
+    TransportComponent,
+    ApplicationRepairComponent
   ],
   imports: [
     BrowserModule,

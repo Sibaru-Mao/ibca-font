@@ -73,3 +73,17 @@
   height: 100%;
   /* background-color: blue; */
 }
+
+.pointOut {
+  float: right;
+  margin-right: 30px;
+}
+
+.pointOut>img {
+  width: 14px;
+  margin-right: 5px;
+}
+
+.pointOut>span {
+  color: #ffffff;
+}
