@@ -91,4 +91,31 @@ export class DataService {
     return await this.http.get(`manual_SpecialSKUs/deletespecialsku?id=${id}`)
   }
 
+  async getBaseData(plant) {
+    return await this.http.get(`manual_BaseData/searchbasedata?Plant=${plant}`)
+  }
+
+  async saveBasesata(data) {
+    return await this.http.post('manual_BaseData/maintainbasedata', data)
+  }
+
+  // 新申请或维修品提交 须填写信息
+  async applicationRepair(data) {
+    return await this.http.post('newApply/applicationinfo', data)
+  }
+
+  async getNewApplyBaseData(data) {
+    return await this.http.get(`newApply/BaseData?Material_No=${data.Material_No}&ModelFamily=${data.Project_Code}&Plant=${data.Plant}`)
+  }
+
+  // 提交新申请或者维修品的基本资料
+  async generateTask(data) {
+    return await this.http.post('newApply/BasedataInsert', data)
+  }
+
+  // 获取新申请和维修品已存在的数据
+  async getExist(data) {
+    return await this.http.post('newApply/getExist', data)
+  }
+
 }

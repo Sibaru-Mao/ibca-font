@@ -1,5 +1,5 @@
-<div class="base">
-  <div class="content">
+<div id="base">
+  <div id="content">
 
     <!-- 搜索栏 -->
     <div *ngIf="pageType==1" class="search">
@@ -7,11 +7,11 @@
       <select [(ngModel)]="searchInfo" class="searchSelect">
         <option *ngFor="let item of plant" value={{item.PlantCode}}>{{item.Plant}}</option>
       </select>
-      <button (click)="search()" class="searchButton" nzSize="small" nz-button nzType="primary">搜索</button>
+      <button (click)="getBaseData()" class="searchButton" nzSize="small" nz-button nzType="primary">搜索</button>
     </div>
 
     <!-- 任務信息 -->
-    <div class="task" *ngIf="pageType!=1">
+    <div class="task" *ngIf="pageType==0">
       <header class="goBack" (click)="goBack()">
         <img style="height: 28px;" src="assets/imgs/rollback.png" alt="丢了">
         <span class="title">任務信息</span>
@@ -288,7 +288,7 @@
         <tr>
           <td colspan="2"><img class="asterisk" src="assets/imgs/asterisk.png" alt="">
             <img class="asterisk" src="assets/imgs/asterisk.png" alt="">防意外啟動：
-            <nz-checkbox-group [(ngModel)]="unexpectStart" (ngModelChange)="log(unexpectStart)">
+            <nz-checkbox-group [(ngModel)]="unexpectStart">
             </nz-checkbox-group>
           </td>
         </tr>
@@ -352,14 +352,13 @@
         </div>
         <div style="margin-top: 30px;">
           其他文件：
-          <span style="color: red;">
-            缺少相關資料
-          </span>
+          <span style="color: red;">缺少相關資料</span>
         </div>
       </ng-container>
       <div style="text-align: center;margin-top: 20px;">
         <button *ngIf="condition.num==2||pageType==1" (click)="save()" nz-button style="width: 80px;"
           nzType="primary">保存</button>
+        <button *ngIf="pageType==2||pageType==3" (click)="generateTask()" nz-button nzType="primary">生成任務</button>
         <button (click)="showModal()" *ngIf="condition.num==1" nz-button style="width: 80px;" nzDanger
           nzType="primary">刪除</button>
       </div>

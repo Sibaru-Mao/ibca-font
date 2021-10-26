@@ -144,12 +144,12 @@
   margin-top: 10px;
 }
 
-::ng-deep .ant-modal-body {
+:host ::ng-deep .ant-modal-body {
   background-color: rgba(32, 48, 51, 100);
   height: 300px;
   padding: 0px;
 }
 
-::ng-deep .ant-modal-close-x {
+:host ::ng-deep .ant-modal-close-x {
   display: none;
 }
