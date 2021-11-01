@@ -1,0 +1,180 @@
+::ng-deep .ant-table-thead .ant-table-cell {
+  background-color: #355256;
+  height: 20px;
+}
+
+/* ::ng-deep .ant-table tfoot>tr>td,
+::ng-deep .ant-table tfoot>tr>th, */
+::ng-deep .ant-table-thead>tr>th {
+  padding: 5px 5px;
+  text-align: center;
+  color: #4EBBBB;
+  border: none;
+  font-weight: bold;
+}
+
+::ng-deep .ant-table-tbody>tr>td {
+  padding: 2px 5px;
+  text-align: center;
+  background-color: #202E31;
+  color: #FFFFFF;
+  border: none;
+  border-bottom: 1px solid rgba(187, 187, 187, 100);
+  font-size: 12px;
+}
+
+::ng-deep .ant-table-tbody>tr.ant-table-row:hover>td {
+  /* background-color: #202E31; */
+  background-color: #355256;
+}
+
+::ng-deep ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::ng-deep ::-webkit-scrollbar-track {
+  background-color: #355256;
+  /* border-radius: 10px; */
+}
+
+::ng-deep ::-webkit-scrollbar-thumb {
+  background-color: #489C9C;
+  border-radius: 10px;
+}
+
+::ng-deep .ant-table-expanded-row-fixed {
+  background-color: #1F2D31;
+  /* height: 300px; */
+}
+
+.title {
+  color: #4EBBBB;
+  font-size: 16px;
+}
+
+
+.postpone {
+  width: 50px;
+  cursor: pointer;
+}
+
+.modal {
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  left: 0;
+}
+
+.base {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(32, 48, 51, 100);
+}
+
+.pmodal1Content {
+  width: 30%;
+  height: 30%;
+}
+
+.modalTitle {
+  background-color: rgba(48, 73, 77, 100);
+  color: rgba(78, 187, 187, 100);
+  font-size: 16px;
+  text-align: center;
+  height: 40px;
+  line-height: 40px;
+  position: relative;
+}
+
+.modalTitle>img {
+  position: absolute;
+  right: 0;
+  cursor: pointer;
+  height: 25px;
+  margin-top: 7.5px;
+  margin-right: 5px;
+}
+
+.pmodal1Content p {
+  color: rgba(210, 58, 95, 100);
+  font-size: 16px;
+  text-align: center;
+  margin-top: 10%;
+  margin-bottom: 6%;
+}
+
+.sure {
+  background-color: rgba(72, 156, 156, 100);
+  width: 80px;
+}
+
+.cancel {
+  background-color: rgba(32, 48, 51, 100);
+  color: rgba(78, 187, 187, 100);
+  width: 80px;
+}
+
+.pmodal2Content {
+  width: 70%;
+  height: 70%;
+}
+
+.pmodal2Content>div {
+  height: 70%;
+  padding: 3%;
+  color: #FFFFFF;
+}
+
+.pmodal3Content {
+  width: 50%;
+  height: 95%;
+}
+
+.modal3Content {
+  padding: 3%;
+  height: 85%;
+}
+
+.pmodal3Content p {
+  font-size: 16px;
+  color: #4EBBBB;
+}
+
+table {
+  color: #FFFFFF;
+}
+
+td {
+  padding-left: 2%;
+}
+
+.transportSelect {
+  display: inline-block;
+  margin-left: 5%;
+}
+
+.asterisk {
+  width: 10px;
+  margin-left: -15px;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+
+.transportInput {
+  width: 70px;
+  height: 20px;
+  background-color: rgba(64, 78, 81, 100);
+  color: rgba(255, 255, 255, 100);
+  border: 1px solid rgba(81, 87, 88, 100);
+  outline: none;
+  text-align: center;
+  margin-left: 15px;
+  display: inline-block;
+  line-height: 1.5em;
+}

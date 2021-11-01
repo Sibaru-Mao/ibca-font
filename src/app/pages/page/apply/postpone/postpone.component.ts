@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { ListComponent } from './../../../component/list/list.component';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-postpone',
@@ -6,10 +7,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./postpone.component.css']
 })
 export class PostponeComponent implements OnInit {
-
+  @ViewChild('list') list: ListComponent
+  show: boolean = false
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  sendData(data) {
+    this.list.getData(data)
   }
 
 }

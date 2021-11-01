@@ -144,10 +144,12 @@
         </tr>
         <tr>
           <td>
+
             <div style="display: flex;">
               <div style="width: 10%;position: relative;">
                 <div style="position: absolute;top: 50%;transform: translate(0,-50%);">運輸方式：</div>
               </div>
+
               <div style="width: 90%;">
                 <div style="margin-bottom: 10px;">
                   <label nz-checkbox nzDisabled=true [ngModel]="info.Transport_Report[1].status">空運</label>
@@ -158,7 +160,7 @@
                   </div>
                 </div>
                 <div style="margin-bottom: 10px;">
-                  <label nz-checkbox nzDisabled=true [ngModel]="info.Transport_Report[1].status">海運</label>
+                  <label nz-checkbox nzDisabled=true [ngModel]="info.Transport_Report[2].status">海運</label>
                   <div class="transportSelect">
                     <img class="asterisk" src="assets/imgs/asterisk.png" alt="">
                     海運報告份數：
@@ -166,7 +168,7 @@
                   </div>
                 </div>
                 <div style="margin-bottom: 10px;">
-                  <label nz-checkbox nzDisabled=true [ngModel]="info.Transport_Report[1].status">公路</label>
+                  <label nz-checkbox nzDisabled=true [ngModel]="info.Transport_Report[3].status">公路</label>
                   <div class="transportSelect">
                     <img class="asterisk" style="visibility: hidden;" src="assets/imgs/asterisk.png" alt="">
                     公路報告份數：
@@ -174,7 +176,7 @@
                   </div>
                 </div>
                 <div style="margin-bottom: 10px;">
-                  <label nz-checkbox nzDisabled=true [ngModel]="info.Transport_Report[1].status">鐵路</label>
+                  <label nz-checkbox nzDisabled=true [ngModel]="info.Transport_Report[4].status">鐵路</label>
                   <div class="transportSelect">
                     <img class="asterisk" style="visibility: hidden;" src="assets/imgs/asterisk.png" alt="">
                     鐵路報告份數：
@@ -182,7 +184,9 @@
                   </div>
                 </div>
               </div>
+
             </div>
+
           </td>
         </tr>
         <tr>

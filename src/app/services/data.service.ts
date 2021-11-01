@@ -42,10 +42,12 @@ export class DataService {
     return await this.http.get('mapping_TaskStatuses/taskstatusmapping')
   }
 
+  // 获取任务信息外的其他信息
   async getInfo(task) {
     return await this.http.get(`v_task_Informations/otherinfo?Task_SN=${task}`)
   }
 
+  // 获取任务信息
   async getTargetInfo(task) {
     return await this.http.get(`v_task_Lists/targetinfo?Task_SN=${task}`)
   }
@@ -116,6 +118,10 @@ export class DataService {
   // 获取新申请和维修品已存在的数据
   async getExist(data) {
     return await this.http.post('newApply/getExist', data)
+  }
+  // 获取 申请 模块里的延期和运输的table资料
+  async getPostponeTransport(data) {
+    return await this.http.post('common/SearchDefer', data)
   }
 
 }
