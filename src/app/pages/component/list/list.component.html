@@ -1,0 +1,141 @@
+<p class="title">獲取資料列表</p>
+<nz-table nzBordered="false" #headerTable [nzData]="tableData" [nzFrontPagination]="false" [nzPageSize]="50"
+  [nzScroll]="{ y: tableScrollHeight }">
+  <thead>
+    <tr>
+      <th *ngFor="let item of tableHead">{{item}}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of headerTable.data">
+      <!-- <td *ngFor="let item of td">{{data.item}}</td> -->
+      <td *ngFor="let item of td">{{data[item]}}</td>
+      <td><img class="postpone" (click)="operate(data)" src="assets/imgs/postpone.png" alt="图标丢了..."></td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<div class="modal" [hidden]="!modalStatus">
+  <!-- <div class="modal"> -->
+
+  <div class="base pmodal1Content" [hidden]="modalType!='pmodal1'">
+    <!-- <div class="base pmodal1Content"> -->
+    <header class="modalTitle">警告<img src="assets/imgs/close.png" (click)="close()" alt="图标丢失了"></header>
+    <div>
+      <p>當前未到12月，不能進行延期</p>
+      <div style="text-align: center;">
+        <button nz-button class="sure" (click)="close()" nzType="primary">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="base pmodal2Content" [hidden]="modalType!='pmodal2'">
+    <header class="modalTitle">客户声明<img src="assets/imgs/close.png" (click)="close()" alt="图标丢失了"></header>
+    <div>
+      本公司承诺本“快速复制 ”提供的信息及资料均真实有效。<br>
+      如因提供信息不全或有误导致鉴定书出具有误而造成的损失由本公司自行承担。<br>
+      本公司承诺：<br>
+      1、 本委托所述包装件信息与源报告完全一致，包括但不限于：包装材质、尺寸、内部格栅、衬垫材料及内装物性质、数量、重量等；<br>
+      2、 本委托所述电池信息与源报告完全一致，包括但不限于：电池种类、型号、电压、容量／锂含量、放置方式，安全排气装置、防逆电流装置、Wh标识、防短路措施等；<br>
+      3、本委托所述样品外观信息与源报告完全一致，包括但不限于：颜色、材质、设备种类等；<br>
+      4、 本委托所述设备信息与源报告完全一致，包括但不限于：防意外启动措施、防短路措施等；（如适用）<br>
+      5、本委托同意使用源报告最后一页图片。<br>
+      同意上述条款请点击“确认”按钮，不同意请点击“取消”按钮。<br>
+      注：1)“快速复制”功能主要用于快速申请新一年度的鉴定书；2)“快速复制”功能要求新委托与源报告委托信息完全一致；3)“快速复制”委托后，除本页面可修改内容、报告邮寄地址外，其余所有内容均不可更改。
+    </div>
+    <div style="text-align: center;">
+      <button nz-button class="cancel" (click)="close()" style="margin-right:20px ;" (click)="close()"
+        nzType="primary">取消</button>
+      <button nz-button class="sure" (click)="pmodal2()" nzType="primary">同意</button>
+    </div>
+  </div>
+
+  <div class="base pmodal3Content" [hidden]="modalType!='pmodal3'">
+    <!-- <div class="base pmodal3Content"> -->
+    <header class="modalTitle">延期申請<img src="assets/imgs/close.png" (click)="close()" alt="图标丢失了"></header>
+    <div class="modal3Content">
+
+      <p>源报告信息</p>
+      <table border="1" width=100% height=20%>
+        <tr>
+          <td>源委托单号：</td>
+          <td>源委托单号：</td>
+        </tr>
+        <tr>
+          <td colspan="2">源使用年份：</td>
+        </tr>
+      </table>
+
+      <p>新报告信息</p>
+      <table border="1" width=100% height=60%>
+        <tr>
+          <td>鉴定书使用年份：2022年</td>
+        </tr>
+        <tr>
+          <td height=50%>
+
+            <div style="display: flex;">
+              <div style="width: 10%;position: relative;flex: 2;">
+                <div style="position: absolute;top: 50%;transform: translate(0,-50%);">運輸方式：</div>
+              </div>
+
+              <div style="width: 90%;flex: 7;">
+                <div style="margin-bottom: 10px;">
+                  <label nz-checkbox nzDisabled=true [ngModel]="info.Transport_Report[1].status">空運</label>
+                  <div class="transportSelect">
+                    <img class="asterisk" src="assets/imgs/asterisk.png" alt="">
+                    空運報告份數：
+                    <input [(ngModel)]="info.Transport_Report[1].number" class="transportInput" type="text">
+                  </div>
+                </div>
+                <div style="margin-bottom: 10px;">
+                  <label nz-checkbox nzDisabled=true [ngModel]="info.Transport_Report[2].status">海運</label>
+                  <div class="transportSelect">
+                    <img class="asterisk" src="assets/imgs/asterisk.png" alt="">
+                    海運報告份數：
+                    <input [(ngModel)]="info.Transport_Report[2].number" class="transportInput" type="text">
+                    <!-- <div class="transportInput">{{info.Transport_Report[2].number}}</div> -->
+                  </div>
+                </div>
+                <div style="margin-bottom: 10px;">
+                  <label nz-checkbox nzDisabled=true [ngModel]="info.Transport_Report[3].status">公路</label>
+                  <div class="transportSelect">
+                    <img class="asterisk" style="visibility: hidden;" src="assets/imgs/asterisk.png" alt="">
+                    公路報告份數：
+                    <input [(ngModel)]="info.Transport_Report[3].number" class="transportInput" type="text" disabled>
+                  </div>
+                </div>
+                <div style="margin-bottom: 10px;">
+                  <label nz-checkbox nzDisabled=true [ngModel]="info.Transport_Report[4].status">鐵路</label>
+                  <div class="transportSelect">
+                    <img class="asterisk" style="visibility: hidden;" src="assets/imgs/asterisk.png" alt="">
+                    鐵路報告份數：
+                    <input [(ngModel)]="info.Transport_Report[4].number" class="transportInput" type="text" disabled>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </td>
+        </tr>
+        <tr>
+          <td>样品处置方式:和原来一致</td>
+        </tr>
+        <tr>
+          <td>引用编号:和原来一致</td>
+        </tr>
+        <tr>
+          <td>委托说明:和原来一致</td>
+        </tr>
+      </table>
+
+    </div>
+    <div style="text-align: center;">
+      <button nz-button class="cancel" (click)="close()" style="margin-right:10px ;" (click)="close()"
+        nzType="primary">取消</button>
+      <button nz-button class="sure" (click)="pmodal3()" nzType="primary">確定</button>
+    </div>
+  </div>
+
+</div>

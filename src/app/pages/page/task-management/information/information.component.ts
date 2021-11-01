@@ -169,7 +169,6 @@ export class InformationComponent implements OnInit {
   searchInfo: string = JSON.parse(sessionStorage.getItem('man')).Plant
   permission: any = JSON.parse(sessionStorage.getItem('man')).Permission
   specialEdit: number = 0
-  unSub: any
 
   constructor(
     private http: DataService,
@@ -203,7 +202,7 @@ export class InformationComponent implements OnInit {
     this.changeStyle()
 
     // 新申请或者维修品确定后处理基础数据
-    this.unSub = this.modalService.getSubject().subscribe(res => {
+    this.modalService.getSubject().subscribe(res => {
       if (!res) return
 
       if (res.type == 'newApplication' && res.data.data) {
@@ -215,11 +214,6 @@ export class InformationComponent implements OnInit {
     console.log(this.info, this.targetInfo, 111111111);
   }
 
-  ngOnDestroy(): void {
-    //Called once, before the instance is destroyed.
-    //Add 'implements OnDestroy' to the class.
-    this.unSub.unsubscribe()
-  }
 
   goBack() {
     history.go(-1)

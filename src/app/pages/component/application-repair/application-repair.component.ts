@@ -1,7 +1,7 @@
 import { ModalService } from './../../../services/server/modal.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { DataService } from './../../../services/data.service';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-application-repair',
@@ -11,6 +11,8 @@ import { Component, OnInit, Input } from '@angular/core';
 export class ApplicationRepairComponent implements OnInit {
   // @Input() type: number
   @Input() title: string
+  @Output() sendData = new EventEmitter<any>()
+
 
   // 新申请或者维修品需填寫信息参数
   newData: any = {
@@ -56,56 +58,74 @@ export class ApplicationRepairComponent implements OnInit {
     this.year.splice(0, 1)
   }
 
-  // 新申请和维修品中点击确认触发的方法
+  // 新申请和维修品 或 延期和运输 中点击确认触发的方法
   async sure() {
     this.newData.Shipment_Books = Number(this.newData.Shipment_Books)
-    // this.handleTransport_Mode()
+    this.handleTransport_Mode()
     let exist = JSON.parse(JSON.stringify(this.newData))
     delete exist.Create_ID
     delete exist.Site
-    delete exist.Transport_Mode
 
-    // 查询已经存在的运输方式
-    let existData = await this.http.getExist(exist)
+    if (this.title == '新申请' || this.title == '维修品') {
+      delete exist.Transport_Mode
+      // 查询已经存在的运输方式
+      let existData = await this.http.getExist(exist)
 
-    if (existData.status) {
-      this.message.create('error', '输入的资料有误，请检查')
-    } else {
-      if (existData.length > 0) {
-        this.handleTransport_Mode()
+      if (existData.status) {
+        this.message.create('error', '输入的资料有误，请检查')
+      } else {
+        if (existData.length > 0) {
+          this.handleTransport_Mode()
 
-        if (this.newData.Transport_Mode.length < 1) {
-          this.message.create('warning', '請至少選擇一種運輸方式')
-        } else {
-          let modalStatus = false
+          if (this.newData.Transport_Mode.length < 1) {
+            this.message.create('warning', '請至少選擇一種運輸方式')
+          } else {
+            let modalStatus = false
 
-          this.transportWay.forEach(t => {
-            t.Task_SN = ''
+            this.transportWay.forEach(t => {
+              t.Task_SN = ''
 
-            existData.forEach(e => {
+              existData.forEach(e => {
 
-              // 本次选择的运输方式如果已经存在，打开提醒的模态框
-              if (t.checked && t.label == e.Description_ZH) {
-                modalStatus = true
-              }
+                // 本次选择的运输方式如果已经存在，打开提醒的模态框
+                if (t.checked && t.label == e.Description_ZH) {
+                  modalStatus = true
+                }
 
-              // 将重复资料的Task_SN加入transportWay,用于模态框的显示
-              if (t.label == e.Description_ZH) {
-                t.Task_SN = e.Task_SN
-              }
+                // 将重复资料的Task_SN加入transportWay,用于模态框的显示
+                if (t.label == e.Description_ZH) {
+                  t.Task_SN = e.Task_SN
+                }
+
+              });
 
             });
 
-          });
+            this.isVisible = modalStatus
+            // 未发现重复申请的运输方式，直接进入资料编辑
+            if (!modalStatus) await this.handleOk()
+          }
 
-          this.isVisible = modalStatus
-          // 未发现重复申请的运输方式，直接进入资料编辑
-          if (!modalStatus) await this.handleOk()
+        } else {
+          // 继续申请
+          await this.handleOk()
         }
+      }
+    } else {
+      exist.Transport_Mode = JSON.stringify(exist.Transport_Mode)
+      // 获取延期和运输的table资料
+      let data = await this.http.getPostponeTransport(exist)
 
-      } else {
-        // 继续申请
-        await this.handleOk()
+      if (data.status) {
+        this.message.create('error', '查询资料失败')
+        return
+      }
+
+      if (data.length == 0) this.message.create('warning', '查询资料为空')
+
+      if (data.length > 0) {
+        this.message.create('success', '资料查询成功')
+        this.sendData.next(data)
       }
 
     }

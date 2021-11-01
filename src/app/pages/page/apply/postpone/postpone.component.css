@@ -10,3 +10,8 @@
   padding: .5% 1%;
   overflow: auto;
 }
+
+.middle {
+  margin: 20px 0;
+  border-bottom: 1px dashed rgba(102, 111, 112, 100);
+}
