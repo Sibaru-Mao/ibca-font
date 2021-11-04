@@ -13,11 +13,15 @@ export class DataCenterComponent implements OnInit {
     { name: '跌落報告' },
     { name: '基礎設定' },
     { name: '特殊架構' },
-    { name: '中文品名' }
+    { name: '中文品名' },
+    { name: '一致性申明' },
+    { name: '鑑定書上傳' },
   ]
 
-  link = ['batteryInfo', 'productPacking', 'dropReport',
-    'basicSetting', 'specialArchitecture', 'chineseName']
+  link = [
+    'batteryInfo', 'productPacking', 'dropReport', 'basicSetting',
+    'specialArchitecture', 'chineseName', 'declare', 'upload'
+  ]
 
   searchInfo: any = {
     plantCode: '',
@@ -26,7 +30,7 @@ export class DataCenterComponent implements OnInit {
 
   plant: any = JSON.parse(sessionStorage.getItem('plant'))
   batteryPN: any = [{ name: '11', code: 1 }]
-  index: number
+  index: number = 0
 
   constructor(private router: Router) { }
 
@@ -43,4 +47,5 @@ export class DataCenterComponent implements OnInit {
   getIndex(data) {
     this.index = data
   }
+
 }

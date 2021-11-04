@@ -2,6 +2,7 @@ import { ModalService } from './../../../services/server/modal.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { DataService } from './../../../services/data.service';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { type } from 'os';
 
 @Component({
   selector: 'app-application-repair',
@@ -12,6 +13,7 @@ export class ApplicationRepairComponent implements OnInit {
   // @Input() type: number
   @Input() title: string
   @Output() sendData = new EventEmitter<any>()
+  @Output() generateTask = new EventEmitter<any>()
 
 
   // 新申请或者维修品需填寫信息参数
@@ -56,6 +58,14 @@ export class ApplicationRepairComponent implements OnInit {
     // })
     this.plant.splice(0, 1)
     this.year.splice(0, 1)
+
+    if (this.title == '运输') {
+      this.transportWay.forEach((e, i) => {
+        e.disabled = true
+        if (i == 0) e.checked = true
+      });
+    }
+
   }
 
   // 新申请和维修品 或 延期和运输 中点击确认触发的方法
@@ -112,8 +122,12 @@ export class ApplicationRepairComponent implements OnInit {
         }
       }
     } else {
+
+
+      // 处理延期和运输的逻辑
+
       exist.Transport_Mode = JSON.stringify(exist.Transport_Mode)
-      // 获取延期和运输的table资料
+      // 获取延期或运输的table资料
       let data = await this.http.getPostponeTransport(exist)
 
       if (data.status) {
@@ -141,6 +155,7 @@ export class ApplicationRepairComponent implements OnInit {
     if (res.code == 200) {
       this.message.create('success', res.msg)
     } else this.message.create('warning', res.msg)
+    this.generateTask.next(res.Task_SN)
   }
 
   // 处理Transport_Mode和Shipment_Books

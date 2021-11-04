@@ -114,6 +114,13 @@
   width: 80px;
 }
 
+.airToSea {
+  background-color: #51B0B0;
+  /* width: 60px; */
+  font-size: 12px;
+  /* height: 20px; */
+}
+
 .cancel {
   background-color: rgba(32, 48, 51, 100);
   color: rgba(78, 187, 187, 100);

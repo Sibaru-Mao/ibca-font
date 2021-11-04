@@ -1,5 +1,7 @@
 <div class="base">
   <div class="content">
-    <app-application-repair title="运输"></app-application-repair>
+    <app-application-repair (sendData)="sendData($event)" title="运输"></app-application-repair>
+    <div class="middle"></div>
+    <app-list #list type="transport"></app-list>
   </div>
 </div>

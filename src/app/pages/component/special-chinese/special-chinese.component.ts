@@ -19,7 +19,7 @@ export class SpecialChineseComponent implements OnInit {
   ]
   plant: any = JSON.parse(sessionStorage.getItem('plant'))
   man: any = JSON.parse(sessionStorage.getItem('man'))
-  searchInfo: any = { PlantCode: this.man.Plant, Material_No: '', Project_Code: '' }
+  searchInfo = { PlantCode: this.man.Plant, Material_No: '', Project_Code: '' }
   isVisible: boolean
   modalInputTitle: any
   modalInput: any = []
@@ -58,8 +58,12 @@ export class SpecialChineseComponent implements OnInit {
 
   // 搜索方法
   async search() {
-    let data = { PlantCode: '', Material_No: '', Project_Code: '' }
-    data.PlantCode = this.searchInfo.PlantCode
+    let data = {
+      PlantCode: this.searchInfo.PlantCode,
+      Material_No: this.searchInfo.Material_No,
+      Project_Code: this.searchInfo.Project_Code
+    }
+
     if (this.searchInfo.Material_No.length < 1)
       data.Material_No = null
     if (this.searchInfo.Project_Code.length < 1)

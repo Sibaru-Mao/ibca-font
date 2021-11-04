@@ -1,3 +1,5 @@
+import { InformationLoadModule } from './pages/page/task-management/information/information-load.module';
+import { DataCenterLaodModule } from './pages/page/data-center/data-center-laod.module';
 import { SpecialChineseComponent } from './pages/component/special-chinese/special-chinese.component';
 import { ModalService } from './services/server/modal.service';
 import { ConfigServiceService } from './services/configService/config-service.service';
@@ -50,6 +52,9 @@ import { PostponeComponent } from './pages/page/apply/postpone/postpone.componen
 import { TransportComponent } from './pages/page/apply/transport/transport.component';
 import { ApplicationRepairComponent } from './pages/component/application-repair/application-repair.component';
 import { ListComponent } from './pages/component/list/list.component';
+import { DeclareComponent } from './pages/page/data-center/declare/declare.component';
+import { UploadComponent } from './pages/page/data-center/upload/upload.component';
+
 
 
 registerLocaleData(zh);
@@ -105,7 +110,9 @@ export function configureProvider(loader: ConfigServiceService): () => Promise<v
     PostponeComponent,
     TransportComponent,
     ApplicationRepairComponent,
-    ListComponent
+    ListComponent,
+    DeclareComponent,
+    UploadComponent
   ],
   imports: [
     BrowserModule,
@@ -134,7 +141,9 @@ export function configureProvider(loader: ConfigServiceService): () => Promise<v
         useFactory: HttpLoaderFactory,
         deps: [HttpClient]
       }
-    })
+    }),
+    DataCenterLaodModule,
+    InformationLoadModule
   ],
   bootstrap: [AppComponent],
   providers: [
