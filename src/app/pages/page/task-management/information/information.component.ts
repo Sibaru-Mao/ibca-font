@@ -310,8 +310,14 @@ export class InformationComponent implements OnInit {
     }
   }
 
+  // 触发生产任务的方法（触发须填写信息的保存）
+  startTask() {
+    this.saveNewData.next()
+  }
+
   // 申请中的新申请和维修品，点击“生成任务”按钮触发的方法（生成任务）
-  async generateTask() {
+  async generateTask(Task_SN) {
+    // this.saveNewData.next()
     let newData = {
       TaskSn: '',
       Site: '',
@@ -342,7 +348,7 @@ export class InformationComponent implements OnInit {
       Entrust_Explain: ''
     }
 
-    newData.TaskSn = this.info.Task_SN
+    newData.TaskSn = Task_SN
     newData.Site = this.info.Site
     newData.Plant = this.info.Plant
     newData.Urgent = 0
@@ -382,7 +388,6 @@ export class InformationComponent implements OnInit {
     if (!status.protocol41) this.message.create('error', '详细信息保存失败')
     else this.message.create('success', '详细资料保存成功')
 
-    this.saveNewData.next()
 
     // this.modalService.emitInfo({ type: 'saveNewData' })
   }

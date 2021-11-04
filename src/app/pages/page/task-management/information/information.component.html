@@ -362,7 +362,7 @@
       <div style="text-align: center;margin-top: 20px;">
         <button *ngIf="condition.num==2||pageType==1" (click)="save()" nz-button style="width: 80px;"
           nzType="primary">保存</button>
-        <button *ngIf="pageType==2||pageType==3" (click)="generateTask()" nz-button nzType="primary">生成任務</button>
+        <button *ngIf="pageType==2||pageType==3" (click)="startTask()" nz-button nzType="primary">生成任務</button>
         <button (click)="showModal()" *ngIf="condition.num==1" nz-button style="width: 80px;" nzDanger
           nzType="primary">刪除</button>
       </div>

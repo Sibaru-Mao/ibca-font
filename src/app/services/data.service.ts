@@ -106,6 +106,7 @@ export class DataService {
     return await this.http.post('newApply/applicationinfo', data)
   }
 
+  // 获取新申请或运输的table资料
   async getNewApplyBaseData(data) {
     return await this.http.get(`newApply/BaseData?Material_No=${data.Material_No}&ModelFamily=${data.Project_Code}&Plant=${data.Plant}`)
   }
@@ -122,6 +123,16 @@ export class DataService {
   // 获取 申请 模块里的延期和运输的table资料
   async getPostponeTransport(data) {
     return await this.http.post('common/SearchDefer', data)
+  }
+
+  // 申请模块里的延期申请
+  async applyForDefer(data) {
+    return await this.http.post('Defer/ApplyForDefer', data)
+  }
+
+  // 空转海
+  async airToSea(data) {
+    return await this.http.post('transport/airToSea', data)
   }
 
 }
