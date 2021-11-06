@@ -63,14 +63,21 @@ export class DataService {
     return { ChineseProduct, special, deleteInfo }
   }
 
+  // 查询特殊架构的信息
   async getSpecialData(data) {
     return await this.http.get(`manual_SpecialSKUs/getskubycondition?Plant=${data.PlantCode}
     &Project_Code=${data.Project_Code}&Material_No=${data.Material_No}`)
   }
 
+  // 查询中文品名的信息
   async getChineseProduct(data) {
     return await this.http.get(`manual_ProductNames/getproductbycondition?Plant=${data.PlantCode}
     &ProductName_ZH=${data.Project_Code}&ProductName_EN=${data.Material_No}`)
+  }
+
+  // 查询产品包装信息PlantCode
+  async productPacking(data) {
+    return await this.http.get(`manual_Package/searchFilter?Plant=${data.PlantCode}&Project_Code=${data.Project_Code}&Material_No=${data.Material_No}`)
   }
 
   async getProductLine(data) {
@@ -134,5 +141,6 @@ export class DataService {
   async airToSea(data) {
     return await this.http.post('transport/airToSea', data)
   }
+
 
 }
