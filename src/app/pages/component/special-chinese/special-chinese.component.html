@@ -6,13 +6,13 @@
     </select>
   </div>
   <div>
-    <span *ngIf="!id">特殊架構：</span>
-    <span *ngIf="id">成品中文品名：</span>
+    <!-- <span *ngIf="id=='special'">特殊架構：</span> -->
+    <span>{{searchTitle[0]}}</span>
     <input [(ngModel)]="searchInfo.Material_No" class="searchInput" type="text">
   </div>
   <div>
-    <span *ngIf="!id">產品系列：</span>
-    <span *ngIf="id">Product Name：</span>
+    <!-- <span *ngIf="id=='special'">產品系列：</span> -->
+    <span>{{searchTitle[1]}}</span>
     <input [(ngModel)]="searchInfo.Project_Code" class="searchInput" type="text">
   </div>
   <button (click)="search()" class="searchButton" nzSize="small" nz-button nzType="primary">搜索</button>
@@ -28,20 +28,32 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let item of headerTable.data;let i=index">
-        <td>{{i+1}}</td>
-        <td>{{item.Plant}}</td>
-        <td *ngIf="!id">{{item.Material_No}}</td>
-        <td *ngIf="id">{{item.ProductName_ZH}}</td>
-        <td *ngIf="!id">{{item.Project_Code}}</td>
-        <td *ngIf="id">{{item.ProductName_EN}}</td>
-        <td>{{item.User_ID }}</td>
-        <td>{{item.Maintain_Time | date:'yyyy/M/dd' }}</td>
-        <td>
-          <img nz-popconfirm nzPopconfirmTitle="確定刪除嗎?" nzPopconfirmPlacement="bottom" (nzOnConfirm)="delete(item.id)"
-            class="delete" src="assets/imgs/delete.png" alt="图片跑路了">
-        </td>
-      </tr>
+
+      <ng-container *ngIf="id!='product'">
+        <tr *ngFor="let item of headerTable.data;let i=index">
+          <td>{{i+1}}</td>
+          <td>{{item.Plant}}</td>
+          <td *ngIf="id=='special'">{{item.Material_No}}</td>
+          <td *ngIf="id=='chinese'">{{item.ProductName_ZH}}</td>
+          <td *ngIf="id=='special'">{{item.Project_Code}}</td>
+          <td *ngIf="id=='chinese'">{{item.ProductName_EN}}</td>
+          <td>{{item.User_ID }}</td>
+          <td>{{item.Maintain_Time | date:'yyyy/M/dd' }}</td>
+          <td>
+            <img nz-popconfirm nzPopconfirmTitle="確定刪除嗎?" nzPopconfirmPlacement="bottom" (nzOnConfirm)="delete(item.id)"
+              class="delete" src="assets/imgs/delete.png" alt="图片跑路了">
+          </td>
+        </tr>
+      </ng-container>
+
+      <ng-container *ngIf="id=='product'">
+        <tr>
+          <td></td>
+        </tr>
+      </ng-container>
+
+
+
     </tbody>
   </nz-table>
 </div>

@@ -290,7 +290,7 @@ export class InformationComponent implements OnInit {
       delete this.info.id
       delete this.info.Update_Time
 
-      this.info.Complete_Time = Number(this.info.Complete_Time)
+      this.info.Complete_Time = JSON.stringify(this.info.Complete_Time)
       this.info.Sample_Dispose = Number(this.info.Sample_Dispose)
       this.info.Sample_Photo = Number(this.info.Sample_Photo)
       this.info.Exhaust_Device = Number(this.info.Exhaust_Device)
