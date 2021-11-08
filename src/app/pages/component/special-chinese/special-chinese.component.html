@@ -47,8 +47,20 @@
       </ng-container>
 
       <ng-container *ngIf="id=='product'">
-        <tr>
-          <td></td>
+        <tr *ngFor="let item of showTableData">
+          <td *ngFor="let key of tableKey;let i=index">
+            <ng-container *ngIf="i!=5">
+              {{item[key]}}
+            </ng-container>
+            <ng-container *ngIf="i==5">
+              <span class="examine">{{key}}</span>
+            </ng-container>
+          </td>
+          <td>
+            <img class="icon" src="assets/imgs/edit.png" alt="">&nbsp;&nbsp;
+            <img class="icon" src="assets/imgs/download.png" alt="">&nbsp;&nbsp;
+            <img class="icon" src="assets/imgs/delete.png" alt="">&nbsp;&nbsp;
+          </td>
         </tr>
       </ng-container>
 

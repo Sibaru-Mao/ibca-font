@@ -31,14 +31,9 @@ export class SpecialChineseComponent implements OnInit {
   async ngOnInit() {
     await this.initData()
     this.isVisible = false
-    // this.searchInfo.PlantCode = this.man.Plant
     this.tableScrollHeight = 0.69 * Number(sessionStorage.getItem('height')) + 'px'
     this.plant.splice(0, 1)
   }
-
-  // async ngOnChanges(changes: SimpleChanges) {
-  //   await this.initData()
-  // }
 
   async initData() {
     switch (this.id) {
@@ -58,12 +53,12 @@ export class SpecialChineseComponent implements OnInit {
         this.tableHead = [
           { name: '廠別' }, { name: '产品系列' }, { name: '特殊架構' },
           { name: '電池放置方式' }, { name: '包裝內電池數量(顆)' }, { name: '產品照片&包裝照片' },
-          { name: '上傳時間' }, { name: '上傳人' }, { name: '操作' }
+          { name: '上傳時間' }, { name: '上傳人' }, { name: '操作', width: '100px' }
         ]
         this.tableKey = [
-          'Plant', 'Plant', 'Special_SKU',
-          'Plant', 'Plant', 'Plant',
-          'Plant', 'Plant', 'Plant',
+          'Plant', 'Project_Code', 'Special_SKU',
+          'Placement_Mode', 'Packages_Qty', '查看',
+          'Maintain_Time ', 'User_ID',
         ]
 
       default:
@@ -79,7 +74,6 @@ export class SpecialChineseComponent implements OnInit {
       Material_No: this.searchInfo.Material_No,
       Project_Code: this.searchInfo.Project_Code
     }
-
     if (this.searchInfo.Material_No.length < 1)
       data.Material_No = null
     if (this.searchInfo.Project_Code.length < 1)
@@ -101,12 +95,6 @@ export class SpecialChineseComponent implements OnInit {
       default:
         break;
     }
-
-    // if (this.id == 'chinese')
-    //   this.showTableData = await this.http.getChineseProduct(data)
-    // else
-    //   this.showTableData = await this.http.getSpecialData(data)
-
     if (this.showTableData.hasOwnProperty('error'))
       this.message.create('error', '資料查詢失敗')
     else if

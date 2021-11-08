@@ -153,3 +153,12 @@
 :host ::ng-deep .ant-modal-close-x {
   display: none;
 }
+
+.icon {
+  width: 20px;
+}
+
+.examine {
+  color: #4EBBBB;
+  cursor: pointer;
+}
