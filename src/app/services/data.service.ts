@@ -143,4 +143,9 @@ export class DataService {
   }
 
 
+
+  /* 鉴定书上传 */
+  async searchFilter(data) {
+    return await this.http.post('testimonial/searchFilter', data)
+  }
 }

@@ -1,1 +1,174 @@
-<p>upload works!</p>
+<div class="content">
+  <div class="searchContent">
+    <div>
+      <span>廠別：</span>
+      <select [(ngModel)]="searchInfo.Plant" class="searchSelect">
+        <option *ngFor="let item of plant" value={{item.PlantCode}}>{{item.Plant}}</option>
+      </select>
+    </div>
+    <div *ngFor="let item of searchTitle">
+      <!-- <span *ngIf="id=='special'">特殊架構：</span> -->
+      <span>{{item.name}}</span>
+      <input [(ngModel)]="item.data" class="searchInput" type="text">
+    </div>
+  </div>
+  <div class="searchContent">
+    <div>
+      <span>年份：</span>
+      <select [(ngModel)]="searchInfo.Demand_Year" class="searchSelect">
+        <option *ngFor="let item of year" value={{item.Demand_Year}}>{{item.Demand_Year}}</option>
+      </select>
+    </div>
+    <div *ngFor="let item of searchTitleOne">
+      <!-- <span *ngIf="id=='special'">特殊架構：</span> -->
+      <span>{{item.name}}</span>
+      <input [(ngModel)]="item.data" class="searchInput" type="text">
+    </div>
+    <button (click)="search()" class="searchButton" nzSize="small" nz-button nzType="primary">搜索</button>
+    <div class="add" (click)="showModal()"><img src="assets/imgs/add.png" alt=""></div>
+  </div>
+
+  <!-- 表格 -->
+  <div class="tableContent">
+    <nz-table nzBordered="false" #headerTable [nzData]="showTableData" [nzFrontPagination]="false"
+      [nzShowPagination]="false" [nzScroll]="{ y: tableScrollHeight }">
+      <thead>
+        <tr>
+          <th *ngFor="let item of tableHead" nzWidth={{item.width}}>{{item.name}}</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <ng-container *ngIf="id!='product'">
+          <tr *ngFor="let item of headerTable.data;let i=index">
+            <td>{{i+1}}</td>
+            <td>{{item.Plant}}</td>
+            <td>{{item.Task_SN}}</td>
+            <td>{{item.Progress }}</td>
+            <td>{{item.Project_Code}}</td>
+            <td>{{item.Special_Flag}}</td>
+            <td>{{item.Battery_PN }}</td>
+            <td>{{item.Plant}}</td>
+            <td>{{item.Demand_Year}}</td>
+            <td>{{item.Plant }}</td>
+            <td>{{item.Transport_Mode}}</td>
+            <td>{{item.Plant}}</td>
+            <td>{{item.Plant }}</td>
+            <td>
+              <img nz-popconfirm nzPopconfirmTitle="確定刪除嗎?" nzPopconfirmPlacement="bottom"
+                (nzOnConfirm)="delete(item.id)" class="delete" src="assets/imgs/delete.png" alt="图片跑路了">
+            </td>
+          </tr>
+        </ng-container>
+
+        <!-- <ng-container *ngIf="id=='product'">
+          <tr *ngFor="let item of showTableData">
+            <td *ngFor="let key of tableKey;let i=index">
+              <ng-container *ngIf="i!=5">
+                {{item[key]}}
+              </ng-container>
+              <ng-container *ngIf="i==5">
+                <span class="examine">{{key}}</span>
+              </ng-container>
+            </td>
+            <td>
+              <img class="icon" src="assets/imgs/edit.png" alt="">&nbsp;&nbsp;
+              <img class="icon" src="assets/imgs/download.png" alt="">&nbsp;&nbsp;
+              <img class="icon" src="assets/imgs/delete.png" alt="">&nbsp;&nbsp;
+            </td>
+          </tr>
+        </ng-container> -->
+
+
+
+      </tbody>
+    </nz-table>
+  </div>
+
+  <!-- 新增模态框 -->
+  <nz-modal [(nzVisible)]="isVisible" nzClosable="false" [nzBodyStyle]="bodyStyle" [nzFooter]="null" nzWidth='26%'>
+    <ng-container *nzModalContent>
+      <div class="modalTitle">
+        <span>新增</span>
+        <img (click)="close()" src="assets/imgs/close.png" alt="">
+      </div>
+      <div class="modalBody">
+        <div>
+          <button (click)="upData()" nz-button class="save" nzType="primary">系統任務</button><img
+            src="../../../../../assets/imgs/right.png" alt="">
+        </div>
+        <div>
+          <button (click)="editData()" nz-button class="save" nzType="primary">非系統任務</button><img
+            src="../../../../../assets/imgs/right.png" alt="">
+        </div>
+      </div>
+    </ng-container>
+  </nz-modal>
+
+  <nz-modal [(nzVisible)]="isUpdate" nzClosable="false" [nzBodyStyle]="bodyStyle" [nzFooter]="null" nzWidth='26%'>
+    <ng-container *nzModalContent>
+      <div class="modalTitle">
+        <span>新增</span>
+        <img (click)="close()" src="assets/imgs/close.png" alt="">
+      </div>
+      <div class="modalBox">
+        <label for="up1" class="box"><input type="file" id="up1"></label>
+      </div>
+    </ng-container>
+  </nz-modal>
+
+  <nz-modal [(nzVisible)]="isEdit" nzClosable="false" [nzBodyStyle]="editStyle" [nzFooter]="null" nzWidth='100%'>
+    <div (click)="close()" class="back"><img src="../../../../../assets/imgs/rollback.png" alt="">
+      <p>新增</p>
+    </div>
+    <table class="tableModal">
+      <tbody>
+        <tr>
+          <td>
+            <p>廠別：</p>
+            <select [(ngModel)]="searchInfo.Plant" class="searchModal">
+              <option *ngFor="let item of plant" value={{item.PlantCode}}>{{item.Plant}}</option>
+            </select>
+          </td>
+          <td>
+            <p>產品系列：</p><input type="text" class="searchInput backgroud-1">
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p>特殊架構：</p><input type="text" class="searchInput backgroud-1">
+          </td>
+          <td>
+            <p>電池料號：</p><input type="text" class="searchInput backgroud-1">
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p>電池型號：</p><input type="text" class="searchInput backgroud-1">
+          </td>
+          <td>
+            <p>需求年份：</p><input type="text" class="searchInput backgroud-1">
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p>出貨賬冊：</p><input type="text" class="searchInput backgroud-1">
+          </td>
+          <td>
+            <p>運輸方式：</p>
+            <nz-checkbox-group [(ngModel)]="transportWay">
+            </nz-checkbox-group>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p>上傳鑑定書：</p><label for="up" class="file">點擊上傳<input type="file" id="up"></label>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="text-align: center;">
+      <button (click)="saveData()" nz-button class="button" nzType="primary">确定</button>
+    </div>
+  </nz-modal>
+</div>
