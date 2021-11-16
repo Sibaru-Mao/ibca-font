@@ -142,6 +142,47 @@ export class DataService {
     return await this.http.post('transport/airToSea', data)
   }
 
+  //获取跌落报告的资料
+  async getDropReport(data) {
+    return await this.http.get(`manual_FalloffReport/searchFilter?Plant=${data.PlantCode}&Project_Code=${data.Material_No}&Battery_PN=${data.Project_Code}`)
+  }
+
+  async getDeclare(data) {
+    return await this.http.get(`manual_ConsistentReport/searchFilter?Plant=${data.PlantCode}&Use_Year=${data.Material_No}`)
+  }
+
+  async uploadPdf(data) {
+    return await this.http.post(
+      `pdfFileUpload?Plant=${data.Plant}&Project_Code=${data.Project_Code}&Battery_PN=${data.Battery_PN}&Use_Year=${data.Use_Year}`,
+      data.pdf)
+  }
+
+  //Plant \Project_Code \Special_SKU \PhotoType \place
+  async uploadPhoto(data) {
+    return await this.http.post(
+      `files/${data.Plant}_${data.Project_Code}_${data.Special_SKU}_${data.PhotoType}_${data.place}`,
+      data)
+  }
+
+  async dropNewAdd(data) {
+    return await this.http.post(`manual_FalloffReport/NewAdd`, data)
+  }
+
+  async declareNewAdd(data) {
+    return await this.http.post(`manual_ConsistentReport/NewAdd`, data)
+  }
+
+  async getDropPdf(data) {
+    return await this.http.post(`manual_FalloffReport/checkPhoto`, data)
+  }
+
+  async downDeclarePdf(data) {
+    return await this.http.post(`manual_ConsistentReport/checkPhoto`, data)
+  }
+
+  async deleteDeclarPdf(data) {
+    return await this.http.get(`manual_ConsistentReport/delete?Plant=${data.Plant}&Use_Year=${data.Use_Year}`)
+  }
 
 
   /* 鉴定书上传 */

@@ -35,7 +35,7 @@ export class HttpService {
     var res: any;
     this.httpOptions = {
       headers: new HttpHeaders({
-        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/json',
       })
     };
 
@@ -63,15 +63,15 @@ export class HttpService {
           const msg = this.getErrorMsg(ex);
           const code = this.getErrorCode(ex);
           this.message.create('error', msg);
-          return {
-            status: ex.status,
-            result: {
-              code: (code == '4000') ? code : 0,
-              status: ex.status,
-              msg: msg,
-            }
-          };
-
+          return ex
+          // return {
+          //   status: ex.status,
+          //   result: {
+          //     code: (code == '4000') ? code : 0,
+          //     status: ex.status,
+          //     msg: msg,
+          //   }
+          // };
         });
     }
     if (res.status == '403') {
