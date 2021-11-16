@@ -184,4 +184,9 @@ export class DataService {
     return await this.http.get(`manual_ConsistentReport/delete?Plant=${data.Plant}&Use_Year=${data.Use_Year}`)
   }
 
+
+  /* 鉴定书上传 */
+  async searchFilter(data) {
+    return await this.http.post('testimonial/searchFilter', data)
+  }
 }
