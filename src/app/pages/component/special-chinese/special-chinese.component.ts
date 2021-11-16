@@ -10,6 +10,16 @@ interface modalData {
   pdf: any
 }
 
+interface photoData {
+  Plant: string,
+  Project_Code: string,
+  Special_SKU: string,
+  Placement_Mode: number,
+  Packages_Qty: number,
+  User_ID: string,
+  Maintain_Time: any
+}
+
 @Component({
   selector: 'app-special-chinese',
   templateUrl: './special-chinese.component.html',
@@ -43,11 +53,37 @@ export class SpecialChineseComponent implements OnInit {
   modalInput: any = []
   tableKey: any
   photoModal: boolean = false
+  productModalType: string
+
+  photoModalTitle: string = '查看'
+
   dRmodalInput: modalData = {
     plant: this.man.Plant,
     input1: '',
     input2: '',
     pdf: ''
+  }
+
+  batteryPlacement: any = [
+    // { name: '与设备包装在一起', value: 0, checked: true },
+    { name: '与设备包装在一起', value: 0 },
+    { name: '安装在设备内', value: 1 },
+  ]
+  url: string = ''
+
+  photoData: photoData = {
+    Plant: JSON.parse(sessionStorage.getItem('man')).Plant,
+    Project_Code: '',
+    Special_SKU: '',
+    Placement_Mode: 0,
+    Packages_Qty: 0,
+    User_ID: JSON.parse(sessionStorage.getItem('man')).User_ID,
+    Maintain_Time: new Date()
+  }
+
+  allPhoto = {
+    productPhoto: [{ name: '正面', url: '' }, { name: '反面', url: '' }, { name: '局部', url: '' }],
+    packagePhoto: [{ name: '正面', url: '' }, { name: '反面', url: '' }, { name: '局部', url: '' }]
   }
 
   constructor(private http: DataService, private message: NzMessageService) { }
@@ -163,8 +199,15 @@ export class SpecialChineseComponent implements OnInit {
   showModal() {
     if (['special', 'chinese'].includes(this.id))
       this.specialChineseModal = true
+
     if (['drop', 'declare'].includes(this.id))
       this.dropUploadModal = true
+
+    if (this.id == 'product') {
+      this.photoModal = true
+      this.productModalType = 'newAdd'
+      this.photoModalTitle = '新增'
+    }
   }
 
   // 关闭模态框
@@ -216,7 +259,7 @@ export class SpecialChineseComponent implements OnInit {
   }
 
   async delete(data) {
-    let status
+    let status: any
     if (this.id == 'chinese')
       status = await this.http.deleteChineseName(data)
     else
@@ -231,8 +274,13 @@ export class SpecialChineseComponent implements OnInit {
     }
   }
 
-  showPhoto() {
+  showPhoto(type) {
     this.photoModal = true
+    this.productModalType = type
+    if (type == 'see')
+      this.photoModalTitle = '查看'
+    if (type == 'edit')
+      this.photoModalTitle = '編輯'
   }
 
   async drUploadNewAdd() {
@@ -408,5 +456,21 @@ export class SpecialChineseComponent implements OnInit {
     this.dropUploadModal = false
   }
 
+  closePhotoModal() {
+    this.photoModal = false
+  }
+
+  getPhoto(event, type, index) {
+    const file = event.target.files[0]
+    if (file) {
+      this.allPhoto[type][index].file = file
+      this.allPhoto[type][index].url = window.URL.createObjectURL(file)
+    }
+    else {
+      this.allPhoto[type][index].file = ''
+      this.allPhoto[type][index].url = ''
+    }
+    console.log(this.allPhoto);
+  }
 
 }

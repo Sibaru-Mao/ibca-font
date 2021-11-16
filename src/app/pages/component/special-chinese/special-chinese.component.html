@@ -14,7 +14,7 @@
     <input [(ngModel)]="searchInfo.Project_Code" class="searchInput" type="text">
   </div>
   <button (click)="search()" class="searchButton" nzSize="small" nz-button nzType="primary">搜索</button>
-  <div class="add" (click)="showModal()"><img src="assets/imgs/add.png" alt=""></div>
+  <div class="add" (click)="showModal()"><img src="assets/imgs/add.png" alt="图片跑了"></div>
 </div>
 
 <!-- table容器 -->
@@ -51,7 +51,7 @@
 
             <ng-container *ngIf="id=='product'">
               <span *ngIf="!([5,6].includes(i))">{{item[key]}}</span>
-              <span *ngIf="i==5" (click)="showPhoto()" class="examine">{{key}}</span>
+              <span *ngIf="i==5" (click)="showPhoto('see')" class="examine">{{key}}</span>
               <span *ngIf="i==6">{{item.Maintain_Time|date: 'yyyy/M/dd HH:mm:ss'}}</span>
             </ng-container>
 
@@ -66,14 +66,14 @@
             <div style="position: absolute;left: 50%;top: 50%;transform: translate(-50%,-50%);width: 100%;">
 
               <ng-container *ngIf="id=='product'">
-                <img class="icon" src="assets/imgs/edit.png" alt="">&nbsp;
-                <img class="icon" src="assets/imgs/download.png" alt="">&nbsp;
-                <img class="icon" src="assets/imgs/delete.png" alt="">&nbsp;
+                <img (click)="showPhoto('edit')" class="icon" src="assets/imgs/edit.png" alt="图片跑了">&nbsp;
+                <img class="icon" src="assets/imgs/download.png" alt="图片跑了">&nbsp;
+                <img class="icon" src="assets/imgs/delete.png" alt="图片跑了">&nbsp;
               </ng-container>
 
               <ng-container *ngIf="id=='declare'">
-                <img (click)="declarePdf(item,'download')" class="icon" src="assets/imgs/download.png" alt="">&nbsp;
-                <img (click)="declarePdf(item,'delete')" class="icon" src="assets/imgs/delete.png" alt="">&nbsp;
+                <img (click)="declarePdf(item,'download')" class="icon" src="assets/imgs/download.png" alt="图片跑了">&nbsp;
+                <img (click)="declarePdf(item,'delete')" class="icon" src="assets/imgs/delete.png" alt="图片跑了">&nbsp;
               </ng-container>
 
             </div>
@@ -106,7 +106,7 @@
   <ng-container *nzModalContent>
     <div class="modalTitle">
       <span>新增</span>
-      <img (click)="close()" src="assets/imgs/close.png" alt="">
+      <img (click)="close()" src="assets/imgs/close.png" alt="图片跑了">
     </div>
     <div class="modalBody">
       <div>
@@ -129,26 +129,107 @@
 </nz-modal>
 
 
-<!-- 查看照片 productPacking-->
+<!--  新增 编辑 查看 照片 productPacking-->
 <div class="baseModal" *ngIf="photoModal">
   <div class="photoModalContent">
     <header
-      style="color:#4EBBBB;text-align: center;height: 30px;line-height:1.5em;background-color: rgba(48, 73, 77, 100);font-size: 18px;">
-      查看
+      style="color:#4EBBBB;text-align: center;height: 40px;line-height:40px;background-color: rgba(48, 73, 77, 100);font-size: 18px;">
+      {{photoModalTitle}}
       <img (click)="photoModal=false"
-        style="position: absolute;right: 20px;margin-top: 5px; width: 20px;cursor: pointer;" src="assets/imgs/close.png"
+        style="position: absolute;right: 10px;margin-top: 5px; width: 20px;cursor: pointer;" src="assets/imgs/close.png"
         alt="图标跑了">
     </header>
 
     <div class="modalContent">
 
-      <ng-container>
+      <!-- newAdd edit -->
+      <ng-container *ngIf="['newAdd','edit'].includes(productModalType)">
+        <table class="newAddEditTable" border="1" width="100%">
+          <tr>
+            <td>廠別：
+              <select [(ngModel)]="photoData.Plant" class="searchSelect">
+                <option *ngFor="let item of plant" value={{item.PlantCode}}>{{item.Plant}}</option>
+              </select>
+            </td>
+            <td>产品系列：<input [(ngModel)]="photoData.Project_Code" class="searchInput photoModalInput" type="text"></td>
+            <td>特殊架構：<input [(ngModel)]="photoData.Special_SKU" class="searchInput photoModalInput" type="text"></td>
+          </tr>
+          <tr>
+            <td colspan="3">
+              電池放置方式：
+              <nz-radio-group style="margin-left: 20px;">
+                <label *ngFor="let item of batteryPlacement" nz-radio nzValue={{item.value}}
+                  [ngModel]="item.value==photoData.Placement_Mode">
+                  {{item.name}}
+                </label>
+              </nz-radio-group>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="3">包装内电池数量(颗)：
+              <input [(ngModel)]="photoData.Packages_Qty" class="searchInput photoModalInput"
+                style="width: 40px;margin-left: 30px;" type="text">
+            </td>
+          </tr>
+          <tr style="height: 60%;">
+            <td colspan="3">
 
+              <div class="photoBack" style="display: inline-block;">
+                <div style="display: flex;height: 100%;width:100%;">
+                  <div class="topContent photoType">
+                    <span>产品照片:</span>
+                  </div>
+
+                  <div *ngFor="let item of allPhoto.productPhoto;let i=index" class="topContent">
+                    <header>
+                      <span>{{item.name}}</span>
+                    </header>
+                    <div class="photoDiv" style="background-image: url({{item.url}});">
+                    </div>
+                    <footer>
+                      <input type="file" (change)="getPhoto($event,'productPhoto',i)" class="modalSelect pdfUpload"
+                        style="width: 20px;">
+                      <span class="upload">上傳</span>
+                    </footer>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="photoBack" style="float: right;">
+                <div style="display: flex;height: 100%;width:100%;">
+                  <div class="topContent photoType">
+                    <span>产品照片:</span>
+                  </div>
+
+                  <div *ngFor="let item of allPhoto.packagePhoto;let i=index" class="topContent">
+                    <header>
+                      <span>{{item.name}}</span>
+                    </header>
+                    <div class="photoDiv" style="background-image: url({{item.url}});">
+                    </div>
+                    <footer>
+                      <input type="file" (change)="getPhoto($event,'packagePhoto',i)" class="modalSelect pdfUpload"
+                        style="width: 20px;">
+                      <span class="upload">上傳</span>
+                    </footer>
+                  </div>
+
+                </div>
+              </div>
+
+            </td>
+          </tr>
+        </table>
+        <div class="photoBottom">
+          <button style="background-color:#4EBBBB;" nzSize="default" nz-button nzType="primary">確定</button>&nbsp;&nbsp;
+          <button (click)="closePhotoModal()" style="background-color:#858D8F;" nzSize="default" nz-button
+            nzType="primary">取消</button>
+        </div>
       </ng-container>
 
-
       <!-- see -->
-      <ng-container>
+      <ng-container *ngIf="productModalType=='see'">
         <div style="display: flex;width: 100%;height: 100%;">
           <div style="height: 50%;width: 100%;background-color: blue;display: flex;">
             <div style="background-color: red;flex-grow: 1;">
@@ -161,14 +242,13 @@
                 background-image: url(http://i4ap01.wks.wistron.com.cn/IBCA_File/package/Photo/1_1_1_1_1.jpg);background-repeat:no-repeat;background-position:center;background-size:100% 100%;">
               </div>
             </div>
-            <div style="background-color: green;flex-grow: 1;">反面</div>
+            <div style="background-color: green;flex-grow: 1;">反面</div>&nbsp;&nbsp;&nbsp;&nbsp;
             <div style="background-color: white;flex-grow: 1;">局部</div>
           </div>
         </div>
       </ng-container>
 
     </div>
-
   </div>
 </div>
 
