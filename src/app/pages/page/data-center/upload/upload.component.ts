@@ -10,7 +10,7 @@ import { DataService } from 'src/app/services/data.service';
 export class UploadComponent implements OnInit {
 
   showTableData: any = []
-  tableScrollHeight: string = '400px'
+  tableScrollHeight: string = '410px'
   tableHead: any = [
     { name: '序號' }, { name: '廠別' }, { name: '任務編碼' }, { name: '項次' }, { name: '產品系列' },
     { name: '特殊架構' }, { name: '電池料號' }, { name: '電池型號' }, { name: '需求年份' }, { name: '出貨賬冊' },
@@ -19,6 +19,7 @@ export class UploadComponent implements OnInit {
   plant: any = JSON.parse(sessionStorage.getItem('plant'))
   year: any = JSON.parse(sessionStorage.getItem('year'))
   man: any = JSON.parse(sessionStorage.getItem('man'))
+  transport = 1
   transportWay: any = [
     { label: '空運', value: 1, disabled: false, checked: false },
     { label: '海運', value: 2, disabled: false, checked: false },
@@ -39,13 +40,17 @@ export class UploadComponent implements OnInit {
     "Plant": this.man.Plant,
     "Demand_Year": new Date().getFullYear(),
   }
+  editInfo: any = {}
+  code: any = { status: 0 }
+  filePdf
+  loading: boolean
   isVisible: boolean
   isEdit: boolean
   isUpdate: boolean
-  modalInputTitle: any
-  modalInput: any = []
-  tableKey: any
-  id
+  // modalInputTitle: any
+  // modalInput: any = []
+  // tableKey: any
+  // id
   bodyStyle = {
     'background-color': 'rgba(32, 48, 51, 100)',
     'height': '200px',
@@ -75,43 +80,11 @@ export class UploadComponent implements OnInit {
     this.search()
   }
 
-  // async initData() {
-  //   switch (this.id) {
-  //     case 'special':
-  //       this.searchTitle = this.modalInputTitle = ['特殊架構：', '產品系列：']
-  //       break;
-
-  //     case 'chinese':
-  //       this.searchTitle = this.modalInputTitle = ['成品中文品名：', 'Product  Name：']
-  //       this.tableHead[2].name = '成品中文品名'
-  //       this.tableHead[2].width = '400px'
-  //       this.tableHead[1].name = 'Product  Name'
-  //       break;
-
-  //     case 'product':
-  //       this.searchTitle = ['特殊架構：', '產品系列：']
-  //       this.tableHead = [
-  //         { name: '廠別' }, { name: '产品系列' }, { name: '特殊架構' },
-  //         { name: '電池放置方式' }, { name: '包裝內電池數量(顆)' }, { name: '產品照片&包裝照片' },
-  //         { name: '上傳時間' }, { name: '上傳人' }, { name: '操作', width: '100px' }
-  //       ]
-  //       this.tableKey = [
-  //         'Plant', 'Project_Code', 'Special_SKU',
-  //         'Placement_Mode', 'Packages_Qty', '查看',
-  //         'Maintain_Time ', 'User_ID',
-  //       ]
-
-  //     default:
-  //       break;
-  //   }
-  // await this.search()
-  // }
-
   // 搜索方法
   async search() {
     let data = {
       Plant: this.searchInfo.Plant,
-      Demand_Year: JSON.stringify(this.searchInfo.Demand_Year),
+      Demand_Year: typeof this.searchInfo.Demand_Year == 'string' ? this.searchInfo.Demand_Year : JSON.stringify(this.searchInfo.Demand_Year),
       Project_Code: this.handleData(this.searchTitle[0]['data']),
       Battery_PN: this.handleData(this.searchTitle[1]['data']),
       Battery_Mo: this.handleData(null),
@@ -119,6 +92,7 @@ export class UploadComponent implements OnInit {
       Entrust_No: this.handleData(this.searchTitleOne[0]['data']),
       Testimonials_SN: this.handleData(this.searchTitleOne[1]['data'])
     }
+    console.log(data);
     this.showTableData = await this.http.searchFilter(data)
     console.log(this.showTableData);
 
@@ -132,78 +106,102 @@ export class UploadComponent implements OnInit {
   // 关闭模态框
   close() {
     this.isVisible = false
-    this.isEdit = false
     this.isUpdate = false
-    this.modalInput = []
+    // this.modalInput = []
   }
 
+  //系統任務
   upData() {
+    this.code = { status: 0 }
     this.isVisible = false
     this.isUpdate = true
   }
 
+  //非系統任務
   editData() {
     this.isVisible = false
     this.isEdit = true
+    this.formatEditData()
   }
 
-  async change() {
-    if (this.id == 'special') {
-      let data = { Plant: this.man.Plant, Material_No: this.modalInput[0] }
-      let productLine = await this.http.getProductLine(data)
-      if (productLine.length > 0)
-        this.modalInput[1] = productLine[0].ModelFamily
-      else this.modalInput[1] = ''
-      console.log(this.modalInput)
+  formatEditData() {
+    this.editInfo = {
+      Plant: this.man.Plant,
+      Project_Code: "",
+      Material_No: "",
+      Battery_PN: "",
+      Demand_Year: "",
+      Shipment_Books: "",
+      Transport_Mode: "",
+      Testimonials_SN: "點擊上傳",
+      Create_ID: "",
+      Create_Time: ""
     }
+  }
+
+  async closeEdit() {
+    this.isEdit = false
+    await this.search()
+  }
+
+  //取无后缀文件名
+  plitFileName(text) {
+    var pattern = /\.{1}[a-z]{1,}$/;
+    if (pattern.exec(text) !== null) {
+      return (text.slice(0, pattern.exec(text).index));
+    } else { return text; }
+  }
+
+  async change(event) {
+    this.loading = true
+    this.isUpdate = true
+    console.log(event.target.files[0]);
+    let name = this.plitFileName(event.target.files[0].name)
+    this.code = await this.http.systemMission(name)
+    if (this.code['status'] == 200) {
+      const file = new FormData()
+      file.append('file', event.target.files[0])
+      await this.http.originFileUpload(file)
+    }
+    this.loading = false
+  }
+
+  uploadPdf(event) {
+    this.filePdf = event.target.files[0]
+    if (this.filePdf) {
+      this.editInfo.Testimonials_SN = this.plitFileName(this.filePdf.name)
+    }
+    console.log(event);
   }
 
   async saveData() {
-    let data
-    let status
-    if (this.id == 'chinese') {
-      data = {
-        Site: this.man.Site,
-        Plant: this.man.Plant,
-        ProductName_ZH: this.modalInput[0],
-        ProductName_EN: this.modalInput[1],
-        User_ID: this.man.User_ID
-      }
-      status = await this.http.addChineseName(data)
-    } else {
-      data = {
-        Site: this.man.Site,
-        Plant: this.man.Plant,
-        Project_Code: this.modalInput[0],
-        Material_No: this.modalInput[1],
-        User_ID: this.man.User_ID
-      }
-      status = await this.http.addSpecialArchitecture(data)
+    this.editInfo.Create_ID = this.man.User_ID
+    this.editInfo.Create_Time = new Date
+    console.log(this.editInfo);
+    this.code = await this.http.noSystemMission(this.editInfo)
+    if (this.code.status == 200) {
+      const file = new FormData()
+      file.append('file', this.filePdf)
+      await this.http.originFileUpload(file)
     }
-    if (status.hasOwnProperty('error'))
-      this.message.create('error', '資料保存失敗')
-    else {
-      this.message.create('success', '資料保存成功')
-      await this.search()
-      this.close()
-    }
+    this.isUpdate = true
   }
 
-  async delete(data) {
-    let status
-    if (this.id == 'chinese')
-      status = await this.http.deleteChineseName(data)
-    else
-      status = await this.http.deleteSpecialArchitecture(data)
+  // async delete(data) {
+  //   let status
+  //   if (this.id == 'chinese')
+  //     status = await this.http.deleteChineseName(data)
+  //   else
+  //     status = await this.http.deleteSpecialArchitecture(data)
 
-    if (status.hasOwnProperty('error'))
-      this.message.create('error', '資料刪除失敗')
-    else {
-      this.showTableData.find((e, i) => { if (e.id == data) this.showTableData.splice(i, 1) })
-      this.showTableData = JSON.parse(JSON.stringify(this.showTableData))
-      this.message.create('success', '資料刪除成功')
-    }
-  }
+  //   if (status.hasOwnProperty('error'))
+  //     this.message.create('error', '資料刪除失敗')
+  //   else {
+  //     this.showTableData.find((e, i) => { if (e.id == data) this.showTableData.splice(i, 1) })
+  //     this.showTableData = JSON.parse(JSON.stringify(this.showTableData))
+  //     this.message.create('success', '資料刪除成功')
+  //   }
+  // }
 
   handleData(data) {
     if (data) return data

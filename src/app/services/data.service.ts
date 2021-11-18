@@ -186,7 +186,19 @@ export class DataService {
 
 
   /* 鉴定书上传 */
+  async systemMission(data) {
+    return await this.http.get(`testimonial/systemMission?Testimonials_SN=${data}`)
+  }
   async searchFilter(data) {
     return await this.http.post('testimonial/searchFilter', data)
   }
+  async noSystemMission(data) {
+    return await this.http.post('testimonial/noSystemMission', data)
+  }
+  async originFileUpload(data) {
+    return await this.http.post('OriginFileUpload?path=Task_Testimonial', data)
+  }
+  // async pdfFileUpload(data) {
+  //   return await this.http.post('pdfFileUpload', data)
+  // }
 }

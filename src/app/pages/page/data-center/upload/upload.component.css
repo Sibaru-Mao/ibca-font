@@ -72,6 +72,15 @@
   height: 88%;
 }
 
+.tableContent .operation {
+  color: #4EBBBB;
+  text-decoration: underline
+}
+
+.tableContent .operation:hover {
+  cursor: pointer;
+}
+
 
 ::ng-deep .ant-table-thead .ant-table-cell {
   background-color: #355256;
@@ -118,6 +127,10 @@
   border-radius: 10px;
 }
 
+::ng-deep .ant-radio-wrapper span {
+  color: #FFFFFF;
+}
+
 /* .delete {
   width: 50px;
 } */
@@ -145,6 +158,20 @@
 .modalBox {
   height: 170px;
   padding: auto;
+}
+
+.tip {
+  text-align: center;
+}
+
+.tip img {
+  width: 90px;
+  height: 90px;
+}
+
+.tip p {
+  margin: 0;
+  color: #fff;
 }
 
 .box {
