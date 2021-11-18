@@ -19,7 +19,6 @@ export class SeeEditComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(res => {
       this.baseInfo = res
-      this.baseInfo = JSON.parse(this.baseInfo)
       console.log(this.baseInfo);
     })
   }
