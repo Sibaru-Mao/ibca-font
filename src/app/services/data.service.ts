@@ -161,7 +161,7 @@ export class DataService {
   async uploadPhoto(data) {
     return await this.http.post(
       `files/${data.Plant}_${data.Project_Code}_${data.Special_SKU}_${data.PhotoType}_${data.place}`,
-      data)
+      data.file)
   }
 
   async dropNewAdd(data) {
@@ -184,6 +184,25 @@ export class DataService {
     return await this.http.get(`manual_ConsistentReport/delete?Plant=${data.Plant}&Use_Year=${data.Use_Year}`)
   }
 
+  async productPackingNewAdd(data) {
+    return await this.http.post('manual_Package/NewAdd', data)
+  }
+
+  async productPackingEdit(data) {
+    return await this.http.post(`manual_Package/edit`, data)
+  }
+
+  async getProductPackingPhoto(data) {
+    return await this.http.post('manual_Package/checkPhoto', data)
+  }
+
+  async deleteProductPacking(data) {
+    return await this.http.get(`manual_Package/delete?Plant=${data.Plant}&Project_Code=${data.Project_Code}&Special_SKU=${data.Special_SKU}`)
+  }
+
+  async getBatteryInfo(data) {
+    return await this.http.get(`batteryInfo/searchFilter?Plant=${data.PlantCode}&battery_pn=${data.Material_No}`)
+  }
 
   /* 鉴定书上传 */
   async systemMission(data) {

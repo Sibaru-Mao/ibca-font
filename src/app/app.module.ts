@@ -55,6 +55,7 @@ import { ApplicationRepairComponent } from './pages/component/application-repair
 import { ListComponent } from './pages/component/list/list.component';
 import { DeclareComponent } from './pages/page/data-center/declare/declare.component';
 import { UploadComponent } from './pages/page/data-center/upload/upload.component';
+import { SeeEditComponent } from './pages/page/data-center/battery-info/see-edit/see-edit.component';
 
 
 
@@ -113,7 +114,8 @@ export function configureProvider(loader: ConfigServiceService): () => Promise<v
     ApplicationRepairComponent,
     ListComponent,
     DeclareComponent,
-    UploadComponent
+    UploadComponent,
+    SeeEditComponent
   ],
   imports: [
     BrowserModule,
