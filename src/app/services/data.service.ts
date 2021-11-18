@@ -217,7 +217,4 @@ export class DataService {
   async originFileUpload(data) {
     return await this.http.post('OriginFileUpload?path=Task_Testimonial', data)
   }
-  // async pdfFileUpload(data) {
-  //   return await this.http.post('pdfFileUpload', data)
-  // }
 }
