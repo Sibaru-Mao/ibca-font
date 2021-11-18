@@ -24,6 +24,7 @@ const dataChild: Routes = [
   { path: 'specialArchitecture', component: SpecialArchitectureComponent },
   { path: 'declare', component: DeclareComponent },
   { path: 'upload', component: UploadComponent },
+  { path: 'batteryInfo/seeEdit', loadChildren: () => import('./battery-info/see-edit/see-edit.module').then(e => e.SeeEditModule) },
 ]
 
 const route: Routes = [{ path: '', component: DataCenterComponent, children: dataChild }]
