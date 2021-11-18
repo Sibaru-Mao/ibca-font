@@ -18,6 +18,7 @@ import { NgxEchartsModule } from 'ngx-echarts';
 import { HeaderComponent } from './pages/component/header/header.component';
 import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { zh_CN } from 'ng-zorro-antd/i18n';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTableModule } from 'ng-zorro-antd/table';
@@ -124,6 +125,7 @@ export function configureProvider(loader: ConfigServiceService): () => Promise<v
     BrowserAnimationsModule,
     NgxLoadingModule,
     NgxEchartsModule,
+    NzSpinModule,
     NzButtonModule,
     NzSelectModule,
     NzTableModule,
