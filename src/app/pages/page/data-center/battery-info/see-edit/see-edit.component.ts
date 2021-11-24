@@ -1,10 +1,6 @@
 import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 
-// interface baseInfo {
-//   battery_pn: string,
-//   plant: string
-// }
 
 @Component({
   selector: 'app-see-edit',
@@ -13,14 +9,25 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SeeEditComponent implements OnInit {
   baseInfo: any
+  photoData: any
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(
+    private route: ActivatedRoute,
+  ) { }
 
-  ngOnInit(): void {
-    this.route.params.subscribe(res => {
+  async ngOnInit() {
+    this.route.params.subscribe(async res => {
       this.baseInfo = res
-      console.log(this.baseInfo);
     })
+  }
+
+  goBack() {
+    history.go(-1)
+  }
+
+  sendPhoto(event) {
+    this.photoData = event
+    console.log(event);
   }
 
 }

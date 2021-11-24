@@ -611,7 +611,8 @@ export class SpecialChineseComponent implements OnInit {
     }
   }
 
-  littleEdit(item) {
+  littleEdit(item, status) {
+    item.status = status
     this.route.navigate(['home/dataCenter/batteryInfo/seeEdit', item])
   }
 

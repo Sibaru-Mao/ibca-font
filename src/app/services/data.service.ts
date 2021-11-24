@@ -203,6 +203,35 @@ export class DataService {
   async getBatteryInfo(data) {
     return await this.http.get(`batteryInfo/searchFilter?Plant=${data.PlantCode}&battery_pn=${data.Material_No}`)
   }
+
+  async getBatteryDetails(data) {
+    return await this.http.get(`batteryInfo/lookOver?Plant=${data.plant}&battery_pn=${data.battery_pn}`)
+  }
+
+  async addTestimonial(data) {
+    return await this.http.post('batteryInfo/Testimonial/edit/NewAdd', data)
+  }
+
+  async addUN38(data) {
+    return await this.http.post('batteryInfo/UN383/edit/NewAdd', data)
+  }
+
+  async addAuthorization(data) {
+    return await this.http.post('batteryInfo/Authorization/edit/NewAdd', data)
+  }
+
+  async addOther(data) {
+    return await this.http.post('batteryInfo/Other/edit/NewAdd', data)
+  }
+
+  async uploadBatteryPdf(path, file) {
+    return await this.http.post(`OriginFileUpload?path=${path}`, file)
+  }
+
+  async uploadBatteryPhoto(data, file) {
+    return await this.http.post(`photo/${data.Plant}_${data.Battery_PN}_${data.place}`, file)
+  }
+
   // alskdlfklasklfkwaeopjfoanweufiajruifrsejigaeoigereigaefklrel
   /* 鉴定书上传 */
   async systemMission(data) {

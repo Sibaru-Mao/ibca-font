@@ -1,0 +1,47 @@
+::ng-deep .ant-table-thead .ant-table-cell {
+  background-color: #355256;
+  height: 20px;
+}
+
+/* ::ng-deep .ant-table tfoot>tr>td,
+::ng-deep .ant-table tfoot>tr>th, */
+::ng-deep .ant-table-thead>tr>th {
+  padding: 5px 5px;
+  text-align: center;
+  color: #4EBBBB;
+  border: none;
+  font-weight: bold;
+}
+
+::ng-deep .ant-table-tbody>tr>td {
+  padding: 15px 5px;
+  text-align: center;
+  background-color: #202E31;
+  color: #FFFFFF;
+  border: none;
+  border-bottom: 1px solid rgba(187, 187, 187, 100);
+  font-size: 12px;
+}
+
+::ng-deep .ant-table-tbody>tr.ant-table-row:hover>td {
+  /* background-color: #202E31; */
+  background-color: #355256;
+}
+
+.newAdd {
+  float: right;
+  width: 60px;
+  cursor: pointer;
+  margin-top: 2px;
+}
+
+.spreadhead {
+  color: #4EBBBB;
+  font-size: 18px;
+}
+
+.examine {
+  color: #4EBBBB;
+  cursor: pointer;
+  text-decoration: underline;
+}

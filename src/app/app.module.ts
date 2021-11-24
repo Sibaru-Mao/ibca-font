@@ -56,7 +56,9 @@ import { ListComponent } from './pages/component/list/list.component';
 import { DeclareComponent } from './pages/page/data-center/declare/declare.component';
 import { UploadComponent } from './pages/page/data-center/upload/upload.component';
 import { SeeEditComponent } from './pages/page/data-center/battery-info/see-edit/see-edit.component';
-
+import { SeeEditTableComponent } from './pages/page/data-center/battery-info/see-edit-table/see-edit-table.component';
+import { LittleAddComponent } from './pages/page/data-center/battery-info/little-add/little-add.component';
+import { PhotoEditComponent } from './pages/page/data-center/battery-info/photo-edit/photo-edit.component';
 
 
 registerLocaleData(zh);
@@ -115,7 +117,10 @@ export function configureProvider(loader: ConfigServiceService): () => Promise<v
     ListComponent,
     DeclareComponent,
     UploadComponent,
-    SeeEditComponent
+    SeeEditComponent,
+    SeeEditTableComponent,
+    LittleAddComponent,
+    PhotoEditComponent,
   ],
   imports: [
     BrowserModule,
@@ -147,7 +152,7 @@ export function configureProvider(loader: ConfigServiceService): () => Promise<v
       }
     }),
     DataCenterLaodModule,
-    InformationLoadModule
+    InformationLoadModule,
   ],
   bootstrap: [AppComponent],
   providers: [

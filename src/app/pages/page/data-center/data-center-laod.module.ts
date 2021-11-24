@@ -12,7 +12,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 
-// import { DataCenterLaodRoutingModule } from './data-center-laod-routing.module';
 
 const dataChild: Routes = [
   { path: '', redirectTo: 'batteryInfo', pathMatch: 'full' },
@@ -25,6 +24,7 @@ const dataChild: Routes = [
   { path: 'declare', component: DeclareComponent },
   { path: 'upload', component: UploadComponent },
   { path: 'batteryInfo/seeEdit', loadChildren: () => import('./battery-info/see-edit/see-edit.module').then(e => e.SeeEditModule) },
+  { path: 'batteryInfo/littleAdd', loadChildren: () => import('./battery-info/little-add/little-add.module').then(e => e.LittleAddModule) },
 ]
 
 const route: Routes = [{ path: '', component: DataCenterComponent, children: dataChild }]

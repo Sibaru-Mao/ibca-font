@@ -1,0 +1,56 @@
+<p style="margin-top: 10px;">
+  <span class="spreadhead">{{title}}</span>
+  <img *ngIf="baseInfo.status=='edit'" (click)="goToLittleAdd()" class="newAdd" src="assets/imgs/add.png" alt="图片跑了">
+</p>
+
+<nz-table nzBordered="false" #headerTable [nzData]="showTableData" [nzFrontPagination]="false">
+  <thead>
+    <tr>
+      <th *ngFor="let item of tableHead" nzWidth={{item.width}}>{{item.name}}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of headerTable.data;let i=index">
+      <td *ngFor="let key of tableKey;let i=index">
+
+        <span *ngIf="i==0">
+          <img style="width: 13px;margin:0 5px 3px 0;" src="assets/imgs/pdf.png" alt="图片跑了">
+          {{'NO.'+item[key]}}
+        </span>
+
+        <span *ngIf="key=='Maintain_Time'">{{item[key]|date:'yyyy/M/dd'}} </span>
+
+        <ng-container *ngIf="title=='鑑定書'">
+          <span *ngIf="i==1">{{'NO.'+item[key]}}</span>
+          <span *ngIf="!([0,1].includes(i))&&key!='Maintain_Time'">{{item[key]}}</span>
+        </ng-container>
+
+        <ng-container *ngIf="title=='UN38.3试验概要'">
+          <span *ngIf="!([0].includes(i))&&key!='Maintain_Time'">{{item[key]}}</span>
+        </ng-container>
+
+        <ng-container *ngIf="title=='授权书'">
+          <span *ngIf="i==1">{{item[key]|date:'yyyy/M/dd'}} </span>
+          <span *ngIf="i==2">{{item[key]|date:'yyyy/M/dd'}} </span>
+          <span *ngIf="!([0,1,2].includes(i))&&key!='Maintain_Time'">{{item[key]}}</span>
+        </ng-container>
+
+        <ng-container *ngIf="title=='其他'">
+          <!-- <span *ngIf="i==1">{{item[key]|date:'yyyy/M/dd'}} </span> -->
+          <span *ngIf="i==2">{{item[key]|date:'yyyy/M/dd'}} </span>
+          <span *ngIf="!([0].includes(i))&&key!='Maintain_Time'">{{item[key]}}</span>
+        </ng-container>
+
+      </td>
+
+      <td style="position: relative;">
+        <div style="position: absolute;left: 50%;top: 50%;transform: translate(-50%,-50%);width: 100%;">
+          <span (click)="seeOrDownload(item,'see')" class="examine">查看</span>&nbsp;&nbsp;
+          <span (click)="seeOrDownload(item,'download')" class="examine">下载</span>&nbsp;&nbsp;
+          <span class="examine" *ngIf="baseInfo.status=='edit'" style="color: #949CA1;">刪除</span>
+        </div>
+      </td>
+
+    </tr>
+  </tbody>
+</nz-table>
