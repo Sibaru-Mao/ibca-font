@@ -85,5 +85,20 @@ export class PhotoEditComponent implements OnInit {
     this.allPhoto[2].url = this.photoData.Photo_Part
   }
 
+  seeOrDown(item, type) {
+    switch (type) {
+      case 'see':
+        window.open(item.url)
+        break;
+
+      case 'down':
+        window.location.href = item.url
+        break;
+
+      default:
+        break;
+    }
+  }
+
 
 }

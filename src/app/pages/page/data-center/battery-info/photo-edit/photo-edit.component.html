@@ -9,14 +9,16 @@
       <div class="photoDiv" style="background-image: url({{item.url}});">
       </div>
       <footer style="position: relative;">
-        <span class="upload">查看</span>&nbsp;&nbsp;&nbsp;&nbsp;
+
+        <span (click)="seeOrDown(item,'see')" class="upload">查看</span>&nbsp;&nbsp;&nbsp;&nbsp;
 
         <ng-container *ngIf="baseInfo.status=='edit'">
           <input type="file" (change)="getPhoto($event,i)" class="pdfUpload" style="width: 30px;">
           <span class="upload">上傳</span>&nbsp;&nbsp;&nbsp;&nbsp;
         </ng-container>
 
-        <span class="upload">下載</span>
+        <span (click)="seeOrDown(item,'down')" class="upload">下載</span>
+
       </footer>
     </div>
 
