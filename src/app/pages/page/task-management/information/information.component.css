@@ -13,6 +13,31 @@
    height: 10px;
  }
 
+ ::ng-deep .ant-checkbox-group-item span {
+   color: #FFFFFF;
+   display: inline-block;
+   margin: 0 4px;
+ }
+
+ ::ng-deep .ant-radio-wrapper span {
+   color: #FFFFFF;
+ }
+
+ ::ng-deep .ant-checkbox-wrapper span {
+   color: #FFFFFF;
+ }
+
+ ::ng-deep .ant-modal-body {
+   background-color: rgba(32, 48, 51, 100);
+   height: 300px;
+   padding: 0px;
+ }
+
+ ::ng-deep .ant-modal-close-x {
+   display: none;
+ }
+
+
  #base {
    width: 100%;
    height: 100%;
@@ -99,11 +124,7 @@
    width: 25%;
  }
 
- ::ng-deep .ant-checkbox-group-item span {
-   color: #FFFFFF;
-   display: inline-block;
-   margin: 0 4px;
- }
+
 
  .taskInfo {
    float: right;
@@ -139,28 +160,13 @@
    margin-left: 60px;
  }
 
- ::ng-deep .ant-radio-wrapper span {
-   color: #FFFFFF;
- }
+
 
  .transportSelect {
    display: inline-block;
    margin-left: 5%;
  }
 
- ::ng-deep .ant-checkbox-wrapper span {
-   color: #FFFFFF;
- }
-
- ::ng-deep .ant-modal-body {
-   background-color: rgba(32, 48, 51, 100);
-   height: 300px;
-   padding: 0px;
- }
-
- ::ng-deep .ant-modal-close-x {
-   display: none;
- }
 
  .transportInput {
    width: 70px;

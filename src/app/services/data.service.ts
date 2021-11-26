@@ -161,7 +161,7 @@ export class DataService {
   async uploadPhoto(data) {
     return await this.http.post(
       `files/${data.Plant}_${data.Project_Code}_${data.Special_SKU}_${data.PhotoType}_${data.place}`,
-      data)
+      data.file)
   }
 
   async dropNewAdd(data) {
@@ -184,4 +184,85 @@ export class DataService {
     return await this.http.get(`manual_ConsistentReport/delete?Plant=${data.Plant}&Use_Year=${data.Use_Year}`)
   }
 
+  async productPackingNewAdd(data) {
+    return await this.http.post('manual_Package/NewAdd', data)
+  }
+
+  async productPackingEdit(data) {
+    return await this.http.post(`manual_Package/edit`, data)
+  }
+
+  async getProductPackingPhoto(data) {
+    return await this.http.post('manual_Package/checkPhoto', data)
+  }
+
+  async deleteProductPacking(data) {
+    return await this.http.get(`manual_Package/delete?Plant=${data.Plant}&Project_Code=${data.Project_Code}&Special_SKU=${data.Special_SKU}`)
+  }
+
+  async getBatteryInfo(data) {
+    return await this.http.get(`batteryInfo/searchFilter?Plant=${data.PlantCode}&battery_pn=${data.Material_No}`)
+  }
+
+  async getBatteryDetails(data) {
+    return await this.http.get(`batteryInfo/lookOver?Plant=${data.plant}&battery_pn=${data.battery_pn}`)
+  }
+
+  async addTestimonial(data) {
+    return await this.http.post('batteryInfo/Testimonial/edit/NewAdd', data)
+  }
+
+  async addUN38(data) {
+    return await this.http.post('batteryInfo/UN383/edit/NewAdd', data)
+  }
+
+  async addAuthorization(data) {
+    return await this.http.post('batteryInfo/Authorization/edit/NewAdd', data)
+  }
+
+  async addOther(data) {
+    return await this.http.post('batteryInfo/Other/edit/NewAdd', data)
+  }
+
+  async uploadBatteryPdf(path, file) {
+    return await this.http.post(`OriginFileUpload?path=${path}`, file)
+  }
+
+  async uploadBatteryPhoto(data, file) {
+    return await this.http.post(`photo/${data.Plant}_${data.Battery_PN}_${data.place}`, file)
+  }
+
+  async getBatteryExist(data) {
+    return await this.http.get(`batteryInfo/searchFilter?Plant=${data.Plant}&battery_pn=${JSON.stringify(data.battery_pn)}`)
+  }
+
+  async delTestimonial(data, base) {
+    return await this.http.get(`batteryInfo/Testimonial/edit/delete?Plant=${base.plant}&battery_pn=${base.battery_pn}&FileName=${data.File_Name}&Testimonial_SN=${data.Testimonial_SN}`)
+  }
+  async delUN383(data, base) {
+    return await this.http.get(`batteryInfo/UN383/edit/delete?Plant=${base.plant}&battery_pn=${base.battery_pn}&FileName=${data.File_Name}&File_Encoding=${data.File_Encoding}`)
+  }
+  async delAuthorization(data, base) {
+    return await this.http.get(`batteryInfo/Authorization/edit/delete?Plant=${base.plant}&battery_pn=${base.battery_pn}&FileName=${data.File_Name}&Start_Date=${data.Start_Date}&End_Date=${data.End_Date}`)
+  }
+  async delOther(data, base) {
+    return await this.http.get(`batteryInfo/Other/edit/delete?Plant=${base.plant}&battery_pn=${JSON.stringify(base.battery_pn)}&FileName=${data.File_Name}`)
+  }
+
+
+
+  // alskdlfklasklfkwaeopjfoanweufiajruifrsejigaeoigereigaefklrel
+  /* 鉴定书上传 */
+  async systemMission(data) {
+    return await this.http.get(`testimonial/systemMission?Testimonials_SN=${data}`)
+  }
+  async searchFilter(data) {
+    return await this.http.post('testimonial/searchFilter', data)
+  }
+  async noSystemMission(data) {
+    return await this.http.post('testimonial/noSystemMission', data)
+  }
+  async originFileUpload(data) {
+    return await this.http.post('OriginFileUpload?path=Task_Testimonial', data)
+  }
 }

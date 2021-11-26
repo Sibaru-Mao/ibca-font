@@ -1,0 +1,24 @@
+<div class="base">
+  <div class="content">
+
+    <header>
+      <div (click)="goBack()" class="goBack">
+        <img src="assets/imgs/rollback.png" style="width: 30px;vertical-align: bottom;" alt="">
+        <span class="littleTitle">返回</span>
+      </div>
+    </header>
+
+    <div class="baseTitle">
+      <div><span class="littleTitle">廠別：</span> {{baseInfo.plant}}</div>
+      <div><span class="littleTitle">電池料號：</span> {{baseInfo.battery_pn}}</div>
+    </div>
+
+    <app-see-edit-table (sendPhoto)="sendPhoto($event)" title='鑑定書' [baseInfo]="baseInfo"></app-see-edit-table>
+    <app-see-edit-table title='UN38.3试验概要' [baseInfo]="baseInfo"></app-see-edit-table>
+    <app-see-edit-table title='授权书' [baseInfo]="baseInfo"></app-see-edit-table>
+    <app-photo-edit [baseInfo]="baseInfo" type="照片"></app-photo-edit>
+    <app-see-edit-table title='其他' [baseInfo]="baseInfo"></app-see-edit-table>
+
+
+  </div>
+</div>

@@ -1,0 +1,317 @@
+.content {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(32, 48, 51, 100);
+  padding: .5% 1%;
+}
+
+.searchContent {
+  height: 6%;
+}
+
+.searchContent div {
+  display: inline-block;
+  margin-right: 20px;
+}
+
+.searchContent span {
+  color: #4EBBBB;
+}
+
+.searchModal {
+  width: 120px;
+  height: 25px;
+  font-size: 12px;
+  background: #404E51;
+  color: rgba(255, 255, 255, 100);
+  border-radius: 3px;
+  border: .1px solid rgba(127, 127, 127, 100);
+  outline: none;
+}
+
+.searchInput {
+  width: 120px;
+  background-color: #203033;
+  border: .1px solid rgba(127, 127, 127, 100);
+  border-radius: 3px;
+  outline: none;
+  text-align: center;
+  color: #FFFFFF;
+}
+
+.backgroud-1 {
+  background: #404E51;
+}
+
+.searchSelect {
+  width: 70px;
+  height: 25px;
+  font-size: 12px;
+  background-color: rgba(48, 73, 77, 100);
+  color: rgba(255, 255, 255, 100);
+  border: 1px solid rgba(81, 87, 88, 100);
+  outline: none;
+}
+
+.searchButton {
+  background-color: #4EBBBB;
+  width: 60px;
+}
+
+.add {
+  float: right;
+  cursor: pointer;
+}
+
+.add>img {
+  width: 65px;
+}
+
+.tableContent {
+  width: 100%;
+  height: 88%;
+}
+
+.tableContent .operation {
+  color: #4EBBBB;
+  text-decoration: underline
+}
+
+.tableContent .operation:hover {
+  cursor: pointer;
+}
+
+
+::ng-deep .ant-table-thead .ant-table-cell {
+  background-color: #355256;
+  height: 20px;
+}
+
+/* ::ng-deep .ant-table tfoot>tr>td,
+::ng-deep .ant-table tfoot>tr>th, */
+::ng-deep .ant-table-thead>tr>th {
+  padding: 5px 5px;
+  text-align: center;
+  color: #4EBBBB;
+  border: none;
+  font-weight: bold;
+}
+
+::ng-deep .ant-table-tbody>tr>td {
+  padding: 10px 5px;
+  text-align: center;
+  background-color: #202E31;
+  color: #FFFFFF;
+  border: none;
+  border-bottom: 1px solid rgba(187, 187, 187, 100);
+  font-size: 12px;
+}
+
+::ng-deep .ant-table-tbody>tr.ant-table-row:hover>td {
+  /* background-color: #202E31; */
+  background-color: #355256;
+}
+
+::ng-deep ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::ng-deep ::-webkit-scrollbar-track {
+  background-color: #355256;
+  /* border-radius: 10px; */
+}
+
+::ng-deep ::-webkit-scrollbar-thumb {
+  background-color: #489C9C;
+  border-radius: 10px;
+}
+
+::ng-deep .ant-radio-wrapper span {
+  color: #FFFFFF;
+}
+
+/* .delete {
+  width: 50px;
+} */
+
+.modalTitle {
+  color: #4EBBBB;
+  background-color: rgba(48, 73, 77, 100);
+  text-align: center;
+  height: 30px;
+  line-height: 30px;
+  font-size: 16px;
+  position: relative;
+}
+
+.modalTitle>img {
+  float: right;
+  position: absolute;
+  width: 20px;
+  /* margin: 5px 10px 0 0; */
+  top: 5px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.modalBox {
+  height: 170px;
+  padding: auto;
+}
+
+.tip {
+  text-align: center;
+}
+
+.tip img {
+  width: 90px;
+  height: 90px;
+}
+
+.tip p {
+  margin: 0;
+  color: #fff;
+}
+
+.box {
+  position: fixed;
+  height: 120px;
+  width: 120px;
+  margin: 25px 106px;
+  text-align: center;
+  background: #355256 url(../../../../../assets/imgs/update_big.png) no-repeat center;
+}
+
+.box:hover {
+  cursor: pointer;
+}
+
+.box input {
+  position: absolute;
+  width: 0;
+  opacity: 0;
+}
+
+.modalBody {
+  width: 100%;
+  height: 100%;
+  padding: 2% 8%;
+  color: #FFFFFF;
+  text-align: center;
+}
+
+.modalBody>div {
+  height: 22%;
+  line-height: 63px;
+}
+
+.modalContent {
+  width: 100%;
+  height: 50%;
+}
+
+.save {
+  text-align: left;
+  width: 80%;
+  border: 0;
+  background: transparent;
+  margin-top: 10px;
+}
+
+.modalBody img {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+}
+
+
+
+
+::ng-deep .ant-checkbox-group-item span {
+  color: #FFFFFF;
+  display: inline-block;
+  margin: 0;
+}
+
+/*
+.uploadModal ::ng-deep .ant-modal-body {
+  background-color: rgba(32, 48, 51, 100);
+  height: 200px;
+  padding: 0px;
+}
+
+.uploadModal ::ng-deep .ant-modal-close-x {
+  display: none;
+}
+*/
+
+.back {
+  width: 8%;
+  text-align: center;
+  color: #4EBBBB;
+}
+
+.back p {
+  display: inline-block;
+  margin: 0;
+  line-height: 30.5px;
+}
+
+.back img {
+  vertical-align: bottom;
+  width: 28px;
+  height: 28px;
+  margin: auto;
+}
+
+.back:hover {
+  cursor: pointer;
+}
+
+.tableModal {
+  width: 80%;
+  height: 80%;
+  border: 1px solid #4D5455;
+  color: #FFFFFF;
+  margin: auto;
+}
+
+.tableModal td {
+  width: 50%;
+  border: 1px solid #4D5455;
+}
+
+.tableModal td p {
+  text-indent: 2em;
+  display: inline-block;
+  width: 150px;
+  text-align: left;
+}
+
+.tableModal td .file {
+  display: inline-block;
+  width: 120px;
+  height: 28px;
+  border: .1px solid rgba(127, 127, 127, 100);
+  border-radius: 3px;
+  padding: 0px 30px;
+  line-height: 21px;
+  background: #404E51 url(../../../../../assets/imgs/update.png) no-repeat left;
+}
+
+.tableModal td .file:hover {
+  cursor: pointer;
+}
+
+.tableModal .file input {
+  position: absolute;
+  width: 0;
+  opacity: 0;
+}
+
+.button {
+  width: 80px;
+  background-color: #489C9C;
+  margin-top: 10px;
+}

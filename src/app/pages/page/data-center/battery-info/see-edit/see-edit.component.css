@@ -1,0 +1,46 @@
+ ::-webkit-scrollbar {
+   width: 10px;
+   height: 10px;
+ }
+
+ ::-webkit-scrollbar-track {
+   background-color: #355256;
+ }
+
+ ::-webkit-scrollbar-thumb {
+   background-color: #489C9C;
+   border-radius: 10px;
+ }
+
+ .base {
+   width: 100%;
+   height: 100%;
+ }
+
+ .content {
+   width: 100%;
+   height: 100%;
+   background-color: rgba(32, 48, 51, 100);
+   padding: .5% 1%;
+   color: #ffffff;
+   overflow-y: scroll;
+ }
+
+ .goBack {
+   display: inline-block;
+   cursor: pointer;
+   line-height: 30px;
+   margin-left: -5px;
+ }
+
+ .baseTitle div {
+   display: inline-block;
+ }
+
+ .baseTitle>div:first-child {
+   margin-right: 10%;
+ }
+
+ .littleTitle {
+   color: #4EBBBB;
+ }

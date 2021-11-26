@@ -18,6 +18,7 @@ import { NgxEchartsModule } from 'ngx-echarts';
 import { HeaderComponent } from './pages/component/header/header.component';
 import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { zh_CN } from 'ng-zorro-antd/i18n';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTableModule } from 'ng-zorro-antd/table';
@@ -54,7 +55,11 @@ import { ApplicationRepairComponent } from './pages/component/application-repair
 import { ListComponent } from './pages/component/list/list.component';
 import { DeclareComponent } from './pages/page/data-center/declare/declare.component';
 import { UploadComponent } from './pages/page/data-center/upload/upload.component';
-
+import { SeeEditComponent } from './pages/page/data-center/battery-info/see-edit/see-edit.component';
+import { SeeEditTableComponent } from './pages/page/data-center/battery-info/see-edit-table/see-edit-table.component';
+import { LittleAddComponent } from './pages/page/data-center/battery-info/little-add/little-add.component';
+import { PhotoEditComponent } from './pages/page/data-center/battery-info/photo-edit/photo-edit.component';
+import { TotalAddComponent } from './pages/page/data-center/battery-info/total-add/total-add.component';
 
 
 registerLocaleData(zh);
@@ -112,7 +117,12 @@ export function configureProvider(loader: ConfigServiceService): () => Promise<v
     ApplicationRepairComponent,
     ListComponent,
     DeclareComponent,
-    UploadComponent
+    UploadComponent,
+    SeeEditComponent,
+    SeeEditTableComponent,
+    LittleAddComponent,
+    PhotoEditComponent,
+    TotalAddComponent,
   ],
   imports: [
     BrowserModule,
@@ -122,6 +132,7 @@ export function configureProvider(loader: ConfigServiceService): () => Promise<v
     BrowserAnimationsModule,
     NgxLoadingModule,
     NgxEchartsModule,
+    NzSpinModule,
     NzButtonModule,
     NzSelectModule,
     NzTableModule,
@@ -143,7 +154,7 @@ export function configureProvider(loader: ConfigServiceService): () => Promise<v
       }
     }),
     DataCenterLaodModule,
-    InformationLoadModule
+    InformationLoadModule,
   ],
   bootstrap: [AppComponent],
   providers: [

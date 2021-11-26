@@ -1,0 +1,30 @@
+<p><span class="spreadhead">{{type}}</span></p>
+<div class="photoBack">
+  <div style="display: flex;height: 100%;width:100%;">
+
+    <div *ngFor="let item of allPhoto;let i=index" class="topContent">
+      <header>
+        <span>{{item.name}}</span>
+      </header>
+      <div class="photoDiv" style="background-image: url({{item.url}});">
+      </div>
+      <footer style="position: relative;">
+
+        <span (click)="seeOrDown(item,'see')" class="upload">查看</span>&nbsp;&nbsp;&nbsp;&nbsp;
+
+        <ng-container *ngIf="baseInfo.status=='edit'">
+          <input type="file" (change)="getPhoto($event,i)" class="pdfUpload" style="width: 30px;">
+          <span class="upload">上傳</span>&nbsp;&nbsp;&nbsp;&nbsp;
+        </ng-container>
+
+        <span (click)="seeOrDown(item,'down')" class="upload">下載</span>
+
+      </footer>
+    </div>
+
+  </div>
+  <p style="margin-top: -2%;text-align: center;">
+    上傳人：{{photoData.User_ID}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    上傳時間：{{photoData.Maintain_Time|date: 'yyyy/M/dd HH:mm:ss'}}
+  </p>
+</div>

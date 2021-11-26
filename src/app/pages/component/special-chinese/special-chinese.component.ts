@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { DataService } from './../../../services/data.service';
 import { Component, OnInit, Input } from '@angular/core';
@@ -8,6 +9,16 @@ interface modalData {
   input1: string,
   input2: string,
   pdf: any
+}
+
+interface photoData {
+  Plant: string,
+  Project_Code: string,
+  Special_SKU: string,
+  Placement_Mode: number,
+  Packages_Qty: number,
+  User_ID: string,
+  Maintain_Time: any
 }
 
 @Component({
@@ -43,6 +54,10 @@ export class SpecialChineseComponent implements OnInit {
   modalInput: any = []
   tableKey: any
   photoModal: boolean = false
+  productModalType: string
+
+  photoModalTitle: string = '查看'
+
   dRmodalInput: modalData = {
     plant: this.man.Plant,
     input1: '',
@@ -50,11 +65,37 @@ export class SpecialChineseComponent implements OnInit {
     pdf: ''
   }
 
-  constructor(private http: DataService, private message: NzMessageService) { }
+  batteryPlacement: any = [
+    // { name: '与设备包装在一起', value: 0, checked: true },
+    { name: '与设备包装在一起', value: 0 },
+    { name: '安装在设备内', value: 1 },
+  ]
+  url: string = ''
+
+  photoData: photoData = {
+    Plant: JSON.parse(sessionStorage.getItem('man')).Plant,
+    Project_Code: '',
+    Special_SKU: '',
+    Placement_Mode: 0,
+    Packages_Qty: 0,
+    User_ID: JSON.parse(sessionStorage.getItem('man')).User_ID,
+    Maintain_Time: ''
+  }
+
+  allPhoto = {
+    productPhoto: [{ name: '正面', en: 'front', url: '', }, { name: '反面', en: 'reverses', url: '' }, { name: '局部', en: 'part', url: '' }],
+    packagePhoto: [{ name: '正面', en: 'front', url: '' }, { name: '反面', en: 'reverses', url: '' }, { name: '局部', en: 'part', url: '' }]
+  }
+
+  constructor(
+    private http: DataService,
+    private message: NzMessageService,
+    private route: Router
+  ) { }
 
   async ngOnInit() {
     await this.initData()
-    this.tableScrollHeight = 0.69 * Number(sessionStorage.getItem('height')) + 'px'
+    this.tableScrollHeight = 0.65 * Number(sessionStorage.getItem('height')) + 'px'
     this.plant.splice(0, 1)
   }
 
@@ -108,6 +149,12 @@ export class SpecialChineseComponent implements OnInit {
         this.modalInput = ['使用年份：', '文件類型：']
         break
 
+      case 'battery':
+        this.searchTitle = ['電池料號：']
+        this.tableHead = [{ name: '編號' }, { name: '廠別' }, { name: '料號' }, { name: '操作' }]
+        this.tableKey = ['plant', 'battery_pn']
+        break
+
       default:
         break;
     }
@@ -147,6 +194,10 @@ export class SpecialChineseComponent implements OnInit {
         this.showTableData = await this.http.getDeclare(data)
         break
 
+      case 'battery':
+        this.showTableData = await this.http.getBatteryInfo(data)
+        break
+
       default:
         break;
     }
@@ -159,12 +210,25 @@ export class SpecialChineseComponent implements OnInit {
     console.log(this.showTableData, 11111);
   }
 
-  // 打开模态框
+  // 打开模态框 / 跳转到totalAdd
   showModal() {
     if (['special', 'chinese'].includes(this.id))
       this.specialChineseModal = true
+
     if (['drop', 'declare'].includes(this.id))
       this.dropUploadModal = true
+
+    if (this.id == 'product') {
+      this.photoModal = true
+      this.productModalType = 'newAdd'
+      this.photoModalTitle = '新增'
+    }
+
+    if (this.id == 'battery') {
+      this.route.navigate(['home/dataCenter/batteryInfo/totalAdd'])
+    }
+
+
   }
 
   // 关闭模态框
@@ -216,7 +280,7 @@ export class SpecialChineseComponent implements OnInit {
   }
 
   async delete(data) {
-    let status
+    let status: any
     if (this.id == 'chinese')
       status = await this.http.deleteChineseName(data)
     else
@@ -231,8 +295,35 @@ export class SpecialChineseComponent implements OnInit {
     }
   }
 
-  showPhoto() {
-    this.photoModal = true
+  async showPhoto(type, item) {
+    const info = {
+      Plant: item.Plant,
+      Project_Code: item.Project_Code,
+      Special_SKU: item.Special_SKU
+    }
+    const data = (await this.http.getProductPackingPhoto(info))[0]
+    this.productModalType = type
+    this.handlePhoto(data)
+
+    if (type == 'see') {
+      this.photoModal = true
+      this.photoModalTitle = '查看'
+    }
+
+    if (type == 'edit') {
+      this.photoModalTitle = '編輯'
+      if (!data) {
+        this.message.create('warning', '抱歉，暂无数据')
+      } else {
+        this.photoData.Plant = data.Plant
+        this.photoData.Project_Code = data.Project_Code
+        this.photoData.Special_SKU = data.Special_SKU
+        this.photoData.Placement_Mode = data.Placement_Mode
+        this.photoData.Packages_Qty = data.Packages_Qty
+        this.photoModal = true
+      }
+    }
+
   }
 
   async drUploadNewAdd() {
@@ -408,5 +499,127 @@ export class SpecialChineseComponent implements OnInit {
     this.dropUploadModal = false
   }
 
+  closePhotoModal() {
+    this.photoData = {
+      Plant: JSON.parse(sessionStorage.getItem('man')).Plant,
+      Project_Code: '',
+      Special_SKU: '',
+      Placement_Mode: 0,
+      Packages_Qty: 0,
+      User_ID: JSON.parse(sessionStorage.getItem('man')).User_ID,
+      Maintain_Time: ''
+    }
+    this.allPhoto = {
+      productPhoto: [{ name: '正面', en: 'FRONT', url: '', }, { name: '反面', en: 'REVERSES', url: '' }, { name: '局部', en: 'PART', url: '' }],
+      packagePhoto: [{ name: '正面', en: 'FRONT', url: '' }, { name: '反面', en: 'REVERSES', url: '' }, { name: '局部', en: 'PART', url: '' }]
+    }
+    this.photoModal = false
+  }
+
+  getPhoto(event, type, index) {
+    const file = event.target.files[0]
+    if (file) {
+      this.allPhoto[type][index].file = new FormData()
+      this.allPhoto[type][index].file.append('file', file)
+
+      // this.allPhoto[type][index].file
+
+      this.allPhoto[type][index].url = window.URL.createObjectURL(file)
+    }
+    else {
+      this.allPhoto[type][index].file = ''
+      this.allPhoto[type][index].url = ''
+    }
+    console.log(this.allPhoto);
+  }
+
+  async savePhoto() {
+    this.photoData.Maintain_Time = new Date()
+    this.photoData.Placement_Mode = Number(this.photoData.Placement_Mode)
+    this.photoData.Packages_Qty = Number(this.photoData.Packages_Qty)
+    this.photoData.Special_SKU = this.photoData.Special_SKU ? this.photoData.Special_SKU : null
+    let status = true
+
+    this.allPhoto.packagePhoto.forEach(e => {
+      if (!e.url) status = false
+    })
+    this.allPhoto.productPhoto.forEach(e => {
+      if (!e.url) status = false
+    })
+    if (!status) {
+      this.message.create('warning', '请上传所有的照片！！！')
+      return
+    }
+
+    let photoInfo = {
+      Plant: this.photoData.Plant,
+      Project_Code: this.photoData.Project_Code,
+      Special_SKU: this.photoData.Special_SKU,
+      PhotoType: '',
+      place: '',
+      file: ''
+    }
+
+    if (this.photoModalTitle == '新增')
+      status = await this.http.productPackingNewAdd(this.photoData)
+    if (this.photoModalTitle == '編輯')
+      status = await this.http.productPackingEdit(this.photoData)
+
+    this.allPhoto.productPhoto.forEach(async e => {
+      if (e['file']) {
+        photoInfo.PhotoType = 'PRODUCT'
+        photoInfo.place = e.en
+        photoInfo.file = e['file']
+        await this.http.uploadPhoto(photoInfo)
+      }
+    })
+
+    this.allPhoto.packagePhoto.forEach(async e => {
+      if (e['file']) {
+        photoInfo.PhotoType = 'PACKAGES'
+        photoInfo.place = e.en
+        photoInfo.file = e['file']
+        await this.http.uploadPhoto(photoInfo)
+      }
+    })
+
+    if (status.hasOwnProperty('error'))
+      this.message.create('error', '上传失败，该厂的该产品可能已经存在')
+    else {
+      this.message.create('success', '上传成功')
+      await this.search()
+      this.closePhotoModal()
+    }
+
+    console.log(this.photoData, 2222222222222222);
+
+  }
+
+  handlePhoto(data) {
+    const base = ['Front', 'Reverses', 'Part']
+
+    this.allPhoto.productPhoto.forEach((e, i) => {
+      e.url = data[`Product_Photo_${base[i]}`]
+    })
+
+    this.allPhoto.packagePhoto.forEach((e, i) => {
+      e.url = data[`Packages_Photo_${base[i]}`]
+    })
+  }
+
+  async deleteProductPacking(item) {
+    const status = await this.http.deleteProductPacking(item)
+    if (status.hasOwnProperty('error'))
+      this.message.create('error', '删除失败')
+    else {
+      this.message.create('success', '删除成功')
+      await this.search()
+    }
+  }
+
+  littleEdit(item, status) {
+    item.status = status
+    this.route.navigate(['home/dataCenter/batteryInfo/seeEdit', item])
+  }
 
 }

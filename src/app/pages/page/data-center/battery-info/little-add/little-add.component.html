@@ -1,0 +1,112 @@
+<div class="base">
+  <div class="content">
+
+    <header>
+      <div (click)="goBack()" class="goBack">
+        <img src="assets/imgs/rollback.png" style="width: 30px;vertical-align: bottom;" alt="图片丢了">
+        <span class="littleTitle">新增{{baseInfo.type}}</span>
+      </div>
+    </header>
+
+    <table *ngIf="baseInfo.type=='鑑定書'||baseInfo.type=='UN38.3试验概要'" border="1" width=100% height='30%'
+      style="color: #ffffff;">
+      <tr>
+        <td style="width: 50%;">
+          文件名稱：
+          NO.{{baseInfo.battery_pn}}
+        </td>
+        <td>
+
+          <ng-container *ngIf="baseInfo.type=='鑑定書'">
+            鑑定書編碼：
+            <input [(ngModel)]="testimonialInfo.Testimonial_SN" class="searchInput" type="text">
+          </ng-container>
+
+          <ng-container *ngIf="baseInfo.type=='UN38.3试验概要'">
+            文件編碼：
+            <input [(ngModel)]="un38.File_Encoding" class="searchInput" type="text">
+          </ng-container>
+
+        </td>
+      </tr>
+      <tr>
+        <td>
+
+          <ng-container *ngIf="baseInfo.type=='鑑定書'">
+            使用年份：
+            <select [(ngModel)]="testimonialInfo.Use_Year" class="searchSelect">
+              <option *ngFor="let item of year" value={{item.Demand_Year}}>{{item.Demand_Year}}</option>
+            </select>
+          </ng-container>
+
+          <ng-container *ngIf="baseInfo.type=='UN38.3试验概要'">
+            驗證碼：
+            <input [(ngModel)]="un38.Verification_Code" class="searchInput" type="text" style="width: 160px;">
+          </ng-container>
+
+        </td>
+        <td>
+          <ng-container *ngIf="baseInfo.type=='鑑定書'">
+            運輸方式：
+            <nz-radio-group style="margin-left: 20px;" [(ngModel)]="testimonialInfo.Transport_Mode">
+              <label *ngFor="let item of transportMode" nz-radio nzValue={{item.value}}
+                [ngModel]="item.value==testimonialInfo.Transport_Mode">
+                {{item.name}}
+              </label>
+            </nz-radio-group>
+          </ng-container>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          上傳檔案：
+          <input type="file" (change)="pdf($event)" class="pdfUpload">
+          <button class="clickUp">
+            <img src="assets/imgs/upload.png" style="width: 15px;" alt="图标跑了">
+            点击上传
+          </button>
+        </td>
+        <td></td>
+      </tr>
+    </table>
+
+
+    <table *ngIf="baseInfo.type=='授权书'||baseInfo.type=='其他'" border="1" width=100% height='30%' style="color: #ffffff;">
+      <tr>
+        <td style="width: 50%;">
+          文件名稱：
+          NO.{{baseInfo.battery_pn}}
+        </td>
+        <td>
+          <ng-container *ngIf="baseInfo.type=='授权书'">
+            任務日期：
+            <nz-range-picker [(ngModel)]="date" (ngModelChange)="onChange($event)"></nz-range-picker>
+          </ng-container>
+
+          <ng-container *ngIf="baseInfo.type=='其他'">
+            備註：
+            <input [(ngModel)]="other.Remark" class="searchInput" type="text">
+          </ng-container>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          上傳檔案：
+          <input type="file" (change)="pdf($event)" class="pdfUpload">
+          <button class="clickUp">
+            <img src="assets/imgs/upload.png" style="width: 15px;" alt="图标跑了">
+            点击上传
+          </button>
+        </td>
+        <td></td>
+      </tr>
+    </table>
+
+
+    <br><br>
+    <p style="text-align: center;">
+      <button class="sure" (click)="sure()" nz-button nzType="primary">确定</button>
+    </p>
+
+  </div>
+</div>

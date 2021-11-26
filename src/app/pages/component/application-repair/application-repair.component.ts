@@ -122,10 +122,7 @@ export class ApplicationRepairComponent implements OnInit {
         }
       }
     } else {
-
-
       // 处理延期和运输的逻辑
-
       exist.Transport_Mode = JSON.stringify(exist.Transport_Mode)
       // 获取延期或运输的table资料
       let data = await this.http.getPostponeTransport(exist)
@@ -141,7 +138,6 @@ export class ApplicationRepairComponent implements OnInit {
         this.message.create('success', '资料查询成功')
         this.sendData.next(data)
       }
-
     }
 
   }
