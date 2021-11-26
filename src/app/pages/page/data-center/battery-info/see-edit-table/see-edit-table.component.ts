@@ -1,3 +1,4 @@
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { Router } from '@angular/router';
 import { DataService } from 'src/app/services/data.service';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
@@ -31,7 +32,7 @@ export class SeeEditTableComponent implements OnInit {
   tableKey: any
   allData: allData
 
-  constructor(private http: DataService, private router: Router) { }
+  constructor(private http: DataService, private router: Router, private message: NzMessageService) { }
 
   async ngOnInit() {
     await this.getBatteryDetails()
@@ -97,6 +98,42 @@ export class SeeEditTableComponent implements OnInit {
       window.location.href = item.File_Name
     }
 
+  }
+
+  async deleteBatteryData(item) {
+    let status
+    switch (this.title) {
+      case '鑑定書':
+        status = await this.http.delTestimonial(item, this.baseInfo)
+        break;
+
+      case 'UN38.3试验概要':
+
+        status = await this.http.delUN383(item, this.baseInfo)
+        break;
+
+      case '授权书':
+
+        status = await this.http.delAuthorization(item, this.baseInfo)
+        break;
+
+      case '其他':
+
+        status = await this.http.delOther(item, this.baseInfo)
+        break;
+
+      default:
+        break;
+    }
+
+    if (status.statusCode)
+      this.message.create('error', '不好意思，删除失败')
+
+    else {
+      this.message.create('success', '恭喜，删除成功')
+      await this.getBatteryDetails()
+      this.initTable()
+    }
   }
 
   goToLittleAdd() {

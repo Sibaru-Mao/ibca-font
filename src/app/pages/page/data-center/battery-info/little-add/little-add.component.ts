@@ -2,8 +2,6 @@ import { DataService } from 'src/app/services/data.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { HtmlParser } from '@angular/compiler';
-import { stat } from 'fs';
 
 @Component({
   selector: 'app-little-add',
@@ -91,7 +89,7 @@ export class LittleAddComponent implements OnInit {
       const file: File = fileList[0]
       if (file.type != 'application/pdf') {
         this.message.create('warning', '请上传PDF文件，谢谢')
-        event.target.files = []
+        // event.target.files = []
         return
       }
       this.pdfName = file.name
@@ -156,8 +154,13 @@ export class LittleAddComponent implements OnInit {
     }
     if (status.hasOwnProperty('error'))
       this.message.create('error', '不好意思，信息新增失败')
-    else
+    else if (status.status == 500) {
+      this.message.create('warning', '不好意思，信息已存在')
+    }
+    else {
       this.message.create('success', '信息新增成功')
+      this.goBack()
+    }
 
     if (pdfStatus.hasOwnProperty('error'))
       this.message.create('error', '不好意思，PDF上传失败')

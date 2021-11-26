@@ -210,7 +210,7 @@ export class SpecialChineseComponent implements OnInit {
     console.log(this.showTableData, 11111);
   }
 
-  // 打开模态框
+  // 打开模态框 / 跳转到totalAdd
   showModal() {
     if (['special', 'chinese'].includes(this.id))
       this.specialChineseModal = true
@@ -223,6 +223,12 @@ export class SpecialChineseComponent implements OnInit {
       this.productModalType = 'newAdd'
       this.photoModalTitle = '新增'
     }
+
+    if (this.id == 'battery') {
+      this.route.navigate(['home/dataCenter/batteryInfo/totalAdd'])
+    }
+
+
   }
 
   // 关闭模态框

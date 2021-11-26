@@ -17,6 +17,7 @@ export class HeaderComponent implements OnInit {
     { name: '資料中心', link: 'dataCenter' },
     { name: '申請', link: 'apply' }
   ]
+  man: any = JSON.parse(sessionStorage.getItem('man'))
 
   constructor(
     private router: Router,

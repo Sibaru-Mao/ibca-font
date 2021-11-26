@@ -10,7 +10,7 @@ import { DataService } from 'src/app/services/data.service';
 export class UploadComponent implements OnInit {
 
   showTableData: any = []
-  tableScrollHeight: string = '410px'
+  tableScrollHeight: string = '390px'
   tableHead: any = [
     { name: '序號' }, { name: '廠別' }, { name: '任務編碼' }, { name: '項次' }, { name: '產品系列' },
     { name: '特殊架構' }, { name: '電池料號' }, { name: '電池型號' }, { name: '需求年份' }, { name: '出貨賬冊' },

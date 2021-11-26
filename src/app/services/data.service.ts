@@ -232,6 +232,25 @@ export class DataService {
     return await this.http.post(`photo/${data.Plant}_${data.Battery_PN}_${data.place}`, file)
   }
 
+  async getBatteryExist(data) {
+    return await this.http.get(`batteryInfo/searchFilter?Plant=${data.Plant}&battery_pn=${JSON.stringify(data.battery_pn)}`)
+  }
+
+  async delTestimonial(data, base) {
+    return await this.http.get(`batteryInfo/Testimonial/edit/delete?Plant=${base.plant}&battery_pn=${base.battery_pn}&FileName=${data.File_Name}&Testimonial_SN=${data.Testimonial_SN}`)
+  }
+  async delUN383(data, base) {
+    return await this.http.get(`batteryInfo/UN383/edit/delete?Plant=${base.plant}&battery_pn=${base.battery_pn}&FileName=${data.File_Name}&File_Encoding=${data.File_Encoding}`)
+  }
+  async delAuthorization(data, base) {
+    return await this.http.get(`batteryInfo/Authorization/edit/delete?Plant=${base.plant}&battery_pn=${base.battery_pn}&FileName=${data.File_Name}&Start_Date=${data.Start_Date}&End_Date=${data.End_Date}`)
+  }
+  async delOther(data, base) {
+    return await this.http.get(`batteryInfo/Other/edit/delete?Plant=${base.plant}&battery_pn=${JSON.stringify(base.battery_pn)}&FileName=${data.File_Name}`)
+  }
+
+
+
   // alskdlfklasklfkwaeopjfoanweufiajruifrsejigaeoigereigaefklrel
   /* 鉴定书上传 */
   async systemMission(data) {

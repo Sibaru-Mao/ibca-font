@@ -26,25 +26,9 @@ export class PhotoEditComponent implements OnInit {
   constructor(private message: NzMessageService, private http: DataService) { }
 
   async ngOnInit() {
-    // this.photoData = { User_ID: '', Maintain_Time: '' }
     console.log(this.baseInfo, '$$$$$$$$$$$$$');
-
     await this.getBatteryDetails()
   }
-
-  // ngOnChanges(changes: SimpleChanges): void {
-  //   //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
-  //   //Add '${implements OnChanges}' to the class.
-  //   console.log(this.photoData, '------------------');
-  //   if (this.photoData) {
-  //     if (this.photoData.length > 0) {
-  //       this.photoData = this.photoData[0]
-  //       this.allPhoto[0].url = this.photoData.Photo_Front
-  //       this.allPhoto[1].url = this.photoData.Photo_Reverses
-  //       this.allPhoto[2].url = this.photoData.Photo_Part
-  //     }
-  //   }
-  // }
 
   async getPhoto(event, index) {
     const file = event.target.files[0]

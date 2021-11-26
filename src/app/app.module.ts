@@ -59,6 +59,7 @@ import { SeeEditComponent } from './pages/page/data-center/battery-info/see-edit
 import { SeeEditTableComponent } from './pages/page/data-center/battery-info/see-edit-table/see-edit-table.component';
 import { LittleAddComponent } from './pages/page/data-center/battery-info/little-add/little-add.component';
 import { PhotoEditComponent } from './pages/page/data-center/battery-info/photo-edit/photo-edit.component';
+import { TotalAddComponent } from './pages/page/data-center/battery-info/total-add/total-add.component';
 
 
 registerLocaleData(zh);
@@ -121,6 +122,7 @@ export function configureProvider(loader: ConfigServiceService): () => Promise<v
     SeeEditTableComponent,
     LittleAddComponent,
     PhotoEditComponent,
+    TotalAddComponent,
   ],
   imports: [
     BrowserModule,

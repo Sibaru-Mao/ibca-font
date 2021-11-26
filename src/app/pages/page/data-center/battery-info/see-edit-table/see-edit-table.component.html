@@ -47,7 +47,8 @@
         <div style="position: absolute;left: 50%;top: 50%;transform: translate(-50%,-50%);width: 100%;">
           <span (click)="seeOrDownload(item,'see')" class="examine">查看</span>&nbsp;&nbsp;
           <span (click)="seeOrDownload(item,'download')" class="examine">下载</span>&nbsp;&nbsp;
-          <span class="examine" *ngIf="baseInfo.status=='edit'" style="color: #949CA1;">刪除</span>
+          <span (click)="deleteBatteryData(item)" class="examine" *ngIf="baseInfo.status=='edit'"
+            style="color: #949CA1;">刪除</span>
         </div>
       </td>
 
