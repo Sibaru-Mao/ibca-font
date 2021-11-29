@@ -249,6 +249,13 @@ export class DataService {
     return await this.http.get(`batteryInfo/Other/edit/delete?Plant=${base.plant}&battery_pn=${JSON.stringify(base.battery_pn)}&FileName=${data.File_Name}`)
   }
 
+  async delBatteryInfo(data) {
+    return await this.http.get(`batteryInfo/deleteAll?Plant=${data.plant}&battery_pn=${data.battery_pn}`)
+  }
+
+  async upBatteryPhotoInfo(data) {
+    return await this.http.post(`batteryInfo/Testimonial/edit/PhotoNewAdd`, data)
+  }
 
 
   // alskdlfklasklfkwaeopjfoanweufiajruifrsejigaeoigereigaefklrel

@@ -622,4 +622,14 @@ export class SpecialChineseComponent implements OnInit {
     this.route.navigate(['home/dataCenter/batteryInfo/seeEdit', item])
   }
 
+  async delBatteryInfo(item) {
+    const status = await this.http.delBatteryInfo(item)
+    if (status?.code == 200) {
+      this.message.success('删除成功')
+      await this.search()
+    }
+    else
+      this.message.error('删除失败')
+  }
+
 }

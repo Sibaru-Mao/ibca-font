@@ -86,18 +86,21 @@ export class PhotoEditComponent implements OnInit {
   }
 
   seeOrDown(item, type) {
-    switch (type) {
-      case 'see':
-        window.open(item.url)
-        break;
+    if (item.url) {
+      switch (type) {
+        case 'see':
+          window.open(item.url)
+          break;
 
-      case 'down':
-        window.location.href = item.url
-        break;
+        case 'down':
+          window.location.href = item.url
+          break;
 
-      default:
-        break;
+        default:
+          break;
+      }
     }
+
   }
 
 
