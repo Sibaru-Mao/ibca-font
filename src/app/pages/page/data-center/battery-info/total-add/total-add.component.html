@@ -1,0 +1,214 @@
+<div class="base">
+  <div class="content">
+
+    <header>
+      <div (click)="goBack()" class="goBack">
+        <img src="assets/imgs/rollback.png" style="width: 30px;vertical-align: bottom;" alt="图片丢了">
+        <span class="littleTitle">返回</span>
+      </div>
+    </header>
+
+    <table border="1" width=100% height='10%'>
+      <tr>
+        <td style="width: 50%;">廠別：
+          <select [(ngModel)]="base.Plant" class="taskSelect">
+            <option *ngFor="let item of plant" value={{item.PlantCode}}>{{item.Plant}}</option>
+          </select>
+        </td>
+        <td>料號：<input [(ngModel)]="base.battery_pn" class="searchInput" type="text"></td>
+      </tr>
+    </table>
+
+
+
+    <!-- 鑑定書 -->
+    <p class="titleContent">
+      <span class="spreadhead">新增鑑定書</span>
+      <img (click)="add('鑑定書')" class="newAdd" src="assets/imgs/add.png" alt="图片跑了">
+    </p>
+
+    <table *ngFor="let key of allTestimonialInfo" border="1" width=100% height='30%'>
+
+      <tr>
+        <td style="width: 50%;">
+          文件名稱：
+          {{key.data.File_Name}}
+        </td>
+        <td>
+          鑑定書編碼：
+          <input [(ngModel)]="key.data.Testimonial_SN" class="searchInput" type="text">
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          使用年份：
+          <select [(ngModel)]="key.data.Use_Year" class="searchSelect">
+            <option *ngFor="let item of year" value={{item.Demand_Year}}>{{item.Demand_Year}}</option>
+          </select>
+        </td>
+        <td>
+          運輸方式：
+          <nz-radio-group style="margin-left: 20px;" [(ngModel)]="key.data.Transport_Mode">
+            <label *ngFor="let item of key.transportMode" nz-radio nzValue={{item.value}}
+              [ngModel]="item.value==key.data.Transport_Mode">
+              {{item.name}}
+            </label>
+          </nz-radio-group>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="uploadContent">
+          上傳檔案：
+          <input type="file" (change)="pdf($event,key)" class="pdfUpload">
+          <button class="clickUp">
+            <img src="assets/imgs/upload.png" style="width: 15px;" alt="图标跑了">
+            点击上传
+          </button>
+        </td>
+        <td></td>
+      </tr>
+
+    </table>
+
+
+
+    <!-- UN38.3试验概要 -->
+    <p class="titleContent">
+      <span class="spreadhead">新增UN38.3试验概要</span>
+      <img (click)="add('UN38.3试验概要')" class="newAdd" src="assets/imgs/add.png" alt="图片跑了">
+    </p>
+
+    <table *ngFor="let key of allUn38" border="1" width=100% height='30%'>
+
+      <tr>
+        <td style="width: 50%;">
+          文件名稱：
+          {{key.data.File_Name}}
+        </td>
+        <td>
+          文件編碼：
+          <input [(ngModel)]="key.data.File_Encoding" class="searchInput" type="text">
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          驗證碼：
+          <input [(ngModel)]="key.data.Verification_Code" class="searchInput" type="text" style="width: 160px;">
+        </td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td class="uploadContent">
+          上傳檔案：
+          <input type="file" (change)="pdf($event,key)" class="pdfUpload">
+          <button class="clickUp">
+            <img src="assets/imgs/upload.png" style="width: 15px;" alt="图标跑了">
+            点击上传
+          </button>
+        </td>
+        <td></td>
+      </tr>
+
+    </table>
+
+
+    <!-- 授权书 -->
+    <p class="titleContent">
+      <span class="spreadhead">新增授权书</span>
+      <img (click)="add('授权书')" class="newAdd" src="assets/imgs/add.png" alt="图片跑了">
+    </p>
+
+    <table *ngFor="let key of allAuthorization" border="1" width=100% height='20%'>
+      <tr>
+        <td style="width: 50%;">
+          文件名稱：
+          {{key.data.File_Name}}
+        </td>
+        <td>
+          任務日期：
+          <nz-range-picker [(ngModel)]="date" (ngModelChange)="onChange($event,key)"></nz-range-picker>
+        </td>
+      </tr>
+      <tr>
+        <td class="uploadContent">
+          上傳檔案：
+          <input type="file" (change)="pdf($event,key)" class="pdfUpload">
+          <button class="clickUp">
+            <img src="assets/imgs/upload.png" style="width: 15px;" alt="图标跑了">
+            点击上传
+          </button>
+        </td>
+        <td></td>
+      </tr>
+    </table>
+
+
+    <!-- 照片 -->
+    <p style="margin-top: 6%;"><span class="spreadhead">新增照片</span></p>
+    <div class="photoBack">
+      <div style="display: flex;height: 100%;width:100%;">
+
+        <div *ngFor="let item of allPhoto;let i=index" class="topContent">
+          <header>
+            <span>{{item.name}}</span>
+          </header>
+          <div class="photoDiv" style="background-image: url({{item.url}});">
+          </div>
+          <footer style="position: relative;">
+            <span (click)="seePhoto(item)" class="upload">查看</span>&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="file" (change)="getPhoto($event,i)" class="photoUpload" style="width: 30px;">
+            <span class="upload">上傳</span>&nbsp;&nbsp;&nbsp;&nbsp;
+            <!-- <span class="upload">下載</span> -->
+          </footer>
+        </div>
+
+      </div>
+      <!-- <p style="margin-top: -2%;text-align: center;">
+         上傳人：{{photoData.User_ID}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         上傳時間：{{photoData.Maintain_Time|date: 'yyyy/M/dd HH:mm:ss'}}
+       </p> -->
+    </div>
+
+
+    <!-- 其他 -->
+    <p class="titleContent">
+      <span class="spreadhead">新增其他</span>
+      <img (click)="add('其他')" class="newAdd" src="assets/imgs/add.png" alt="图片跑了">
+    </p>
+
+    <table *ngFor="let key of allOther" border="1" width=100% height='20%'>
+      <tr>
+        <td style="width: 50%;">
+          文件名稱：
+          {{key.data.File_Name}}
+        </td>
+        <td>
+          備註：
+          <input [(ngModel)]="key.data.Remark" class="searchInput" type="text">
+        </td>
+      </tr>
+      <tr>
+        <td class="uploadContent">
+          上傳檔案：
+          <input type="file" (change)="pdf($event,key)" class="pdfUpload">
+          <button class="clickUp">
+            <img src="assets/imgs/upload.png" style="width: 15px;" alt="图标跑了">
+            点击上传
+          </button>
+        </td>
+        <td></td>
+      </tr>
+    </table>
+
+
+    <br><br>
+    <p style="text-align: center;">
+      <button class="sure" (click)="sure()" nz-button nzType="primary">确定</button>
+    </p>
+
+  </div>
+</div>

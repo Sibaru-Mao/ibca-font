@@ -1,0 +1,83 @@
+::ng-deep .ant-radio-wrapper span {
+  color: #FFFFFF;
+}
+
+:host ::ng-deep .ng-untouched,
+:host ::ng-deep .ng-touched {
+  color: #FFFFFF;
+}
+
+nz-range-picker {
+  background-color: #203033;
+  border-color: rgba(127, 127, 127, 100);
+}
+
+.base {
+  width: 100%;
+  height: 100%;
+}
+
+.content {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(32, 48, 51, 100);
+  padding: .5% 1%;
+}
+
+
+.goBack {
+  display: inline-block;
+  cursor: pointer;
+  line-height: 30px;
+  margin-left: -5px;
+}
+
+.littleTitle {
+  color: #4EBBBB;
+}
+
+td {
+  padding-left: 10px;
+}
+
+.searchSelect {
+  width: 160px;
+  height: 25px;
+  font-size: 12px;
+  background-color: rgba(48, 73, 77, 100);
+  color: rgba(255, 255, 255, 100);
+  border: 1px solid rgba(81, 87, 88, 100);
+  outline: none;
+  text-align: center;
+}
+
+.searchInput {
+  width: 200px;
+  background-color: #203033;
+  border: .1px solid rgba(127, 127, 127, 100);
+  border-radius: 3px;
+  outline: none;
+  text-align: center;
+  color: #FFFFFF;
+  height: 24px;
+}
+
+.clickUp {
+  text-align: center;
+  background-color: #30494D;
+  width: 160px;
+  border: none;
+  opacity: none;
+  color: #B6C3CC;
+}
+
+.pdfUpload {
+  opacity: 0;
+  position: absolute;
+  cursor: pointer;
+  width: 160px;
+}
+
+.sure {
+  background-color: #489C9C;
+}

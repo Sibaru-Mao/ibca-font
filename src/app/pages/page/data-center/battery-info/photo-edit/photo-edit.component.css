@@ -1,0 +1,65 @@
+.spreadhead {
+  color: #4EBBBB;
+  font-size: 18px;
+}
+
+.photoBack {
+  width: 100%;
+  height: 60%;
+  padding-top: 4%;
+}
+
+.topContent {
+  flex-grow: 2;
+  height: 100%;
+  padding: 0 10px;
+}
+
+.topContent header,
+.topContent footer {
+  text-align: center;
+}
+
+.topContent header {
+  position: relative;
+}
+
+.topContent header>span {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translate(-50%, 0);
+}
+
+
+.photoType {
+  flex-grow: 1;
+  position: relative;
+}
+
+.photoType>span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+}
+
+.photoDiv {
+  width: 50%;
+  height: 60%;
+  background-color: #7B8486;
+  background-size: 100% 100%;
+  margin-left: 25%;
+}
+
+.pdfUpload {
+  opacity: 0;
+  position: absolute;
+  cursor: pointer;
+}
+
+.upload {
+  text-decoration: underline;
+  color: #4EBBBB;
+}

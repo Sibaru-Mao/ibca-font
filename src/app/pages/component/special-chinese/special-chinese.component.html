@@ -103,8 +103,8 @@
           <td *ngFor="let key of tableKey"> {{item[key]}}</td>
           <td style="position: relative;">
             <div style="position: absolute;left: 50%;top: 50%;transform: translate(-50%,-50%);width: 100%;">
-              <span class="examine">查看</span>&nbsp;&nbsp;
-              <span class="examine" (click)="littleEdit(item)">編輯</span>&nbsp;&nbsp;
+              <span class="examine" (click)="littleEdit(item,'see')">查看</span>&nbsp;&nbsp;
+              <span class="examine" (click)="littleEdit(item,'edit')">編輯</span>&nbsp;&nbsp;
               <span class="examine" style="color: #949CA1;">刪除</span>
             </div>
           </td>
@@ -214,7 +214,8 @@
                     <div class="photoDiv" style="background-image: url({{item.url}});">
                     </div>
                     <footer>
-                      <input type="file" (change)="getPhoto($event,'productPhoto',i)" class="modalSelect pdfUpload">
+                      <input type="file" (change)="getPhoto($event,'productPhoto',i)" class="pdfUpload"
+                        style="width: 40px;">
                       <span class="upload">上傳</span>
                     </footer>
                   </div>
@@ -235,8 +236,8 @@
                     <div class="photoDiv" style="background-image: url({{item.url}});">
                     </div>
                     <footer>
-                      <input type="file" (change)="getPhoto($event,'packagePhoto',i)" class="modalSelect pdfUpload"
-                        style="width: 20px;">
+                      <input type="file" (change)="getPhoto($event,'packagePhoto',i)" class="pdfUpload"
+                        style="width: 40px;">
                       <span class="upload">上傳</span>
                     </footer>
                   </div>
