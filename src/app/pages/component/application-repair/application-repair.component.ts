@@ -121,7 +121,9 @@ export class ApplicationRepairComponent implements OnInit {
           await this.handleOk()
         }
       }
+
     } else {
+
       // 处理延期和运输的逻辑
       exist.Transport_Mode = JSON.stringify(exist.Transport_Mode)
       // 获取延期或运输的table资料

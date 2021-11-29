@@ -2,7 +2,6 @@ import { DataService } from 'src/app/services/data.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Component, OnInit } from '@angular/core';
 
-
 @Component({
   selector: 'app-total-add',
   templateUrl: './total-add.component.html',
@@ -179,13 +178,25 @@ export class TotalAddComponent implements OnInit {
       await this.postData(e, '其他', i)
     });
 
+    await this.postPhoto()
 
+    const photoInfoStatus = await this.http.upBatteryPhotoInfo({
+      Plant: this.base.Plant,
+      Battery_PN: this.base.battery_pn,
+      User_ID: this.man.User_ID,
+      Maintain_Time: new Date()
+    })
+
+    if (photoInfoStatus.status != 200) {
+      this.message.error('照片信息上传失败')
+      this.status = false
+    }
 
     if (this.status) {
       this.message.create('success', '恭喜你，资料上传成功')
       setTimeout(() => {
         this.goBack()
-      }, 500);
+      }, 1000);
     }
 
     console.log(this.allTestimonialInfo, this.allUn38, this.allAuthorization, this.allOther);
@@ -224,7 +235,6 @@ export class TotalAddComponent implements OnInit {
       this.status = false
     }
 
-
     if (pdfStatus.hasOwnProperty('error')) {
       this.message.create('error', `${type}，第${i + 1}个PDF上传失败`)
       this.status = false
@@ -240,6 +250,7 @@ export class TotalAddComponent implements OnInit {
     }
 
     this.allPhoto.forEach(async (e, i) => {
+      data.place = e.en
       const photoStatus = await this.http.uploadBatteryPhoto(data, e.file)
       if (photoStatus.hasOwnProperty('error')) {
         this.message.create('error', `不好意思，第${i}张图片上传失败`)
@@ -303,7 +314,10 @@ export class TotalAddComponent implements OnInit {
   }
 
   seePhoto(item) {
-    window.open(item.url)
+    if (item.url)
+      window.open(item.url)
+    else
+      this.message.create('warning', '不好意思，暂无照片可看')
   }
 
 

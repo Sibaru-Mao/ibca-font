@@ -105,7 +105,7 @@
             <div style="position: absolute;left: 50%;top: 50%;transform: translate(-50%,-50%);width: 100%;">
               <span class="examine" (click)="littleEdit(item,'see')">查看</span>&nbsp;&nbsp;
               <span class="examine" (click)="littleEdit(item,'edit')">編輯</span>&nbsp;&nbsp;
-              <span class="examine" style="color: #949CA1;">刪除</span>
+              <span class="examine" (click)="delBatteryInfo(item)" style="color: #949CA1;">刪除</span>
             </div>
           </td>
         </tr>
