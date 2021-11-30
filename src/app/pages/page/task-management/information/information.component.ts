@@ -12,7 +12,7 @@ import { ActivatedRoute, } from '@angular/router';
 })
 export class InformationComponent implements OnInit {
   @Output() saveNewData = new EventEmitter<any>()
-  @Input() pageType: number = 0 //0任务管理中的查看、编辑、删除，1资料中心的基础设定，2申请中的新申请，
+  @Input() pageType: number = 0 //0任务管理中的查看、编辑、删除，1资料中心的基础设定，2申请中的新申请、维修品，3
 
   isVisible = false;
   transportWay: any = [
@@ -108,7 +108,7 @@ export class InformationComponent implements OnInit {
   condition: any = { task: '', num: 0, index: 0 }
 
   info: any = {
-    Battery_SN: 1,//number
+    Battery_SN: '',//number
     Button_Battery: '',//number
     Complete_Time: '',//number
     Consignor: '',
@@ -179,16 +179,10 @@ export class InformationComponent implements OnInit {
     // 新申请或者维修品确定后处理基础数据
     this.modalService.getSubject().subscribe(res => {
       if (!res) return
-
       if (res.type == 'newApplication' && res.data.data) {
         this.info = res.data.data
         this.handleUnexpected_Start()
       }
-
-      // if (res.type == 'repair' && res.data.data) {
-      //   this.info = res.data.data
-      //   this.handleUnexpected_Start()
-      // }
       console.log(this.info, this.targetInfo, 111111111);
     })
   }
@@ -315,7 +309,7 @@ export class InformationComponent implements OnInit {
     }
   }
 
-  // 触发生产任务的方法（触发须填写信息的保存）
+  // 触发生成任务的方法（触发须填写信息的保存）
   startTask() {
     this.saveNewData.next()
   }

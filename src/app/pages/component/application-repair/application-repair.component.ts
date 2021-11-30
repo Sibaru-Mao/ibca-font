@@ -153,7 +153,9 @@ export class ApplicationRepairComponent implements OnInit {
 
     if (res.code == 200) {
       this.message.create('success', res.msg)
-    } else this.message.create('warning', res.msg)
+    } else {
+      this.message.create('warning', res.msg)
+    }
     this.generateTask.next(res.Task_SN)
   }
 
@@ -179,14 +181,6 @@ export class ApplicationRepairComponent implements OnInit {
       this.message.success('获取基本资料成功')
     }
     // 给information模块发送基本资料并且触发方法处理资料
-    // let type
-
-    // if (this.title == '新申请')
-    //   type = 'newApplication'
-
-    // if (this.title == '维修品')
-    //   type = 'repair'
-
     this.modalService.emitInfo({ type: 'newApplication', data: { status: true, data: baseData } })
 
     this.isVisible = false;

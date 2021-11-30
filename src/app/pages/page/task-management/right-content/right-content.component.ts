@@ -105,10 +105,10 @@ export class RightContentComponent implements OnInit {
     this.tableData = await this.http.getTableData(this.tableContion)
     console.log(this.tableData);
     // if (!this.tableData.hasOwnProperty('error')) {
-    //   if (this.tableData.length > 0) this.message.create('success', '資料請求成功')
-    //   else this.message.create('warning', '暫無資料')
+    //   if (this.tableData.length > 0) this.message.success('資料請求成功')
+    //   else this.message.warning('暫無資料')
     // }
-    // else this.message.create('error', '資料請求失敗')
+    // else this.message.error('資料請求失敗')
   }
 
   async getConfig() {

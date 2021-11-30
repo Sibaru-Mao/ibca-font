@@ -1,6 +1,6 @@
-import { async } from '@angular/core/testing';
 import { DataService } from './../services/data.service';
 import { Injectable } from '@angular/core';
+
 import {
   ActivatedRouteSnapshot,
   Router,
@@ -13,7 +13,12 @@ import { KeycloakAuthGuard, KeycloakService } from 'keycloak-angular';
 })
 export class AuthGuard extends KeycloakAuthGuard {
 
-  constructor(private http: DataService, protected readonly router: Router, protected readonly keycloak: KeycloakService) {
+
+  constructor(
+    private http: DataService,
+    protected readonly router: Router,
+    protected readonly keycloak: KeycloakService
+  ) {
     super(router, keycloak);
   }
 

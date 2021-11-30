@@ -28,7 +28,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { NzMessageModule } from 'ng-zorro-antd/message';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
-import * as configjson from '../assets/config/config.json';
+
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -62,8 +62,23 @@ import { PhotoEditComponent } from './pages/page/data-center/battery-info/photo-
 import { TotalAddComponent } from './pages/page/data-center/battery-info/total-add/total-add.component';
 
 
+
+export function configureProvider(loader: ConfigServiceService): () => Promise<void> {
+  return async () => {
+    await loader.loadConfigure([
+      { path: 'assets/config/config.json', type: 'datasources' }
+    ]);
+  };
+}
+
 registerLocaleData(zh);
+
+export function HttpLoaderFactory(httpClient: HttpClient) {
+  return new TranslateHttpLoader(httpClient);
+}
+
 function initializeKeycloak(keycloak: KeycloakService) {
+  const configjson = JSON.parse(sessionStorage.getItem('config'))
   return () =>
     keycloak.init({
       config: {
@@ -79,16 +94,12 @@ function initializeKeycloak(keycloak: KeycloakService) {
     });
 }
 
-export function HttpLoaderFactory(httpClient: HttpClient) {
-  return new TranslateHttpLoader(httpClient);
-}
-
-export function configureProvider(loader: ConfigServiceService): () => Promise<void> {
-  return async () => {
-    await loader.loadConfigure([
-      { path: 'assets/config/config.json', type: 'datasources' }
-    ]);
-  };
+window.onload = function () {
+  let url = document.location.href
+  if (url.indexOf('yes') == -1) {
+    const time = new Date()
+    window.location.href = url + `?yes=${time.getTime()}`
+  }
 }
 
 @NgModule({
@@ -158,6 +169,12 @@ export function configureProvider(loader: ConfigServiceService): () => Promise<v
   ],
   bootstrap: [AppComponent],
   providers: [
+    {
+      provide: APP_INITIALIZER,
+      useFactory: configureProvider,
+      deps: [ConfigServiceService],
+      multi: true
+    },
     ModalService,
     { provide: NZ_I18N, useValue: zh_CN },
     {
@@ -165,12 +182,6 @@ export function configureProvider(loader: ConfigServiceService): () => Promise<v
       useFactory: initializeKeycloak,
       multi: true,
       deps: [KeycloakService],
-    },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: configureProvider,
-      deps: [ConfigServiceService],
-      multi: true
     }
   ]
 })
