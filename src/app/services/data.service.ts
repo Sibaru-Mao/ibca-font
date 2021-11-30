@@ -261,8 +261,6 @@ export class DataService {
     return await this.http.post(`batteryInfo/Testimonial/edit/PhotoNewAdd`, data)
   }
 
-
-  // alskdlfklasklfkwaeopjfoanweufiajruifrsejigaeoigereigaefklrel
   /* 鉴定书上传 */
   async systemMission(data) {
     return await this.http.get(`testimonial/systemMission?Testimonials_SN=${data}`)
