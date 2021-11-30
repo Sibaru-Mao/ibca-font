@@ -2,7 +2,6 @@ import { ModalService } from './../../../services/server/modal.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { DataService } from './../../../services/data.service';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { type } from 'os';
 
 @Component({
   selector: 'app-application-repair',
@@ -31,7 +30,7 @@ export class ApplicationRepairComponent implements OnInit {
 
   isVisible = false;
   isConfirmLoading = false;
-
+  Shipment_Books: string
 
   plant: Array<any> = JSON.parse(sessionStorage.getItem('plant'))
   year: Array<any> = JSON.parse(sessionStorage.getItem('year'))
@@ -66,6 +65,8 @@ export class ApplicationRepairComponent implements OnInit {
       });
     }
 
+    this.handleShipmentBooks()
+
   }
 
   // 新申请和维修品 或 延期和运输 中点击确认触发的方法
@@ -96,24 +97,22 @@ export class ApplicationRepairComponent implements OnInit {
               t.Task_SN = ''
 
               existData.forEach(e => {
-
                 // 本次选择的运输方式如果已经存在，打开提醒的模态框
                 if (t.checked && t.label == e.Description_ZH) {
                   modalStatus = true
                 }
-
                 // 将重复资料的Task_SN加入transportWay,用于模态框的显示
                 if (t.label == e.Description_ZH) {
                   t.Task_SN = e.Task_SN
                 }
-
               });
 
             });
 
             this.isVisible = modalStatus
             // 未发现重复申请的运输方式，直接进入资料编辑
-            if (!modalStatus) await this.handleOk()
+            if (!modalStatus)
+              await this.handleOk()
           }
 
         } else {
@@ -128,6 +127,8 @@ export class ApplicationRepairComponent implements OnInit {
       exist.Transport_Mode = JSON.stringify(exist.Transport_Mode)
       // 获取延期或运输的table资料
       let data = await this.http.getPostponeTransport(exist)
+      console.log(data);
+
 
       if (data.status) {
         this.message.create('error', '查询资料失败')
@@ -171,7 +172,21 @@ export class ApplicationRepairComponent implements OnInit {
 
     // 获取基本资料
     let baseData = await this.http.getNewApplyBaseData(this.newData)
+    if (baseData.status) {
+      this.message.error('获取基本资料失败')
+      return
+    } else {
+      this.message.success('获取基本资料成功')
+    }
     // 给information模块发送基本资料并且触发方法处理资料
+    // let type
+
+    // if (this.title == '新申请')
+    //   type = 'newApplication'
+
+    // if (this.title == '维修品')
+    //   type = 'repair'
+
     this.modalService.emitInfo({ type: 'newApplication', data: { status: true, data: baseData } })
 
     this.isVisible = false;
@@ -183,5 +198,17 @@ export class ApplicationRepairComponent implements OnInit {
     this.isVisible = false;
   }
 
+  handleShipmentBooks() {
+    if (['新申请', '运输', '延期'].includes(this.title)) {
+      this.newData.Shipment_Books = 0
+      this.Shipment_Books = '生產賬冊'
+    }
+
+    if (['维修品'].includes(this.title)) {
+      this.newData.Shipment_Books = 1
+      this.Shipment_Books = '維修賬冊'
+    }
+
+  }
 
 }

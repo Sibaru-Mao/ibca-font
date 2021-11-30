@@ -339,8 +339,14 @@
         <div class="foot">
           <div>
             授權書：
-            <u style="color: #3BAEE5;">023.B0010.0191 授權書</u>
-            <img class="down" src="assets/imgs/download.png" alt="">
+            <ng-container *ngIf="info.authorization.AuthBook!='找不到相关资料'">
+              <u style="color: #3BAEE5;">{{info.authorization.AuthBook}}</u>
+              <img (click)="downLoad(info.authorization.File_Name)" class="down" src="assets/imgs/download.png" alt="">
+            </ng-container>
+
+            <ng-container *ngIf="info.authorization.AuthBook=='找不到相关资料'">
+              <span style="color: red;">缺少相關資料</span>
+            </ng-container>
           </div>
           <div>
             報告照片：

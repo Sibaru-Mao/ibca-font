@@ -115,7 +115,11 @@ export class DataService {
 
   // 获取新申请或运输的table资料
   async getNewApplyBaseData(data) {
-    return await this.http.get(`newApply/BaseData?Material_No=${data.Material_No}&ModelFamily=${data.Project_Code}&Plant=${data.Plant}`)
+    // return await this.http.get(`newApply/BaseData?Material_No=${data.Material_No}&ModelFamily=${data.Project_Code}&Plant=${data.Plant}`)
+    return await this.http.get(`newApply/BaseData?Material_No=${data.Material_No}&ModelFamily=${data.Project_Code}
+    &Plant=${data.Plant}&Battery_PN=${data.Battery_PN}&Use_Year=${data.Demand_Year}
+    &Transport_Mode=${JSON.stringify(data.Transport_Mode)}&Project_Code=${data.Project_Code}
+    &Shipment_Books=${data.Shipment_Books}`)
   }
 
   // 提交新申请或者维修品的基本资料

@@ -175,8 +175,23 @@ export class InformationComponent implements OnInit {
     private route: ActivatedRoute,
     private message: NzMessageService,
     private modalService: ModalService,
-    // private applicationRepair: ApplicationRepairComponent
-  ) { }
+  ) {
+    // 新申请或者维修品确定后处理基础数据
+    this.modalService.getSubject().subscribe(res => {
+      if (!res) return
+
+      if (res.type == 'newApplication' && res.data.data) {
+        this.info = res.data.data
+        this.handleUnexpected_Start()
+      }
+
+      // if (res.type == 'repair' && res.data.data) {
+      //   this.info = res.data.data
+      //   this.handleUnexpected_Start()
+      // }
+      console.log(this.info, this.targetInfo, 111111111);
+    })
+  }
 
   async ngOnInit() {
     await this.getTaskStatus()
@@ -201,17 +216,7 @@ export class InformationComponent implements OnInit {
 
     this.changeStyle()
 
-    // 新申请或者维修品确定后处理基础数据
-    this.modalService.getSubject().subscribe(res => {
-      if (!res) return
 
-      if (res.type == 'newApplication' && res.data.data) {
-        this.info = res.data.data
-        this.handleUnexpected_Start()
-      }
-
-    })
-    console.log(this.info, this.targetInfo, 111111111);
   }
 
 
@@ -315,7 +320,7 @@ export class InformationComponent implements OnInit {
     this.saveNewData.next()
   }
 
-  // 申请中的新申请和维修品，点击“生成任务”按钮触发的方法（生成任务）
+  // 申请中的新申请和维修品，点击"生成任务"按钮触发的方法（生成任务）
   async generateTask(Task_SN) {
     // this.saveNewData.next()
     let newData = {
@@ -362,7 +367,7 @@ export class InformationComponent implements OnInit {
     newData.Sample_Photo = this.toNumber(this.info.Sample_Photo)
     newData.Battery_SN = 1
     // newData.Battery_SN = this.toNumber(this.info.Battery_SN)
-    newData.Placement_Mode = this.toNumber(this.info.Placement_Mode)
+    newData.Placement_Mode = this.handlePlacement_Mode(this.info.Placement_Mode)
     newData.UN383_SN = this.info.UN383_SN
     newData.Verification_Code = this.info.Verification_Code
     newData.Button_Battery = this.toNumber(this.info.Button_Battery)
@@ -423,10 +428,12 @@ export class InformationComponent implements OnInit {
 
   }
 
-  // 处理info中的Unexpected_Start，为 防意外啟動  绑定勾选状态
+  // 处理info中的Unexpected_Start，为防意外啟動  绑定勾选状态
   handleUnexpected_Start() {
     if (this.info.Unexpected_Start.length > 0) {
-
+      if (typeof (this.info.Unexpected_Start) == 'string') {
+        this.info.Unexpected_Start = JSON.parse(this.info.Unexpected_Start)
+      }
       this.unexpectStart.forEach(e => {
         e.checked = false
       });
@@ -476,6 +483,18 @@ export class InformationComponent implements OnInit {
       return 0
     }
 
+  }
+
+  handlePlacement_Mode(data) {
+    if (data == '与设备包装在一起')
+      return 0
+    if (data = '安装在设备内')
+      return 1
+  }
+
+  downLoad(url) {
+    // window.location.href = url
+    window.open(url)
   }
 
 }
