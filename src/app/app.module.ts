@@ -62,11 +62,6 @@ import { PhotoEditComponent } from './pages/page/data-center/battery-info/photo-
 import { TotalAddComponent } from './pages/page/data-center/battery-info/total-add/total-add.component';
 
 
-registerLocaleData(zh);
-
-export function HttpLoaderFactory(httpClient: HttpClient) {
-  return new TranslateHttpLoader(httpClient);
-}
 
 export function configureProvider(loader: ConfigServiceService): () => Promise<void> {
   return async () => {
@@ -75,9 +70,15 @@ export function configureProvider(loader: ConfigServiceService): () => Promise<v
     ]);
   };
 }
-const configjson = JSON.parse(sessionStorage.getItem('config'))
+
+registerLocaleData(zh);
+
+export function HttpLoaderFactory(httpClient: HttpClient) {
+  return new TranslateHttpLoader(httpClient);
+}
 
 function initializeKeycloak(keycloak: KeycloakService) {
+  const configjson = JSON.parse(sessionStorage.getItem('config'))
   return () =>
     keycloak.init({
       config: {
@@ -91,6 +92,14 @@ function initializeKeycloak(keycloak: KeycloakService) {
           window.location.origin + '/assets/silentCheckSso.html',
       },
     });
+}
+
+window.onload = function () {
+  let url = document.location.href
+  if (url.indexOf('yes') == -1) {
+    const time = new Date()
+    window.location.href = url + `?yes=${time.getTime()}`
+  }
 }
 
 @NgModule({
@@ -160,6 +169,12 @@ function initializeKeycloak(keycloak: KeycloakService) {
   ],
   bootstrap: [AppComponent],
   providers: [
+    {
+      provide: APP_INITIALIZER,
+      useFactory: configureProvider,
+      deps: [ConfigServiceService],
+      multi: true
+    },
     ModalService,
     { provide: NZ_I18N, useValue: zh_CN },
     {
@@ -167,12 +182,6 @@ function initializeKeycloak(keycloak: KeycloakService) {
       useFactory: initializeKeycloak,
       multi: true,
       deps: [KeycloakService],
-    },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: configureProvider,
-      deps: [ConfigServiceService],
-      multi: true
     }
   ]
 })
