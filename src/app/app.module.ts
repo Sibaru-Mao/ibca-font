@@ -28,7 +28,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { NzMessageModule } from 'ng-zorro-antd/message';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
-import * as configjson from '../assets/config/config.json';
+
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -63,6 +63,20 @@ import { TotalAddComponent } from './pages/page/data-center/battery-info/total-a
 
 
 registerLocaleData(zh);
+
+export function HttpLoaderFactory(httpClient: HttpClient) {
+  return new TranslateHttpLoader(httpClient);
+}
+
+export function configureProvider(loader: ConfigServiceService): () => Promise<void> {
+  return async () => {
+    await loader.loadConfigure([
+      { path: 'assets/config/config.json', type: 'datasources' }
+    ]);
+  };
+}
+const configjson = JSON.parse(sessionStorage.getItem('config'))
+
 function initializeKeycloak(keycloak: KeycloakService) {
   return () =>
     keycloak.init({
@@ -77,18 +91,6 @@ function initializeKeycloak(keycloak: KeycloakService) {
           window.location.origin + '/assets/silentCheckSso.html',
       },
     });
-}
-
-export function HttpLoaderFactory(httpClient: HttpClient) {
-  return new TranslateHttpLoader(httpClient);
-}
-
-export function configureProvider(loader: ConfigServiceService): () => Promise<void> {
-  return async () => {
-    await loader.loadConfigure([
-      { path: 'assets/config/config.json', type: 'datasources' }
-    ]);
-  };
 }
 
 @NgModule({

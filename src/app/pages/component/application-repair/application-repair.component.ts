@@ -153,7 +153,9 @@ export class ApplicationRepairComponent implements OnInit {
 
     if (res.code == 200) {
       this.message.create('success', res.msg)
-    } else this.message.create('warning', res.msg)
+    } else {
+      this.message.create('warning', res.msg)
+    }
     this.generateTask.next(res.Task_SN)
   }
 

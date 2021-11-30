@@ -1,3 +1,4 @@
+import { InformationComponent } from './../../task-management/information/information.component';
 import { ApplicationRepairComponent } from './../../../component/application-repair/application-repair.component';
 import { ModalService } from './../../../../services/server/modal.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -9,6 +10,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 })
 export class RepairComponent implements OnInit {
   @ViewChild('appRe') appRe: ApplicationRepairComponent
+  @ViewChild('information') information: InformationComponent
   show: boolean = false
 
   constructor(private modalService: ModalService) { }
@@ -23,6 +25,10 @@ export class RepairComponent implements OnInit {
 
   async saveNewData() {
     await this.appRe.saveNewData()
+  }
+
+  generateTask(Task_SN) {
+    this.information.generateTask(Task_SN)
   }
 
 }

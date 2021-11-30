@@ -108,7 +108,7 @@ export class InformationComponent implements OnInit {
   condition: any = { task: '', num: 0, index: 0 }
 
   info: any = {
-    Battery_SN: 1,//number
+    Battery_SN: '',//number
     Button_Battery: '',//number
     Complete_Time: '',//number
     Consignor: '',
@@ -315,7 +315,7 @@ export class InformationComponent implements OnInit {
     }
   }
 
-  // 触发生产任务的方法（触发须填写信息的保存）
+  // 触发生成任务的方法（触发须填写信息的保存）
   startTask() {
     this.saveNewData.next()
   }
