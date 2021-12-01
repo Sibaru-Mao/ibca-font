@@ -1,4 +1,3 @@
-import { ConfigServiceService } from './../../../services/configService/config-service.service';
 import { AppComponent } from './../../../app.component';
 import { Component, OnInit } from '@angular/core';
 import { KeycloakService } from 'keycloak-angular';
@@ -10,7 +9,6 @@ import { KeycloakService } from 'keycloak-angular';
 })
 export class HeaderComponent implements OnInit {
   language: string = 'tc'
-  version: string
   navigationBar = [
     { name: '任務管理', link: 'taskManagement' },
     { name: '資料中心', link: 'dataCenter' },
@@ -21,11 +19,9 @@ export class HeaderComponent implements OnInit {
   constructor(
     private keycloak: KeycloakService,
     private app: AppComponent,
-    private configServe: ConfigServiceService
   ) { }
 
   ngOnInit(): void {
-    this.version = this.configServe.getSpecificConfigure('datasources').version
   }
 
   logout() {
