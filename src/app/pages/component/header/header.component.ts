@@ -1,6 +1,5 @@
+import { ConfigServiceService } from './../../../services/configService/config-service.service';
 import { AppComponent } from './../../../app.component';
-import { DataService } from './../../../services/data.service';
-import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { KeycloakService } from 'keycloak-angular';
 
@@ -20,20 +19,14 @@ export class HeaderComponent implements OnInit {
   man: any = JSON.parse(sessionStorage.getItem('man'))
 
   constructor(
-    private router: Router,
     private keycloak: KeycloakService,
-    private http: DataService,
     private app: AppComponent,
+    private configServe: ConfigServiceService
   ) { }
 
-  ngOnInit(): void { }
-
-  // selectNavigate(item) {
-  //   this.navigationBar.forEach((e) => { e.status = false })
-  //   item.status = true
-  //   this.router.navigate([item.link])
-  // }
-
+  ngOnInit(): void {
+    this.version = this.configServe.getSpecificConfigure('datasources').version
+  }
 
   logout() {
     this.keycloak.logout();
