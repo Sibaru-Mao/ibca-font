@@ -4,6 +4,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { DataService } from './../../../../services/data.service';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, } from '@angular/router';
+import { stringify } from 'querystring';
 
 @Component({
   selector: 'app-information',
@@ -181,6 +182,10 @@ export class InformationComponent implements OnInit {
       if (!res) return
       if (res.type == 'newApplication' && res.data.data) {
         this.info = res.data.data
+
+        if (typeof (this.info.Transport_Report) == 'string')
+          this.info.Transport_Report = JSON.parse(this.info.Transport_Report)
+
         this.handleUnexpected_Start()
       }
       console.log(this.info, this.targetInfo, 111111111);
