@@ -9,6 +9,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TotalAddComponent implements OnInit {
 
+  loading: boolean = false
   man: any = JSON.parse(sessionStorage.getItem('man'))
   year: any = JSON.parse(sessionStorage.getItem('year'))
   plant: any = JSON.parse(sessionStorage.getItem('plant'))
@@ -136,6 +137,7 @@ export class TotalAddComponent implements OnInit {
   }
 
   async sure() {
+    this.loading = true
 
     if (!(this.base.Plant && this.base.battery_pn)) {
       this.message.create('warning', '不好意思，请将廠別和料号填写完整')
@@ -198,6 +200,8 @@ export class TotalAddComponent implements OnInit {
         this.goBack()
       }, 1000);
     }
+
+    this.loading = false
 
     console.log(this.allTestimonialInfo, this.allUn38, this.allAuthorization, this.allOther);
   }
