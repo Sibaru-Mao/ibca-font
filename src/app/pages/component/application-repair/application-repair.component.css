@@ -17,6 +17,7 @@
 }
 
 ::ng-deep .ant-modal-body {
+  background-color: rgba(32, 48, 51, 100);
   padding-top: 5%;
   color: #ffffff;
 }

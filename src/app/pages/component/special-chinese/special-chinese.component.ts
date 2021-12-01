@@ -413,10 +413,10 @@ export class SpecialChineseComponent implements OnInit {
         // document.body.removeChild(link)
         // window.URL.revokeObjectURL(link.href)
 
-        const link = document.createElement('a')
-        link.href = url[0].File_Name
-        link.download = ''
-        link.click()
+        // const link = document.createElement('a')
+        // link.href = url[0].File_Name
+        // link.download = ''
+        // link.click()
 
 
         // this.downloadExportFile(url[0].File_Name, 'test', 'pdf')
@@ -427,7 +427,7 @@ export class SpecialChineseComponent implements OnInit {
 
 
 
-        // window.location.href = url[0].File_Name
+        window.location.href = url[0].File_Name
       }
     } else
       this.message.create('warning', '暂无PDF文件')

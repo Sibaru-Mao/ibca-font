@@ -132,10 +132,11 @@ export class ListComponent implements OnInit {
     this.nowData = data
     if (this.type == 'postpone') {
       const month = new Date().getMonth() + 1
-      // if (month != 12) {
-      //   this.modalStatus = true
-      //   this.modalType = 'pmodal1'
-      // }
+      if (month != 12) {
+        this.modalStatus = true
+        this.modalType = 'pmodal1'
+        return
+      }
       this.modalStatus = true
       this.modalType = 'pmodal2'
     }
