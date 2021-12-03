@@ -1,10 +1,8 @@
-// import { ApplicationRepairComponent } from './../../../component/application-repair/application-repair.component';
 import { ModalService } from './../../../../services/server/modal.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { DataService } from './../../../../services/data.service';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, } from '@angular/router';
-import { stringify } from 'querystring';
 
 @Component({
   selector: 'app-information',
@@ -37,9 +35,9 @@ export class InformationComponent implements OnInit {
   taskStatus = []
 
   appointLabel = [
-    { name: '2個工作日（正常）', value: 0, checked: true },
-    { name: '1個工作日（加急）', value: 1 },
-    { name: '6～24小時（特急）', value: 2 }
+    { name: '2個工作日（正常）', value: '1' },
+    { name: '1個工作日（加急）', value: '2' },
+    { name: '6～24小時（特急）', value: '3' }
   ]
 
   sample = {
@@ -52,22 +50,22 @@ export class InformationComponent implements OnInit {
 
   need = {
     label: [
-      { name: '需要', value: 0 },
-      { name: '不需要', value: 1 },
+      { name: '需要', value: 1 },
+      { name: '不需要', value: 2 },
     ]
   }
 
   battery = {
     label: [
-      { name: '是', value: 0 },
-      { name: '否', value: 1 },
+      { name: '是', value: 1 },
+      { name: '否', value: 2 },
     ]
   }
 
   safeExhaust = {
     label: [
-      { name: '有', value: 0 },
-      { name: '無', value: 1 },
+      { name: '有', value: 1 },
+      { name: '無', value: 2 },
     ]
   }
 
@@ -283,18 +281,12 @@ export class InformationComponent implements OnInit {
 
   // 任務管理模塊的編輯保存，以及資料中心基礎設定的保存觸發的事件
   async save() {
-    // let arr = []
-    // this.unexpectStart.forEach(e => {
-    //   if (e.checked) arr.push(e.value)
-    // });
-    // this.info.Unexpected_Start = arr
     this.saveUnexpected_Start()
-
     if (this.pageType == 1) {
       delete this.info.id
       delete this.info.Update_Time
 
-      this.info.Complete_Time = JSON.stringify(this.info.Complete_Time)
+      this.info.Complete_Time = typeof (this.info.Complete_Time) == 'string' ? this.info.Complete_Time : JSON.stringify(this.info.Complete_Time)
       this.info.Sample_Dispose = Number(this.info.Sample_Dispose)
       this.info.Sample_Photo = Number(this.info.Sample_Photo)
       this.info.Exhaust_Device = Number(this.info.Exhaust_Device)
@@ -310,6 +302,7 @@ export class InformationComponent implements OnInit {
         this.message.create('error', '保存失敗')
       } else {
         this.message.create('success', '保存成功')
+        await this.getBaseData()
       }
     }
   }
@@ -392,19 +385,24 @@ export class InformationComponent implements OnInit {
     if (!status.protocol41) this.message.create('error', '详细信息保存失败')
     else this.message.create('success', '详细资料保存成功')
 
-
     // this.modalService.emitInfo({ type: 'saveNewData' })
   }
 
   // 资料中心的基础设定获取页面数据
   async getBaseData() {
     let baseData = await this.http.getBaseData(this.searchInfo)
-    if (baseData.hasOwnProperty('error')) this.message.create('error', '獲取基本信息失敗')
-    if (baseData.length == 0) this.message.create('warning', `該廠區目前暫無基本資料`)
-
+    if (baseData.hasOwnProperty('error')) {
+      this.message.create('error', '獲取基本信息失敗')
+      return
+    }
+    if (baseData.length == 0) {
+      this.message.create('warning', `該廠區目前暫無基本資料`)
+      return
+    }
     if (baseData.length > 0) {
       this.message.create('success', '獲取基本信息成功')
       this.info = baseData[0]
+      console.log(this.info, 111111111111111);
       // 防意外啟動的勾选框
       this.handleUnexpected_Start()
     }
@@ -494,6 +492,11 @@ export class InformationComponent implements OnInit {
   downLoad(url) {
     // window.location.href = url
     window.open(url)
+  }
+
+  transportWayChange(event) {
+    console.log(event, 2222222);
+    console.log(this.info.Transport_Report, 33333333333)
   }
 
 }

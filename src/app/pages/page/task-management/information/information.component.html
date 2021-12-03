@@ -151,38 +151,54 @@
               </div>
 
               <div style="width: 90%;">
+
                 <div style="margin-bottom: 10px;">
-                  <label nz-checkbox nzDisabled=true [ngModel]="info.Transport_Report[1].status">空運</label>
+                  <img *ngIf="pageType==1" class="asterisk" src="assets/imgs/asterisk.png" alt="">
+                  <label nz-checkbox *ngIf="pageType!=1" nzDisabled=true
+                    [(ngModel)]="info.Transport_Report[1].status">空運
+                  </label>
+                  <label nz-checkbox *ngIf="pageType==1" (ngModelChange)="transportWayChange($event)"
+                    [(ngModel)]="info.Transport_Report[1].status">空運
+                  </label>
                   <div class="transportSelect">
                     <img class="asterisk" src="assets/imgs/asterisk.png" alt="">
                     空運報告份數：
                     <input [(ngModel)]="info.Transport_Report[1].number" class="transportInput" type="text">
                   </div>
                 </div>
+
                 <div style="margin-bottom: 10px;">
-                  <label nz-checkbox nzDisabled=true [ngModel]="info.Transport_Report[2].status">海運</label>
+                  <img *ngIf="pageType==1" class="asterisk" src="assets/imgs/asterisk.png" alt="">
+                  <label nz-checkbox *ngIf="pageType!=1" nzDisabled=true
+                    [(ngModel)]="info.Transport_Report[2].status">海運
+                  </label>
+                  <label nz-checkbox *ngIf="pageType==1" [(ngModel)]="info.Transport_Report[2].status">海運
+                  </label>
                   <div class="transportSelect">
                     <img class="asterisk" src="assets/imgs/asterisk.png" alt="">
                     海運報告份數：
                     <input [(ngModel)]="info.Transport_Report[2].number" class="transportInput" type="text">
                   </div>
                 </div>
+
                 <div style="margin-bottom: 10px;">
-                  <label nz-checkbox nzDisabled=true [ngModel]="info.Transport_Report[3].status">公路</label>
+                  <label nz-checkbox nzDisabled=true [(ngModel)]="info.Transport_Report[3].status">公路</label>
                   <div class="transportSelect">
                     <img class="asterisk" style="visibility: hidden;" src="assets/imgs/asterisk.png" alt="">
                     公路報告份數：
                     <input [(ngModel)]="info.Transport_Report[3].number" class="transportInput" type="text" disabled>
                   </div>
                 </div>
+
                 <div style="margin-bottom: 10px;">
-                  <label nz-checkbox nzDisabled=true [ngModel]="info.Transport_Report[4].status">鐵路</label>
+                  <label nz-checkbox nzDisabled=true [(ngModel)]="info.Transport_Report[4].status">鐵路</label>
                   <div class="transportSelect">
                     <img class="asterisk" style="visibility: hidden;" src="assets/imgs/asterisk.png" alt="">
                     鐵路報告份數：
                     <input [(ngModel)]="info.Transport_Report[4].number" class="transportInput" type="text" disabled>
                   </div>
                 </div>
+
               </div>
 
             </div>
@@ -247,7 +263,7 @@
               </nz-radio-group>
             </div>
           </td>
-          <td><img class="asterisk" src="assets/imgs/asterisk.png" alt="">安全排气装置：
+          <td width="50%"><img class="asterisk" src="assets/imgs/asterisk.png" alt="">安全排气装置：
             <div class="infoRadio">
               <nz-radio-group [(ngModel)]="info.Exhaust_Device">
                 <label *ngFor="let item of safeExhaust.label" nz-radio nzValue={{item.value}}
@@ -282,7 +298,10 @@
               </nz-radio-group>
             </div>
           </td>
-          <td *ngIf="pageType==1">防短路：{{info.Short_Circuit}}</td>
+          <td *ngIf="pageType==1">
+            <img class="asterisk" src="assets/imgs/asterisk.png" alt="">
+            防短路： <input class="baseInfoInput" *ngIf="pageType==1" [(ngModel)]="info.Short_Circuit" type="text">
+          </td>
         </tr>
         <tr *ngIf="pageType!=1">
           <td>包装件内该电池数量(颗)：{{info.Packages_Qty}}</td>
@@ -332,6 +351,46 @@
       </table>
     </div>
 
+
+    <!-- 委託說明 -->
+    <div *ngIf="pageType==1" class="sample" style="margin-top: 60px;">
+      <header>
+        <span class="title">委託說明</span>
+      </header>
+      <table border="1" width=100% height=120px>
+        <tr>
+          <td width="50%">
+            <img class="asterisk" src="assets/imgs/asterisk.png" alt="">
+            新申請：
+            <input [(ngModel)]="info.Entrust_Newapply" style="width: 50%;" placeholder="請輸入委託說明"
+              class="description baseInfoInput" type="text">
+          </td>
+          <td>
+            <img class="asterisk" src="assets/imgs/asterisk.png" alt="">
+            空運轉海運：
+            <input [(ngModel)]="info.Entrust_Transfer" style="width: 50%;" placeholder="請輸入委託說明"
+              class="description baseInfoInput" type="text">
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <img class="asterisk" src="assets/imgs/asterisk.png" alt="">
+            維修品鑑定書：
+            <input [(ngModel)]="info.Entrust_Repair" style="width: 50%;" placeholder="請輸入委託說明"
+              class="description baseInfoInput" type="text">
+          </td>
+          <td>
+            <img class="asterisk" src="assets/imgs/asterisk.png" alt="">
+            延期：
+            <input [(ngModel)]="info.Entrust_Postpone" style="width: 50%;" placeholder="請輸入委託說明"
+              class="description baseInfoInput" type="text">
+          </td>
+        </tr>
+      </table>
+    </div>
+
+
+
     <!-- 附件 -->
     <div class="footContent">
       <ng-container *ngIf="pageType!=1">
@@ -339,14 +398,14 @@
         <div class="foot">
           <div>
             授權書：
-            <ng-container *ngIf="info.authorization.AuthBook!='找不到相关资料'">
+            <!-- <ng-container *ngIf="info.authorization.AuthBook!='找不到相关资料'">
               <u style="color: #3BAEE5;">{{info.authorization.AuthBook}}</u>
               <img (click)="downLoad(info.authorization.File_Name)" class="down" src="assets/imgs/download.png" alt="">
-            </ng-container>
+            </ng-container> -->
 
-            <ng-container *ngIf="info.authorization.AuthBook=='找不到相关资料'">
-              <span style="color: red;">缺少相關資料</span>
-            </ng-container>
+            <!-- <ng-container *ngIf="info.authorization.AuthBook=='找不到相关资料'"> -->
+            <span style="color: red;">缺少相關資料</span>
+            <!-- </ng-container> -->
           </div>
           <div>
             報告照片：

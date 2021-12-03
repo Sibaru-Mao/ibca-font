@@ -2,6 +2,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { Router } from '@angular/router';
 import { DataService } from 'src/app/services/data.service';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { AddNamePipe } from 'src/app/services/pipe/common-pipe.pipe';
 
 interface baseInfo {
   battery_pn: string,
@@ -28,6 +29,7 @@ export class SeeEditTableComponent implements OnInit {
   @Input() baseInfo: baseInfo
   @Output() sendPhoto = new EventEmitter<any>()
 
+  loading: boolean = false
   tableHead: any
   tableKey: any
   allData: allData
@@ -46,7 +48,7 @@ export class SeeEditTableComponent implements OnInit {
           { name: '文件名称' }, { name: '鉴定书编码' }, { name: '使用年份' },
           { name: '运输方式' }, { name: '上傳人' }, { name: '上傳時間' }, { name: '操作', width: '12%' }
         ]
-        this.tableKey = ['Testimonial_SN', 'Testimonial_SN', 'Use_Year', 'Description_ZH', 'User_ID', 'Maintain_Time']
+        this.tableKey = ['File_Name', 'Testimonial_SN', 'Use_Year', 'Description_ZH', 'User_ID', 'Maintain_Time']
         this.showTableData = this.allData.Testimonial
         break;
 
@@ -55,7 +57,7 @@ export class SeeEditTableComponent implements OnInit {
           { name: '文件名称' }, { name: '文件编码' }, { name: '驗證碼' },
           { name: '上傳人' }, { name: '上傳時間' }, { name: '操作', width: '12%' }
         ]
-        this.tableKey = ['Battery_PN', 'File_Encoding', 'Verification_Code', 'User_ID', 'Maintain_Time']
+        this.tableKey = ['File_Name', 'File_Encoding', 'Verification_Code', 'User_ID', 'Maintain_Time']
         this.showTableData = this.allData.UN383
         break;
 
@@ -64,7 +66,7 @@ export class SeeEditTableComponent implements OnInit {
           { name: '文件名称' }, { name: '開始日期' }, { name: '結束日期' },
           { name: '上傳人' }, { name: '上傳時間' }, { name: '操作', width: '12%' }
         ]
-        this.tableKey = ['Battery_PN', 'Start_Date', 'End_Date', 'User_ID', 'Maintain_Time']
+        this.tableKey = ['File_Name', 'Start_Date', 'End_Date', 'User_ID', 'Maintain_Time']
         this.showTableData = this.allData.Authorization
         break;
 
@@ -73,7 +75,7 @@ export class SeeEditTableComponent implements OnInit {
           { name: '文件名称' }, { name: '上傳人' }, { name: '上傳時間' },
           { name: '備註' }, { name: '操作', width: '12%' }
         ]
-        this.tableKey = ['Testimonial_SN', 'User_ID', 'Maintain_Time', 'Remark']
+        this.tableKey = ['File_Name', 'User_ID', 'Maintain_Time', 'Remark']
         this.showTableData = this.allData.Other
         break;
 
@@ -95,12 +97,14 @@ export class SeeEditTableComponent implements OnInit {
     }
 
     if (type == 'download') {
-      window.location.href = item.File_Name
+      // window.location.href = item.File_Name
+      window.open(item.File_Name)
     }
 
   }
 
   async deleteBatteryData(item) {
+    this.loading = true
     let status
     switch (this.title) {
       case '鑑定書':
@@ -134,6 +138,7 @@ export class SeeEditTableComponent implements OnInit {
       await this.getBatteryDetails()
       this.initTable()
     }
+    this.loading = false
   }
 
   goToLittleAdd() {

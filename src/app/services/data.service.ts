@@ -250,7 +250,7 @@ export class DataService {
     return await this.http.get(`batteryInfo/Authorization/edit/delete?Plant=${base.plant}&battery_pn=${base.battery_pn}&FileName=${data.File_Name}&Start_Date=${data.Start_Date}&End_Date=${data.End_Date}`)
   }
   async delOther(data, base) {
-    return await this.http.get(`batteryInfo/Other/edit/delete?Plant=${base.plant}&battery_pn=${JSON.stringify(base.battery_pn)}&FileName=${data.File_Name}`)
+    return await this.http.get(`batteryInfo/Other/edit/delete?Plant=${base.plant}&Battery_PN=${base.battery_pn}&File_Name=${(data.File_Name).split('/').pop()}`)
   }
 
   async delBatteryInfo(data) {

@@ -51,7 +51,7 @@ export class SpecialChineseComponent implements OnInit {
   dropUploadModal: boolean = false
   modalInputTitle: any
   searchTitle: any
-  modalInput: any = []
+  modalInput: any = ['', '']
   tableKey: any
   photoModal: boolean = false
   productModalType: string
@@ -251,6 +251,12 @@ export class SpecialChineseComponent implements OnInit {
   async saveData() {
     let data
     let status
+    const input1 = this.modalInput[0].replace(/(^\s*)|(\s*$)/g, '')
+    const input2 = this.modalInput[1].replace(/(^\s*)|(\s*$)/g, '')
+    if (!input1 || !input2) {
+      this.message.warning('请将所有的输入框都输入有效数据再提交')
+      return
+    }
     if (this.id == 'chinese') {
       data = {
         Site: this.man.Site,
@@ -264,8 +270,8 @@ export class SpecialChineseComponent implements OnInit {
       data = {
         Site: this.man.Site,
         Plant: this.man.Plant,
-        Project_Code: this.modalInput[0],
-        Material_No: this.modalInput[1],
+        Material_No: this.modalInput[0],
+        Project_Code: this.modalInput[1],
         User_ID: this.man.User_ID
       }
       status = await this.http.addSpecialArchitecture(data)
@@ -427,7 +433,8 @@ export class SpecialChineseComponent implements OnInit {
 
 
 
-        window.location.href = url[0].File_Name
+        // window.location.href = url[0].File_Name
+        window.open(url[0].File_Name)
       }
     } else
       this.message.create('warning', '暂无PDF文件')
@@ -478,7 +485,8 @@ export class SpecialChineseComponent implements OnInit {
       if (url.length == 0)
         this.message.create('warning', '没有PDF文件')
       else {
-        window.location.href = url[0].File_Name
+        // window.location.href = url[0].File_Name
+        window.open(url[0].File_Name)
       }
 
     }
