@@ -15,7 +15,7 @@
 
         <span *ngIf="i==0">
           <img style="width: 13px;margin:0 5px 3px 0;" src="assets/imgs/pdf.png" alt="图片跑了">
-          {{'NO.'+item[key]}}
+          {{item[key]|getFileName}}
         </span>
 
         <span *ngIf="key=='Maintain_Time'">{{item[key]|date:'yyyy/M/dd'}} </span>
@@ -55,3 +55,5 @@
     </tr>
   </tbody>
 </nz-table>
+
+<ngx-loading [show]="loading"></ngx-loading>

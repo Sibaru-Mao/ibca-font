@@ -30,6 +30,8 @@ export class RightContentComponent implements OnInit {
   tableScrollHeight: string
   permission: any
 
+  // handleTableata = {}////
+
   constructor(
     private modalService: ModalService,
     private http: DataService,
@@ -51,7 +53,6 @@ export class RightContentComponent implements OnInit {
         await this.getTableData()
         this.handleShowData()
       }
-      // this.handleShowData()
     })
   }
 
@@ -104,6 +105,13 @@ export class RightContentComponent implements OnInit {
   async getTableData() {
     this.tableData = await this.http.getTableData(this.tableContion)
     console.log(this.tableData);
+
+    // for (let i = 1; i <= 6; i++) {
+    //   const data = this.tableData.filter(e => { return e.Task_Status == i })
+    //   this.handleTableata[i] = data
+    // }
+
+
     // if (!this.tableData.hasOwnProperty('error')) {
     //   if (this.tableData.length > 0) this.message.success('資料請求成功')
     //   else this.message.warning('暫無資料')
@@ -125,6 +133,12 @@ export class RightContentComponent implements OnInit {
   }
 
   handleShowData() {
-    if (this.index) this.showTableData = this.tableData.filter(e => { return e.Task_Status == this.index })
+    if (this.index) this.showTableData = this.tableData.filter(e => { return e.Task_Status == this.index })////
+    // if (this.index)
+    //   this.showTableData = this.handleTableata[this.index]
   }
+
+
+
+
 }

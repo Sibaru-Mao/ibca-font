@@ -9,6 +9,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./little-add.component.css']
 })
 export class LittleAddComponent implements OnInit {
+  loading: boolean = false
   man: any = JSON.parse(sessionStorage.getItem('man'))
   baseInfo: any
   year: any = JSON.parse(sessionStorage.getItem('year'))
@@ -105,6 +106,7 @@ export class LittleAddComponent implements OnInit {
       this.message.create('warning', '不好意思，请先上传PDF文件')
       return
     }
+    this.loading = true
     let status
     let pdfStatus
     switch (this.baseInfo.type) {
@@ -166,6 +168,7 @@ export class LittleAddComponent implements OnInit {
       this.message.create('error', '不好意思，PDF上传失败')
     else
       this.message.create('success', '恭喜，PDF上传成功')
+    this.loading = false
     console.log(this.testimonialInfo, this.pdfFile, 11111);
   }
 

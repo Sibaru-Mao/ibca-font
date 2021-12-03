@@ -4,6 +4,5 @@
     "url": "https://keycloak.wks.wistron.com.cn/auth/",
     "realm": "K8SWKSI40",
     "clientId": "healthmonitor-font"
-  },
-  "version": 20211128
+  }
 }

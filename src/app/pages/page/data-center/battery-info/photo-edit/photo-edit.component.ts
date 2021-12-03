@@ -93,7 +93,8 @@ export class PhotoEditComponent implements OnInit {
           break;
 
         case 'down':
-          window.location.href = item.url
+          // window.location.href = item.url
+          window.open(item.url)
           break;
 
         default:

@@ -109,6 +109,16 @@
  }
 
 
+ ::-webkit-input-placeholder {
+   color: #FFFFFF;
+ }
+
+ .description {
+   float: right;
+   margin-right: 20%;
+ }
+
+
  .footContent {
    color: #FFFFFF;
    margin-top: 20px;

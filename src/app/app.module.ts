@@ -60,6 +60,7 @@ import { SeeEditTableComponent } from './pages/page/data-center/battery-info/see
 import { LittleAddComponent } from './pages/page/data-center/battery-info/little-add/little-add.component';
 import { PhotoEditComponent } from './pages/page/data-center/battery-info/photo-edit/photo-edit.component';
 import { TotalAddComponent } from './pages/page/data-center/battery-info/total-add/total-add.component';
+import { GetFileNamePipe, AddNamePipe } from './services/pipe/common-pipe.pipe';
 
 
 
@@ -96,10 +97,18 @@ function initializeKeycloak(keycloak: KeycloakService) {
 
 window.onload = function () {
   let url = document.location.href
+  let time = new Date().getMinutes()
+  time = time.toString().length > 1 ? time : Number('0' + time)
   if (url.indexOf('yes') == -1) {
-    const time = new Date()
-    window.location.href = url + `?yes=${time.getTime()}`
+    window.location.href = url + `?yes=${time}`
+    // window.open(url + `?yes=${time}`)
   }
+  // else {
+  //   let num = Number((url.substr(url.indexOf('yes') + 4, 2)))
+  //   if (time != num)
+  //     window.location.href = url + `?yes=${time}`
+  // }
+
 }
 
 @NgModule({
@@ -134,6 +143,8 @@ window.onload = function () {
     LittleAddComponent,
     PhotoEditComponent,
     TotalAddComponent,
+    GetFileNamePipe,
+    AddNamePipe
   ],
   imports: [
     BrowserModule,
