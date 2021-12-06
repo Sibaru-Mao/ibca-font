@@ -137,7 +137,6 @@ export class TotalAddComponent implements OnInit {
   }
 
   async sure() {
-    this.loading = true
 
     if (!(this.base.Plant && this.base.battery_pn)) {
       this.message.create('warning', '不好意思，请将廠別和料号填写完整')
@@ -149,6 +148,8 @@ export class TotalAddComponent implements OnInit {
       this.message.create('warning', '不好意思，该廠別已经有该料号的数据')
       return
     }
+
+    this.loading = true
 
     let photoStatus: boolean = false
     this.allPhoto.forEach(e => {

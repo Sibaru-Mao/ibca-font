@@ -43,7 +43,11 @@ export class TopComponent implements OnInit {
     this.plantName.forEach(e => { e['status'] = true })
 
     this.year = [{ Demand_Year: "all" }]
-    this.year.push(...await this.http.getYear())
+    const time = new Date()
+    const nowYear = time.getFullYear()
+    const yearData = [{ Demand_Year: `${nowYear}` }, { Demand_Year: `${nowYear + 1}` }]
+    // this.year.push(...await this.http.getYear())
+    this.year.push(...yearData)
     sessionStorage.setItem('year', JSON.stringify(this.year))
 
     this.deliveryMode = [{ Transport_Mode_Desc: "all", Transport_Mode: 'all' },]
