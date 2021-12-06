@@ -149,8 +149,6 @@ export class TotalAddComponent implements OnInit {
       return
     }
 
-    this.loading = true
-
     let photoStatus: boolean = false
     this.allPhoto.forEach(e => {
       if (!e.url) photoStatus = true
@@ -159,6 +157,8 @@ export class TotalAddComponent implements OnInit {
       this.message.create('warning', '不好意思，请上传所有的照片')
       return
     }
+
+    this.loading = true
 
 
     this.allTestimonialInfo.forEach(async (e, i) => {

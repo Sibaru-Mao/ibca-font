@@ -208,6 +208,7 @@ export class InformationComponent implements OnInit {
 
     if (this.pageType == 1) {
       await this.getBaseData()
+      console.log(this.info);
       this.plant.splice(0, 1)
     }
 
@@ -397,6 +398,33 @@ export class InformationComponent implements OnInit {
     }
     if (baseData.length == 0) {
       this.message.create('warning', `該廠區目前暫無基本資料`)
+      this.info = {
+        Site: 'WKS',
+        Plant: this.searchInfo,
+        Consignor: '',
+        Manufacturer: '',
+        Complete_Time: '',
+        Transport_Report: {
+          1: { status: false, number: 0 },
+          2: { status: false, number: 0 },
+          3: { status: false, number: 0 },
+          4: { status: false, number: 0 }
+        },
+        Sample_Dispose: 0,
+        Sample_Photo: 0,
+        Exhaust_Device: 0,
+        Currents_Device: 0,
+        Wh_Logo: 0,
+        Short_Circuit: '',
+        Unexpected_Start: '',
+        Special_Require: 0,
+        Dangerous_Label: 0,
+        LithiumBattery_Label: 0,
+        Entrust_Newapply: '',
+        Entrust_Transfer: '',
+        Entrust_Repair: '',
+        Entrust_Postpone: ''
+      }
       return
     }
     if (baseData.length > 0) {
