@@ -11,8 +11,8 @@ stages:
   - prepare
   - setup
   - build
-  - build_for_test
-  - deploy_for_test
+  # - build_for_test
+  # - deploy_for_test
   - deploy
   - update
 
