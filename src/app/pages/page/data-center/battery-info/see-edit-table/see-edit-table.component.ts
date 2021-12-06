@@ -2,7 +2,6 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { Router } from '@angular/router';
 import { DataService } from 'src/app/services/data.service';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { AddNamePipe } from 'src/app/services/pipe/common-pipe.pipe';
 
 interface baseInfo {
   battery_pn: string,
