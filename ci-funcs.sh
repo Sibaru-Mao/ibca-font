@@ -10,27 +10,37 @@ function get_version() {
 
     echo "Begin: get_version()"
 
-    echo "1: Get branch"
+    echo "1: Check inputs"
 
-    # Get current branch type (master, production, pre-production, or fix-)
-    get_branch "${CI_COMMIT_REF_NAME}" branch
-
-    echo "End 1: Branch: ${branch}"
+    # Check if Gitlab CI/CD variables been set.
+    echo "1.1: Check Gitlab CI/CD vars"
+    if ! check_vars "GITLAB_KEY" "${GITLAB_KEY}" ""; then exit 0; fi
+    if ! check_vars "GITLAB_URL" "${GITLAB_URL}" ""; then exit 0; fi
+    if ! check_vars "VER_M" "${VER_M}" ""; then exit 0; fi
+    if ! check_vars "VER_S" "${VER_S}" ""; then exit 0; fi
 
     # Skip process if it's conflict commit
-    echo "2: Check if it's conflict commit"
+    echo "1.2: Check if it's conflict commit"
     current_commit=$(get_commit_info "${CI_COMMIT_SHORT_SHA}")
     conflict_commit=$(get_conflict_commit "${current_commit}")
     if test "$conflict_commit" != ""; then
 
-        # Save version to file for artifact usage
-        echo "export SYS_VER="NA";" >build-vars.sh
+      # Save version to file for artifact usage
+      echo "export SYS_VER="NA";" >build-vars.sh
 
-        # exit process
-        echo "Skip process for conflict commit, exit"
-        exit 0
+      # exit process
+      echo "Skip process for conflict commit, exit"
+      exit 0
     fi
-    echo "End 2: Check if it's conflict commit"
+
+    echo "End 1: Check pass."
+
+    echo "2: Get branch"
+
+    # Get current branch type (master, production, pre-production, or fix-)
+    get_branch "${CI_COMMIT_REF_NAME}" branch
+
+    echo "End 2: Branch: ${branch}"
 
     echo "3: Get version by branch"
 
@@ -38,17 +48,6 @@ function get_version() {
     version="NA"
 
     if test "${branch}" == "master"; then
-
-         echo "3.1: Check inputs"
-
-        # Check if Gitlab CI/CD variables been set.
-        echo "3.2: Check Gitlab CI/CD vars"
-        if ! check_vars "GITLAB_KEY" "${GITLAB_KEY}" ""; then exit 0; fi
-        if ! check_vars "GITLAB_URL" "${GITLAB_URL}" ""; then exit 0; fi
-        if ! check_vars "VER_M" "${VER_M}" ""; then exit 0; fi
-        if ! check_vars "VER_S" "${VER_S}" ""; then exit 0; fi
-
-        echo "End 3.1: Check pass."
 
         # New version: VER_M + (VER_S + 1)
         next_ver_s=$((${VER_S} + 1))
@@ -182,15 +181,16 @@ function docker_build() {
 
         # No need to build image for QAS
         echo "Skip Docker biuld and push for QAS"
-        echo "5.1: Retag QAS Docker image"
-        retag
 
     elif test "${branch}" == "production"; then
 
         # No need to build image for QAS
         echo "Skip Docker biuld and push for PRD"
-        echo "5.1: Retag PRD Docker image"
-        retag
+
+    elif test "${SOURCEPJ}" != "true"; then
+
+        # No need to build image if it's not source project
+        echo "Skip Docker biuld and push for non-source project"
 
     else
 
@@ -202,14 +202,12 @@ function docker_build() {
         if ! check_vars "HARBOR_PASSWORD" "${HARBOR_PASSWORD}" ""; then exit 0; fi
 
         # Build & test Docker image
-        # echo "5.2: Create Docker image"
-        # create_image ${tag}
-        echo "5.2: Retag Docker image ${tag}"
-        retag ${tag}
+        echo "5.2: Create Docker image"
+        create_image ${tag}
 
         # Push image to harbor
-        # echo "5.3: Push image to harbor"
-        # push_image ${tag}
+        echo "5.3: Push image to harbor"
+        push_image ${tag}
 
         # Update version & tag to Gitlab CI/CD variables
         echo "5.4: Update Gitlab variables"
@@ -219,29 +217,6 @@ function docker_build() {
     echo "End 5"
 
     echo "End: docker_build()"
-}
-
-# Zap vulnerability scan
-function zap_scan() {
-  # Create './report' directory
-  if [ -d "./report" ]; then
-    echo "Delete ./report folder"
-    rm -rf ./report
-  fi
-  echo "Create ./report folder"
-
-  # Create '/zap/wrk' directory
-  if [ -d "/zap/wrk" ]; then
-    echo "Delete /zap/wrk folder"
-    rm -rf /zap/wrk
-  fi
-  echo "Create /zap/wrk folder"
-  mkdir /zap/wrk
-
-  echo "zap-baseline.py -I -t "http://${SERVICE_NAME}"."${SCAN_URL}" -x zapreport.xml"
-  zap-baseline.py -I -t http://${SERVICE_NAME}.${SCAN_URL} -x zapreport.xml
-  ls -altr /zap/wrk
-  cp -pr /zap/wrk/* ./report.xml
 }
 
 # Update Rancher settings
@@ -429,7 +404,8 @@ function cd_update() {
     # prepare script
     pod_upgrade_body=$(jq '.annotations."cattle.io/timestamp"=$newVal' --arg newVal ${CI_JOB_TIMESTAMP} <<<"$pod_upgrade_body")
     pod_upgrade_body=$(jq '.containers[].image=$newVal' --arg newVal ${HARBOR_URL}/${HARBOR_PROJECT}/${BUILD_IMAGE_NAME}:${version} <<<"$pod_upgrade_body")
-
+    pod_upgrade_body=$(jq '.volumes=$newVal' --argjson newVal "${ConfigCfg}" <<<"$pod_upgrade_body")
+    pod_upgrade_body=$(jq '.containers[].volumeMounts=$newVal' --argjson newVal "${ConfigVol}" <<<"$pod_upgrade_body")
 
     # Turn on if need to debug in detail
     # echo "pod_upgrade_body: ${pod_upgrade_body}"
@@ -873,7 +849,6 @@ function split_ver() {
   eval "$4=$v3"
   eval "$5=$v4"
 }
-
 function record_git_qas_version() {
     if test "${CI_COMMIT_REF_NAME}" == "pre-production"; then
         version="${SYS_VER}"
@@ -882,40 +857,22 @@ function record_git_qas_version() {
     fi
 }
 
-# Retag docker image
-# Input $1: version (docker image tag)
 function retag() {
-  # Get CSRF Token
-  echo "${HARBOR_URL}/api/v2.0/projects/${HARBOR_PROJECT}/repositories/${BUILD_IMAGE_NAME}/artifacts"
-  curl -L --request GET -u "${HARBOR_USER}:${HARBOR_PASSWORD}" --header "Cookie: sid=c9c72ece20502da0d78991979321bb3e;_gorilla_csrf=${HARBOR_WEB_TOKEN}" "${HARBOR_URL}/api/v2.0/projects/${HARBOR_PROJECT}/repositories/${BUILD_IMAGE_NAME}/artifacts?page=1&page_size=10" -D resheader.txt
-  text=$(cat resheader.txt | grep "X-Harbor-Csrf-Token")
-  OIFS="$IFS"
-  IFS=' '
-  read -a new_text <<< "${text}"
-  csrf_token=$(echo "${new_text[1]}")
-  echo $csrf_token
-
-
-  image_name="${BUILD_IMAGE_NAME}"
-  if test "${CI_COMMIT_REF_NAME}" == "pre-production"; then
-    version="${SYS_VER}"
-    echo "${CI_COMMIT_REF_NAME}: retag qas ${image_name}:${version}"
-    #curl -L --request POST -u "${HARBOR_USER}:${HARBOR_PASSWORD}" --header "Content-Type: application/json" "${HARBOR_URL}/api/repositories/${HARBOR_PROJECT}/${BUILD_IMAGE_NAME}/tags" -d "{\"override\": true,\"src_image\": \"${HARBOR_PROJECT}/${BUILD_IMAGE_NAME}:${version}\",\"tag\": \"${version}.qas\"}"
-    curl -L --request POST -u "${HARBOR_USER}:${HARBOR_PASSWORD}" --header "X-Harbor-CSRF-Token: ${csrf_token}" --header "Content-Type: application/json" "${HARBOR_URL}/api/v2.0/projects/${HARBOR_PROJECT}/repositories/${BUILD_IMAGE_NAME}/artifacts/${version}/tags" -d "{\"name\": \"${version}.qas\"}"
-    record_git_qas_version
-  elif test "${CI_COMMIT_REF_NAME}" == "production"; then
-    qas_version="${CURRENT_QAS_VERSION}"
-    if test "$qas_version" != ""; then
-      echo "${CI_COMMIT_REF_NAME}: retag prd ${image_name}:${qas_version}"
-      #curl -L --request POST -u "${HARBOR_USER}:${HARBOR_PASSWORD}" --header "Content-Type: application/json" "${HARBOR_URL}/api/repositories/${HARBOR_PROJECT}/${BUILD_IMAGE_NAME}/tags" -d "{\"override\": true,\"src_image\": \"${HARBOR_PROJECT}/${BUILD_IMAGE_NAME}:${qas_version}.qas\",\"tag\": \"${qas_version}.prd\"}"
-      curl -L --request POST -u "${HARBOR_USER}:${HARBOR_PASSWORD}" --header "X-Harbor-CSRF-Token: ${csrf_token}" --header "Content-Type: application/json" "${HARBOR_URL}/api/v2.0/projects/${HARBOR_PROJECT}/repositories/${BUILD_IMAGE_NAME}/artifacts/${qas_version}.qas/tags" -d "{\"name\": \"${qas_version}.prd\"}"
-    else
-      echo "Variable CURRENT_QAS_VERSION not found , skip retag"
+    image_name="${BUILD_IMAGE_NAME}"
+    if test "${CI_COMMIT_REF_NAME}" == "pre-production"; then
+        version="${SYS_VER}"
+        echo "${CI_COMMIT_REF_NAME}: retag qas ${image_name}:${version}"
+        curl -L --request POST -u "${HARBOR_USER}:${HARBOR_PASSWORD}" --header "Content-Type: application/json" "${HARBOR_URL}/api/repositories/${HARBOR_PROJECT}/${BUILD_IMAGE_NAME}/tags" -d "{\"override\": true,\"src_image\": \"${HARBOR_PROJECT}/${BUILD_IMAGE_NAME}:${version}\",\"tag\": \"${version}.qas\"}"
+        record_git_qas_version
+    elif test "${CI_COMMIT_REF_NAME}" == "production"; then
+        qas_version="${CURRENT_QAS_VERSION}"
+        if test "$qas_version" != ""; then
+            echo "${CI_COMMIT_REF_NAME}: retag prd ${image_name}:${qas_version}"
+            curl -L --request POST -u "${HARBOR_USER}:${HARBOR_PASSWORD}" --header "Content-Type: application/json" "${HARBOR_URL}/api/repositories/${HARBOR_PROJECT}/${BUILD_IMAGE_NAME}/tags" -d "{\"override\": true,\"src_image\": \"${HARBOR_PROJECT}/${BUILD_IMAGE_NAME}:${qas_version}.qas\",\"tag\": \"${qas_version}.prd\"}"
+        else
+            echo "Variable CURRENT_QAS_VERSION not found , skip retag"
+        fi
+        
+        
     fi
-  elif test "${CI_COMMIT_REF_NAME}" == "master"; then
-    dev_version=$1
-    echo "${CI_COMMIT_REF_NAME}: retag dev ${image_name}:${dev_version}"
-    #curl -L --request POST -u "${HARBOR_USER}:${HARBOR_PASSWORD}" --header "Content-Type: application/json" "${HARBOR_URL}/api/repositories/${HARBOR_PROJECT}/${BUILD_IMAGE_NAME}/tags" -d "{\"override\": false,\"src_image\": \"${HARBOR_PROJECT}/${BUILD_IMAGE_NAME}:${DOCKER_TEST_IMAGE_TAG}\",\"tag\": \"${dev_version}\"}"
-    curl -L --request POST -u "${HARBOR_USER}:${HARBOR_PASSWORD}" --header "X-Harbor-CSRF-Token: ${csrf_token}" --header "Content-Type: application/json" "${HARBOR_URL}/api/v2.0/projects/${HARBOR_PROJECT}/repositories/${BUILD_IMAGE_NAME}/artifacts/${DOCKER_TEST_IMAGE_TAG}/tags" -d "{\"name\": \"${version}\"}"
-  fi
 }
