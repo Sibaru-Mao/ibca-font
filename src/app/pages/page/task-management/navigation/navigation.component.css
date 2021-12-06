@@ -12,6 +12,11 @@
   position: relative;
 }
 
+.box:hover {
+  background-color: rgb(9, 205, 240);
+  height: 88%;
+}
+
 .seleceBox {
   background-color: #2979FF;
 }
@@ -70,7 +75,7 @@
   left: 101%;
   top: 50%;
   border-left: 6px solid #2979FF;
-  border-top:5px solid transparent;
+  border-top: 5px solid transparent;
   border-bottom: 5px solid transparent;
   transform: translate(0, -50%);
 }

@@ -11,21 +11,49 @@ import { DataCenterComponent } from './data-center.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-
-
 const dataChild: Routes = [
   { path: '', redirectTo: 'batteryInfo', pathMatch: 'full' },
-  { path: 'batteryInfo', component: BatteryInfoComponent },
-  { path: 'basicSetting', component: BasicSettingsComponent },
-  { path: 'chineseName', component: ChineseNameComponent },
-  { path: 'dropReport', component: DropReportComponent },
-  { path: 'productPacking', component: ProductPackagingComponent },
-  { path: 'specialArchitecture', component: SpecialArchitectureComponent },
-  { path: 'declare', component: DeclareComponent },
+  {
+    path: 'batteryInfo', loadChildren: () => import('./battery-info/battery-info.module')
+      .then(e => e.BatteryInfoModule)
+  },
+  {
+    path: 'basicSetting', loadChildren: () => import('./basic-settings/basic-settings.module')
+      .then(e => e.BasicSettingsModule)
+  },
+  {
+    path: 'chineseName', loadChildren: () => import('./chinese-name/chinese-name.module')
+      .then(e => e.ChineseNameModule)
+  },
+  {
+    path: 'dropReport', loadChildren: () => import('./drop-report/drop-report.module')
+      .then(e => e.DropReportModule)
+  },
+  {
+    path: 'productPacking', loadChildren: () => import('./product-packaging/product-packaging.module')
+      .then(e => e.ProductPackagingModule)
+  },
+  {
+    path: 'specialArchitecture', loadChildren: () => import('./special-architecture/special-architecture.module')
+      .then(e => e.SpecialArchitectureModule)
+  },
+  {
+    path: 'declare', loadChildren: () => import('./declare/declare.module')
+      .then(e => e.DeclareModule)
+  },
   { path: 'upload', component: UploadComponent },
-  { path: 'batteryInfo/seeEdit', loadChildren: () => import('./battery-info/see-edit/see-edit.module').then(e => e.SeeEditModule) },
-  { path: 'batteryInfo/littleAdd', loadChildren: () => import('./battery-info/little-add/little-add.module').then(e => e.LittleAddModule) },
-  { path: 'batteryInfo/totalAdd', loadChildren: () => import('./battery-info/total-add/total-add.module').then(e => e.TotalAddModule) }
+  {
+    path: 'batteryInfo/seeEdit', loadChildren: () => import('./battery-info/see-edit/see-edit.module')
+      .then(e => e.SeeEditModule)
+  },
+  {
+    path: 'batteryInfo/littleAdd', loadChildren: () => import('./battery-info/little-add/little-add.module')
+      .then(e => e.LittleAddModule)
+  },
+  {
+    path: 'batteryInfo/totalAdd', loadChildren: () => import('./battery-info/total-add/total-add.module')
+      .then(e => e.TotalAddModule)
+  }
 ]
 
 const route: Routes = [{ path: '', component: DataCenterComponent, children: dataChild }]

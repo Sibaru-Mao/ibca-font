@@ -24,7 +24,7 @@ export class TopComponent implements OnInit {
     Transport_Mode_Desc: 'all'
   }
   year: Array<any> = []
-  deliveryMode: Array<any> = []
+  deliveryMode: any[] = []
 
   constructor(private http: DataService, private modalService: ModalService) { }
 
@@ -47,7 +47,9 @@ export class TopComponent implements OnInit {
     sessionStorage.setItem('year', JSON.stringify(this.year))
 
     this.deliveryMode = [{ Transport_Mode_Desc: "all", Transport_Mode: 'all' },]
-    this.deliveryMode.push(...await this.http.getDliveryMode())
+    const allDeliveryMode = await this.http.getDliveryMode()
+    this.deliveryMode.push(...allDeliveryMode.filter(e => { return e.Transport_Mode_Desc }))
+    // this.deliveryMode.push(...await this.http.getDliveryMode())
   }
 
   // 选择plant触发的方法

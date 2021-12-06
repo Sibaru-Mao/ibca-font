@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-task-management',
@@ -8,10 +7,9 @@ import { Title } from '@angular/platform-browser';
 })
 export class TaskManagementComponent implements OnInit {
 
-  constructor(private title: Title) { }
+  constructor() { }
 
   ngOnInit(): void {
-    this.title.setTitle('电池鉴定书')
   }
 
 }
