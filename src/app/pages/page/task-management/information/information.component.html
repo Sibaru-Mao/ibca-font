@@ -396,33 +396,54 @@
       <ng-container *ngIf="pageType!=1">
         <header><span class="title">附件</span></header>
         <div class="foot">
+
           <div>
             授權書：
-            <!-- <ng-container *ngIf="info.authorization.AuthBook!='找不到相关资料'">
+            <ng-container *ngIf="info.authorization.AuthBook!='找不到相关资料'">
               <u style="color: #3BAEE5;">{{info.authorization.AuthBook}}</u>
               <img (click)="downLoad(info.authorization.File_Name)" class="down" src="assets/imgs/download.png" alt="">
-            </ng-container> -->
-
-            <!-- <ng-container *ngIf="info.authorization.AuthBook=='找不到相关资料'"> -->
-            <span style="color: red;">缺少相關資料</span>
-            <!-- </ng-container> -->
+            </ng-container>
+            <span *ngIf="info.authorization.AuthBook=='找不到相关资料'" style="color: red;">缺少相關資料</span>
           </div>
+
           <div>
             報告照片：
-            <span style="color: red;">缺少相關資料</span>
+            <!-- <ng-container *ngIf="info.ReportPhoto.PhotoName!='找不到相关资料'">
+              <u style="color: #3BAEE5;">{{info.ReportPhoto.PhotoName}}</u>
+              <img (click)="downLoad(info.ReportPhoto.File_Name)" class="down" src="assets/imgs/download.png" alt="">
+            </ng-container> -->
+            <span *ngIf="info.ReportPhoto.PhotoName=='找不到相关资料'" style="color: red;">缺少相關資料</span>
           </div>
+
           <div>
             1.2m跌落報告：
-            <span style="color: red;">缺少相關資料</span>
+            <!-- <ng-container *ngIf="info.FalloffReport.PhotoName!='找不到相关资料'">
+              <u style="color: #3BAEE5;">{{info.FalloffReport .PhotoName}}</u>
+              <img (click)="downLoad(info.FalloffReport.File_Name)" class="down" src="assets/imgs/download.png" alt="">
+            </ng-container> -->
+            <!-- <span *ngIf="info.FalloffReport.PhotoName=='找不到相关资料'" style="color: red;">缺少相關資料</span> -->
           </div>
+
           <div>
             運輸條件鑑定書：
-            <span style="color: red;">缺少相關資料</span></div>
+            <ng-container *ngIf="info.testimonial[0].TransferName!='找不到相关资料'">
+              <u style="color: #3BAEE5;">{{info.testimonial[0].TransferName}}</u>
+              <img (click)="downLoad(info.testimonial[0].File_Name)" class="down" src="assets/imgs/download.png" alt="">
+            </ng-container>
+            <span *ngIf="info.testimonial[0].TransferName!='找不到相关资料'" style="color: red;">缺少相關資料</span>
+          </div>
+
         </div>
+
         <div style="margin-top: 30px;">
           其他文件：
-          <span style="color: red;">缺少相關資料</span>
+          <ng-container *ngIf="info.Other.Name!='找不到相关资料'">
+            <u style="color: #3BAEE5;">{{info.Other.Name}}</u>
+            <img (click)="downLoad(info.Other.File_Name)" class="down" src="assets/imgs/download.png" alt="">
+          </ng-container>
+          <span *ngIf="info.Other.Name=='找不到相关资料'" style="color: red;">缺少相關資料</span>
         </div>
+
       </ng-container>
       <div style="text-align: center;margin-top: 20px;">
         <button *ngIf="condition.num==2||pageType==1" (click)="save()" nz-button style="width: 80px;"
