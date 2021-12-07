@@ -149,35 +149,52 @@ export class TotalAddComponent implements OnInit {
       return
     }
 
-    let photoStatus: boolean = false
-    this.allPhoto.forEach(e => {
-      if (!e.url) photoStatus = true
+    this.allTestimonialInfo.forEach(e => {
+      this.handleData(e)
     });
-    if (photoStatus) {
+
+    this.allUn38.forEach(e => {
+      this.handleData(e)
+    });
+
+    this.allAuthorization.forEach(e => {
+      this.handleData(e)
+    });
+
+    this.allOther.forEach(e => {
+      this.handleData(e)
+    });
+
+    const allTestimonialInfoEmpty = this.handleEmptyData(this.allTestimonialInfo, '新增鑑定書')
+    if (allTestimonialInfoEmpty) return
+
+    const allUn38Empty = this.handleEmptyData(this.allUn38, '新增UN38.3试验概要')
+    if (allUn38Empty) return
+
+    const allAuthorizationEmpty = this.handleEmptyData(this.allAuthorization, '新增授权书')
+    if (allAuthorizationEmpty) return
+
+    const photoStatus = this.allPhoto.every(e => { return e.url })
+    if (!photoStatus) {
       this.message.create('warning', '不好意思，请上传所有的照片')
       return
     }
 
     this.loading = true
 
-
     this.allTestimonialInfo.forEach(async (e, i) => {
-      this.handleData(e)
       await this.postData(e, '鑑定書', i)
     });
 
     this.allUn38.forEach(async (e, i) => {
-      this.handleData(e)
       await this.postData(e, 'UN38.3试验概要', i)
     });
 
     this.allAuthorization.forEach(async (e, i) => {
-      this.handleData(e)
       await this.postData(e, '授权书', i)
     });
 
     this.allOther.forEach(async (e, i) => {
-      this.handleData(e)
       await this.postData(e, '其他', i)
     });
 
@@ -201,10 +218,38 @@ export class TotalAddComponent implements OnInit {
         this.goBack()
       }, 1000);
     }
-
     this.loading = false
-
     console.log(this.allTestimonialInfo, this.allUn38, this.allAuthorization, this.allOther);
+  }
+
+  handleEmptyData(data: any, name: string): boolean {
+    let emptyStatus: boolean = false
+    data.forEach((item, index) => {
+      // const value = Object.values(item.data)
+      // const valueStatus = value.every(e => { return e })
+
+      const value = Object.keys(item.data)
+      let valueStatus: boolean = true
+      value.forEach(e => {
+        if (e != 'File_Name') {
+          if (!item.data[e])
+            valueStatus = false
+        }
+      });
+      const pdfStatus = !!item.file
+      let status = `${name}的第${index + 1}笔资料有缺失`
+
+      if (!valueStatus)
+        status += ` ,基本信息未填写完整`
+      if (!pdfStatus)
+        status += `  , PDF档案未上传`
+
+      if (!valueStatus || !pdfStatus) {
+        this.message.warning(status)
+        emptyStatus = true
+      }
+    });
+    return emptyStatus
   }
 
   async postData(data, type, i) {
@@ -212,23 +257,32 @@ export class TotalAddComponent implements OnInit {
     let pdfStatus
     switch (type) {
       case '鑑定書':
-        dataStatus = await this.http.addTestimonial(data.data)
-        pdfStatus = await this.http.uploadBatteryPdf('Battery\\Testimonial', data.file)
+        if (data.data && data.file) {
+          dataStatus = await this.http.addTestimonial(data.data)
+          pdfStatus = await this.http.uploadBatteryPdf('Battery\\Testimonial', data.file)
+        }
         break;
 
       case 'UN38.3试验概要':
-        dataStatus = await this.http.addUN38(data.data)
-        pdfStatus = await this.http.uploadBatteryPdf('Battery\\UN383', data.file)
+        if (data.data && data.file) {
+          dataStatus = await this.http.addUN38(data.data)
+          pdfStatus = await this.http.uploadBatteryPdf('Battery\\UN383', data.file)
+        }
         break;
 
       case '授权书':
-        dataStatus = await this.http.addAuthorization(data.data)
-        pdfStatus = await this.http.uploadBatteryPdf('Battery\\Authorization', data.file)
+        if (data.data && data.file) {
+          dataStatus = await this.http.addAuthorization(data.data)
+          pdfStatus = await this.http.uploadBatteryPdf('Battery\\Authorization', data.file)
+        }
         break;
 
       case '其他':
-        dataStatus = await this.http.addOther(data.data)
-        pdfStatus = await this.http.uploadBatteryPdf('Battery\\Other', data.file)
+        if (data.data && data.file) {
+          dataStatus = await this.http.addOther(data.data)
+          pdfStatus = await this.http.uploadBatteryPdf('Battery\\Other', data.file)
+        }
+
         break;
 
       default:

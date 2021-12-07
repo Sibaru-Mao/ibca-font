@@ -75,7 +75,7 @@ export class SpecialChineseComponent implements OnInit {
   photoData: photoData = {
     Plant: JSON.parse(sessionStorage.getItem('man')).Plant,
     Project_Code: '',
-    Special_SKU: '',
+    Special_SKU: '/',
     Placement_Mode: 0,
     Packages_Qty: 0,
     User_ID: JSON.parse(sessionStorage.getItem('man')).User_ID,
@@ -551,7 +551,7 @@ export class SpecialChineseComponent implements OnInit {
     this.photoData.Maintain_Time = new Date()
     this.photoData.Placement_Mode = Number(this.photoData.Placement_Mode)
     this.photoData.Packages_Qty = Number(this.photoData.Packages_Qty)
-    this.photoData.Special_SKU = this.photoData.Special_SKU ? this.photoData.Special_SKU : null
+    this.photoData.Special_SKU = this.photoData.Special_SKU ? this.photoData.Special_SKU : '/'
     let status = true
 
     this.allPhoto.packagePhoto.forEach(e => {
@@ -568,7 +568,7 @@ export class SpecialChineseComponent implements OnInit {
     let photoInfo = {
       Plant: this.photoData.Plant,
       Project_Code: this.photoData.Project_Code,
-      Special_SKU: this.photoData.Special_SKU,
+      Special_SKU: this.photoData.Special_SKU ? this.photoData.Special_SKU : '/',
       PhotoType: '',
       place: '',
       file: ''
@@ -644,6 +644,12 @@ export class SpecialChineseComponent implements OnInit {
     }
     else
       this.message.error('删除失败')
+  }
+
+  handlePackages_Qty(data) {
+    if (data.Packages_Qty <= 0)
+      data.Packages_Qty = 1
+    data.Packages_Qty = Math.round(data.Packages_Qty)
   }
 
 }
