@@ -109,7 +109,6 @@ window.onload = function () {
   //   if (time != num)
   //     window.location.href = url + `?yes=${time}`
   // }
-
 }
 
 @NgModule({

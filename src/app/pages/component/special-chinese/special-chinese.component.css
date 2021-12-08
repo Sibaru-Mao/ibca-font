@@ -47,6 +47,10 @@
   border-radius: 10px;
 }
 
+::-webkit-input-placeholder {
+  color: #fff;
+}
+
 .searchContent {
   height: 6%;
 }
@@ -214,7 +218,7 @@
 }
 
 .dR div {
-  height: 20%;
+  height: 19%;
   padding-top: 3%;
 }
 

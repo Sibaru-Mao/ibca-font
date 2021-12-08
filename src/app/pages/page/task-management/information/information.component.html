@@ -430,7 +430,7 @@
               <u style="color: #3BAEE5;">{{info.testimonial[0].TransferName}}</u>
               <img (click)="downLoad(info.testimonial[0].File_Name)" class="down" src="assets/imgs/download.png" alt="">
             </ng-container>
-            <span *ngIf="info.testimonial[0].TransferName!='找不到相关资料'" style="color: red;">缺少相關資料</span>
+            <span *ngIf="info.testimonial[0].TransferName=='找不到相关资料'" style="color: red;">缺少相關資料</span>
           </div>
 
         </div>
