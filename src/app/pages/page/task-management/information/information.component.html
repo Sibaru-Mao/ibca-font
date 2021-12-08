@@ -399,11 +399,11 @@
 
           <div>
             授權書：
-            <ng-container *ngIf="info.authorization.AuthBook!='找不到相关资料'">
+            <!-- <ng-container *ngIf="info.authorization.AuthBook!='找不到相关资料'">
               <u style="color: #3BAEE5;">{{info.authorization.AuthBook}}</u>
               <img (click)="downLoad(info.authorization.File_Name)" class="down" src="assets/imgs/download.png" alt="">
             </ng-container>
-            <span *ngIf="info.authorization.AuthBook=='找不到相关资料'" style="color: red;">缺少相關資料</span>
+            <span *ngIf="info.authorization.AuthBook=='找不到相关资料'" style="color: red;">缺少相關資料</span> -->
           </div>
 
           <div>
@@ -426,22 +426,22 @@
 
           <div>
             運輸條件鑑定書：
-            <ng-container *ngIf="info.testimonial[0].TransferName!='找不到相关资料'">
+            <!-- <ng-container *ngIf="info.testimonial[0].TransferName!='找不到相关资料'">
               <u style="color: #3BAEE5;">{{info.testimonial[0].TransferName}}</u>
               <img (click)="downLoad(info.testimonial[0].File_Name)" class="down" src="assets/imgs/download.png" alt="">
             </ng-container>
-            <span *ngIf="info.testimonial[0].TransferName=='找不到相关资料'" style="color: red;">缺少相關資料</span>
+            <span *ngIf="info.testimonial[0].TransferName=='找不到相关资料'" style="color: red;">缺少相關資料</span> -->
           </div>
 
         </div>
 
         <div style="margin-top: 30px;">
           其他文件：
-          <ng-container *ngIf="info.Other.Name!='找不到相关资料'">
+          <!-- <ng-container *ngIf="info.Other.Name!='找不到相关资料'">
             <u style="color: #3BAEE5;">{{info.Other.Name}}</u>
             <img (click)="downLoad(info.Other.File_Name)" class="down" src="assets/imgs/download.png" alt="">
           </ng-container>
-          <span *ngIf="info.Other.Name=='找不到相关资料'" style="color: red;">缺少相關資料</span>
+          <span *ngIf="info.Other.Name=='找不到相关资料'" style="color: red;">缺少相關資料</span> -->
         </div>
 
       </ng-container>
