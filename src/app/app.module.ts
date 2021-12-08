@@ -61,6 +61,7 @@ import { LittleAddComponent } from './pages/page/data-center/battery-info/little
 import { PhotoEditComponent } from './pages/page/data-center/battery-info/photo-edit/photo-edit.component';
 import { TotalAddComponent } from './pages/page/data-center/battery-info/total-add/total-add.component';
 import { GetFileNamePipe, AddNamePipe } from './services/pipe/common-pipe.pipe';
+import { GetIntNumDirective } from './services/directive/directive.directive';
 
 
 
@@ -108,7 +109,6 @@ window.onload = function () {
   //   if (time != num)
   //     window.location.href = url + `?yes=${time}`
   // }
-
 }
 
 @NgModule({
@@ -144,7 +144,8 @@ window.onload = function () {
     PhotoEditComponent,
     TotalAddComponent,
     GetFileNamePipe,
-    AddNamePipe
+    AddNamePipe,
+    GetIntNumDirective
   ],
   imports: [
     BrowserModule,

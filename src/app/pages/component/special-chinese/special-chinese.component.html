@@ -128,22 +128,28 @@
         <div style="display: inline-block;margin-left: 50px;width: 120px;text-align: left;">{{man.Plant}}</div>
       </div>
       <div>
-        {{modalInputTitle[0]}} <input (change)="change()" [(ngModel)]="modalInput[0]" style="width: 140px;height: 24px;"
-          class="searchInput" type="text">
+        {{modalInputTitle[0]}}
+        <input *ngIf="id=='chinese'" [(ngModel)]="modalInput[0]" style="width: 140px;height: 24px;" class="searchInput"
+          type="text">
+        <input *ngIf="id=='special'" placeholder="输入架构后按回车键" (change)="change()" [(ngModel)]="modalInput[0]"
+          style="width: 140px;height: 24px;" class="searchInput" type="text">
       </div>
       <div>
-        {{modalInputTitle[1]}} <input [(ngModel)]="modalInput[1] " style="width: 140px;height: 24px;"
+        {{modalInputTitle[1]}}
+        <input *ngIf="id=='chinese'" [(ngModel)]="modalInput[1] " style="width: 140px;height: 24px;" class="searchInput"
+          type="text">
+        <input *ngIf="id=='special'" disabled [(ngModel)]="modalInput[1] " style="width: 140px;height: 24px;"
           class="searchInput" type="text">
       </div>
       <div style="text-align: center;">
-        <button (click)="saveData()" nz-button class="save" nzType="primary">确定</button>
+        <button (click)="saveData()" nz-button class="save" nzType="primary">確定</button>
       </div>
     </div>
   </ng-container>
 </nz-modal>
 
 
-<!--  新增 编辑 查看 照片 productPacking-->
+<!--  新增 编辑 查看 照片 productPacking product-->
 <div class="baseModal" *ngIf="photoModal">
   <div class="photoModalContent">
     <header
@@ -160,6 +166,7 @@
       <ng-container *ngIf="['newAdd','edit'].includes(productModalType)">
         <table class="newAddEditTable" border="1" width="100%">
           <tr>
+
             <td>廠別：
               <select *ngIf="photoModalTitle=='新增'" [(ngModel)]="photoData.Plant" class="searchSelect">
                 <option *ngFor="let item of plant" value={{item.PlantCode}}>{{item.Plant}}</option>
@@ -168,18 +175,22 @@
                 <option *ngFor="let item of plant" value={{item.PlantCode}}>{{item.Plant}}</option>
               </select>
             </td>
+
             <td>产品系列：
               <input *ngIf="photoModalTitle=='新增'" [(ngModel)]="photoData.Project_Code"
                 class="searchInput photoModalInput" type="text">
               <input *ngIf="photoModalTitle=='編輯'" [(ngModel)]="photoData.Project_Code"
                 class="searchInput photoModalInput" type="text" disabled>
             </td>
+
             <td>特殊架構：
               <input *ngIf="photoModalTitle=='新增'" [(ngModel)]="photoData.Special_SKU"
                 class="searchInput photoModalInput" type="text">
+              <ng-container *ngIf="photoModalTitle=='新增'">&nbsp;&nbsp;&nbsp;非特殊架构请输入符号 /</ng-container>
               <input *ngIf="photoModalTitle=='編輯'" [(ngModel)]="photoData.Special_SKU"
                 class="searchInput photoModalInput" type="text" disabled>
             </td>
+
           </tr>
           <tr>
             <td colspan="3">
@@ -194,8 +205,8 @@
           </tr>
           <tr>
             <td colspan="3">包装内电池数量(颗)：
-              <input [(ngModel)]="photoData.Packages_Qty" class="searchInput photoModalInput"
-                style="width: 40px;margin-left: 30px;" type="text">
+              <input [(ngModel)]="photoData.Packages_Qty" (change)="handlePackages_Qty(photoData)"
+                class="searchInput photoModalInput" style="width: 40px;margin-left: 30px;" type="text">
             </td>
           </tr>
           <tr style="height: 60%;">
@@ -307,23 +318,31 @@
         alt="图标跑了">
     </header>
     <div class="dR">
+
       <div>
         <div style="display: inline-block;margin-right: 28px;">廠別：</div>
         <select [(ngModel)]="dRmodalInput.plant" class="searchSelect modalSelect">
           <option *ngFor="let item of plant" value={{item.PlantCode}}>{{item.Plant}}</option>
         </select>
       </div>
-      <div>{{modalInput[0]}}<input [(ngModel)]="dRmodalInput.input1" class="searchInput modalSelect" type="text">
+
+      <div>{{modalInput[0]}}<input [(ngModel)]="dRmodalInput.input1" class="searchInput modalSelect" type="text"></div>
+
+      <div>{{modalInput[1]}}<input *ngIf="id=='declare'" disabled [(ngModel)]="dRmodalInput.input2"
+          class="searchInput modalSelect" type="text">
+        <input *ngIf="id=='drop'" [(ngModel)]="dRmodalInput.input2" class="searchInput modalSelect" type="text">
       </div>
-      <div>{{modalInput[1]}}<input [(ngModel)]="dRmodalInput.input2" class="searchInput modalSelect" type="text"></div>
-      <div style="position: relative;">
+
+      <div style="position: relative;height: 25%;">
         PDF檔案：
         <input type="file" (change)="pdf($event)" class="modalSelect pdfUpload">
         <button class="clickUp">
           <img src="assets/imgs/upload.png" style="width: 15px;" alt="图标跑了">
           点击上传
         </button>
+        <div [hidden]="!pdfName" style="text-align: center;">PDF檔案：{{pdfName}}</div>
       </div>
+
       <div style="text-align: center;">
         <button (click)="drUploadNewAdd()" style="background-color:#4EBBBB;" nzSize="default" nz-button
           nzType="primary">確定</button>
@@ -331,3 +350,4 @@
     </div>
   </div>
 </div>
+<ngx-loading [show]="loading"></ngx-loading>

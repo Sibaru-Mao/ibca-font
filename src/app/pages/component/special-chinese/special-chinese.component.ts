@@ -39,7 +39,7 @@ export class SpecialChineseComponent implements OnInit {
   showTableData: any = []
   tableScrollHeight: string = ''
   tableHead: any = [
-    { name: '序號' }, { name: '廠別：' },
+    { name: '序號' }, { name: '廠別' },
     { name: '特殊架構' }, { name: '產品系列' },
     { name: '上傳人' }, { name: '上傳時間' },
     { name: '編輯' }
@@ -55,6 +55,8 @@ export class SpecialChineseComponent implements OnInit {
   tableKey: any
   photoModal: boolean = false
   productModalType: string
+  pdfName: string = ''
+  loading: boolean = false
 
   photoModalTitle: string = '查看'
 
@@ -75,7 +77,7 @@ export class SpecialChineseComponent implements OnInit {
   photoData: photoData = {
     Plant: JSON.parse(sessionStorage.getItem('man')).Plant,
     Project_Code: '',
-    Special_SKU: '',
+    Special_SKU: '/',
     Placement_Mode: 0,
     Packages_Qty: 0,
     User_ID: JSON.parse(sessionStorage.getItem('man')).User_ID,
@@ -97,6 +99,8 @@ export class SpecialChineseComponent implements OnInit {
     await this.initData()
     this.tableScrollHeight = 0.65 * Number(sessionStorage.getItem('height')) + 'px'
     this.plant.splice(0, 1)
+    if (this.id == 'declare')
+      this.dRmodalInput.input2 = '一致性申明'
   }
 
   async initData() {
@@ -109,7 +113,7 @@ export class SpecialChineseComponent implements OnInit {
         this.searchTitle = this.modalInputTitle = ['成品中文品名：', 'Product  Name：']
         this.tableHead[2].name = '成品中文品名'
         this.tableHead[2].width = '400px'
-        this.tableHead[1].name = 'Product  Name'
+        this.tableHead[3].name = 'Product  Name'
         break;
 
       case 'product':
@@ -130,7 +134,7 @@ export class SpecialChineseComponent implements OnInit {
         this.searchTitle = ['產品系列：', '電池料號：']
         this.tableHead = [
           { name: '文件名稱' }, { name: '廠別' }, { name: '产品系列' },
-          { name: '电池料号' }, { name: '上传人(顆)' }, { name: '上传时间' },
+          { name: '电池料号' }, { name: '上传人' }, { name: '上传时间' },
           { name: '操作', width: '13%' }
         ]
         this.tableKey = [
@@ -162,8 +166,8 @@ export class SpecialChineseComponent implements OnInit {
   }
 
   // 搜索方法
-  async search() {
-    let data = {
+  async search(warn?: boolean) {
+    let data: any = {
       PlantCode: this.searchInfo.PlantCode,
       Material_No: this.searchInfo.Material_No,
       Project_Code: this.searchInfo.Project_Code
@@ -195,18 +199,26 @@ export class SpecialChineseComponent implements OnInit {
         break
 
       case 'battery':
+        if (data.Material_No) {
+          if (data.Material_No.includes('，'))
+            data.Material_No = data.Material_No.replace(/，/ig, ',')
+          data.Material_No = JSON.stringify(data.Material_No.split(','))
+        }
         this.showTableData = await this.http.getBatteryInfo(data)
         break
 
       default:
         break;
     }
-    if (this.showTableData.hasOwnProperty('error'))
-      this.message.create('error', '資料查詢失敗')
-    else if
-      (this.showTableData.length == 0) this.message.create('warning', '查询资料为空')
-    else
-      this.message.create('success', '資料查詢成功')
+    if (!warn) {
+      if (this.showTableData.hasOwnProperty('error') || this.showTableData.status)
+        this.message.create('error', '資料查詢失敗')
+      else if
+        (this.showTableData.length == 0) this.message.create('warning', '查询资料为空')
+      else
+        this.message.create('success', '資料查詢成功')
+    }
+
     console.log(this.showTableData, 11111);
   }
 
@@ -215,8 +227,11 @@ export class SpecialChineseComponent implements OnInit {
     if (['special', 'chinese'].includes(this.id))
       this.specialChineseModal = true
 
-    if (['drop', 'declare'].includes(this.id))
+    if (['drop', 'declare'].includes(this.id)) {
+      if (this.id == 'declare')
+        this.dRmodalInput.input2 = '一致性申明'
       this.dropUploadModal = true
+    }
 
     if (this.id == 'product') {
       this.photoModal = true
@@ -277,10 +292,13 @@ export class SpecialChineseComponent implements OnInit {
       status = await this.http.addSpecialArchitecture(data)
     }
     if (status.hasOwnProperty('error'))
-      this.message.create('error', '資料保存失敗')
+      this.message.create('error', '資料保存失敗!!!')
+    else if (status.msg == '已存在') {
+      this.message.warning('该资料已经存在!!!')
+    }
     else {
-      this.message.create('success', '資料保存成功')
-      await this.search()
+      this.message.success('資料保存成功')
+      await this.search(true)
       this.close()
     }
   }
@@ -333,6 +351,7 @@ export class SpecialChineseComponent implements OnInit {
   }
 
   async drUploadNewAdd() {
+    this.loading = true
     const man = JSON.parse(sessionStorage.getItem('man'))
     const date = new Date()
     let status1: any
@@ -357,6 +376,11 @@ export class SpecialChineseComponent implements OnInit {
         User_ID: man.User_ID,
         Maintain_Time: date
       }
+      if (!this.findEmpty(addData) || !data.pdf) {
+        this.message.warning('请确认你正确已输入所有资料并且上传了PDF文档！！！')
+        this.loading = false
+        return
+      }
       status2 = await this.http.dropNewAdd(addData)
     }
     if (this.id == 'declare') {
@@ -370,25 +394,53 @@ export class SpecialChineseComponent implements OnInit {
         User_ID: man.User_ID,
         Maintain_Time: date
       }
+      if (!this.findEmpty(addData) || !data.pdf) {
+        this.loading = false
+        this.message.warning('请确认你已正确输入所有资料并且上传了PDF文档！！！')
+        return
+      }
       status2 = await this.http.declareNewAdd(addData)
     }
     status1 = await this.http.uploadPdf(data)
-    if (status1.hasOwnProperty('error') && status2.hasOwnProperty('error'))
+    if (status1.hasOwnProperty('error') || status2.hasOwnProperty('error'))
       this.message.create('error', '上传失败')
-    else
+    else if (status2.msg == '已存在')
+      this.message.warning('该资料已经存在')
+    else {
       this.message.create('success', '上传成功')
-    await this.search()
-    this.dropUploadModal = false
+      await this.search(true)
+      this.closeDropUploadModal()
+    }
     console.log(this.dRmodalInput, 222222222);
+    this.loading = false
+  }
+
+  findEmpty(data) {
+    return Object.values(data).every((e) => {
+      if (typeof e == 'string')
+        return e.replace(/(^\s*)|(\s*$)/g, '')
+      else if (typeof e == 'number')
+        return JSON.stringify(e)
+      else
+        return e
+    })
   }
 
   pdf(event) {
     const fileList: FileList = event.target.files
     if (fileList.length > 0) {
       const file: File = fileList[0]
+      if (file.type != 'application/pdf') {
+        this.message.warning('请上传PDF文档')
+        return
+      }
+      this.pdfName = file.name
       this.dRmodalInput.pdf = new FormData()
       this.dRmodalInput.pdf.append('file', file)
-    } else this.dRmodalInput.pdf = ''
+    } else {
+      this.dRmodalInput.pdf = ''
+      this.pdfName = ''
+    }
     console.log(this.dRmodalInput.pdf);
   }
 
@@ -497,7 +549,7 @@ export class SpecialChineseComponent implements OnInit {
         this.message.create('error', '删除失败')
       else {
         this.message.create('success', '删除成功')
-        this.search()
+        this.search(true)
       }
     }
 
@@ -510,6 +562,7 @@ export class SpecialChineseComponent implements OnInit {
       input2: '',
       pdf: ''
     }
+    this.pdfName = ''
     this.dropUploadModal = false
   }
 
@@ -551,24 +604,28 @@ export class SpecialChineseComponent implements OnInit {
     this.photoData.Maintain_Time = new Date()
     this.photoData.Placement_Mode = Number(this.photoData.Placement_Mode)
     this.photoData.Packages_Qty = Number(this.photoData.Packages_Qty)
-    this.photoData.Special_SKU = this.photoData.Special_SKU ? this.photoData.Special_SKU : null
+    this.photoData.Special_SKU = this.photoData.Special_SKU ? this.photoData.Special_SKU : '/'
+    if (!this.findEmpty(this.photoData)) {
+      this.message.warning('请正确输入所有资料！！！')
+      return
+    }
     let status = true
 
-    this.allPhoto.packagePhoto.forEach(e => {
-      if (!e.url) status = false
+    this.allPhoto.packagePhoto.forEach((e, i) => {
+      if (!e.url && i != 2) status = false
     })
-    this.allPhoto.productPhoto.forEach(e => {
-      if (!e.url) status = false
+    this.allPhoto.productPhoto.forEach((e, i) => {
+      if (!e.url && i != 2) status = false
     })
     if (!status) {
-      this.message.create('warning', '请上传所有的照片！！！')
+      this.message.create('warning', '正面和反面的照片必须上传！！！')
       return
     }
 
     let photoInfo = {
       Plant: this.photoData.Plant,
       Project_Code: this.photoData.Project_Code,
-      Special_SKU: this.photoData.Special_SKU,
+      Special_SKU: this.photoData.Special_SKU ? this.photoData.Special_SKU : '/',
       PhotoType: '',
       place: '',
       file: ''
@@ -601,7 +658,7 @@ export class SpecialChineseComponent implements OnInit {
       this.message.create('error', '上传失败，该厂的该产品可能已经存在')
     else {
       this.message.create('success', '上传成功')
-      await this.search()
+      await this.search(true)
       this.closePhotoModal()
     }
 
@@ -627,7 +684,7 @@ export class SpecialChineseComponent implements OnInit {
       this.message.create('error', '删除失败')
     else {
       this.message.create('success', '删除成功')
-      await this.search()
+      await this.search(true)
     }
   }
 
@@ -640,10 +697,16 @@ export class SpecialChineseComponent implements OnInit {
     const status = await this.http.delBatteryInfo(item)
     if (status?.code == 200) {
       this.message.success('删除成功')
-      await this.search()
+      await this.search(true)
     }
     else
       this.message.error('删除失败')
+  }
+
+  handlePackages_Qty(data) {
+    if (data.Packages_Qty <= 0)
+      data.Packages_Qty = 1
+    data.Packages_Qty = Math.round(data.Packages_Qty)
   }
 
 }

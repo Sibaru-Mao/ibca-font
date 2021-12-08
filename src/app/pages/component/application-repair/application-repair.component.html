@@ -14,7 +14,8 @@
       </td>
       <td>
         特殊架構：
-        <input class="newInput" [(ngModel)]="newData.Material_No" type="text">
+        <input (change)="changeMaterial_No(newData.Material_No)" class="newInput" [(ngModel)]="newData.Material_No"
+          type="text">
       </td>
       <td>
         電池料號：
@@ -59,3 +60,5 @@
     <button nz-button nzType="default" (click)="handleCancel()">取消申请</button>
   </ng-template>
 </nz-modal>
+
+<ngx-loading [show]="loading"></ngx-loading>

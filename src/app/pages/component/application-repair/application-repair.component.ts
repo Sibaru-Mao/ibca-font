@@ -14,14 +14,14 @@ export class ApplicationRepairComponent implements OnInit {
   @Output() sendData = new EventEmitter<any>()
   @Output() generateTask = new EventEmitter<any>()
 
-
+  loading: boolean = false
   // 新申请或者维修品需填寫信息参数
   newData: any = {
     Create_ID: JSON.parse(sessionStorage.getItem('man')).User_ID,
     Site: JSON.parse(sessionStorage.getItem('man')).Site,
     Plant: JSON.parse(sessionStorage.getItem('man')).Plant,
     Project_Code: '',
-    Material_No: '',
+    Material_No: '/',
     Battery_PN: '',
     Demand_Year: '',
     Shipment_Books: '',//number
@@ -73,10 +73,24 @@ export class ApplicationRepairComponent implements OnInit {
   async sure() {
     this.newData.Shipment_Books = Number(this.newData.Shipment_Books)
     this.handleTransport_Mode()
+    if (!Object.values(this.newData).every(e => {
+      if (typeof e == 'object' && e['length'] < 1) {
+        return false
+      }
+      else if (!['string', 'object'].includes(typeof e))
+        return JSON.stringify(e)
+      else
+        return e
+    })) {
+      this.message.warning('请填写完所有信息，并且至少选择一种运输方式！！！')
+      return
+    }
+
     let exist = JSON.parse(JSON.stringify(this.newData))
     delete exist.Create_ID
     delete exist.Site
 
+    this.loading = true
     if (this.title == '新申请' || this.title == '维修品') {
       delete exist.Transport_Mode
       // 查询已经存在的运输方式
@@ -88,32 +102,32 @@ export class ApplicationRepairComponent implements OnInit {
         if (existData.length > 0) {
           this.handleTransport_Mode()
 
-          if (this.newData.Transport_Mode.length < 1) {
-            this.message.create('warning', '請至少選擇一種運輸方式')
-          } else {
-            let modalStatus = false
+          // if (this.newData.Transport_Mode.length < 1) {
+          //   this.message.create('warning', '請至少選擇一種運輸方式')
+          // } else {
+          let modalStatus = false
 
-            this.transportWay.forEach(t => {
-              t.Task_SN = ''
+          this.transportWay.forEach(t => {
+            t.Task_SN = ''
 
-              existData.forEach(e => {
-                // 本次选择的运输方式如果已经存在，打开提醒的模态框
-                if (t.checked && t.label == e.Description_ZH) {
-                  modalStatus = true
-                }
-                // 将重复资料的Task_SN加入transportWay,用于模态框的显示
-                if (t.label == e.Description_ZH) {
-                  t.Task_SN = e.Task_SN
-                }
-              });
-
+            existData.forEach(e => {
+              // 本次选择的运输方式如果已经存在，打开提醒的模态框
+              if (t.checked && t.label == e.Description_ZH) {
+                modalStatus = true
+              }
+              // 将重复资料的Task_SN加入transportWay,用于模态框的显示
+              if (t.label == e.Description_ZH) {
+                t.Task_SN = e.Task_SN
+              }
             });
 
-            this.isVisible = modalStatus
-            // 未发现重复申请的运输方式，直接进入资料编辑
-            if (!modalStatus)
-              await this.handleOk()
-          }
+          });
+
+          this.isVisible = modalStatus
+          // 未发现重复申请的运输方式，直接进入资料编辑
+          if (!modalStatus)
+            await this.handleOk()
+          // }
 
         } else {
           // 继续申请
@@ -143,6 +157,7 @@ export class ApplicationRepairComponent implements OnInit {
       }
     }
 
+    this.loading = false
   }
 
   // 保存新申请和维修品的须填写资料
@@ -177,14 +192,22 @@ export class ApplicationRepairComponent implements OnInit {
     if (baseData.status) {
       this.message.error('获取基本资料失败')
       return
-    } else {
+    }
+    else if (Object.keys(baseData).length <= 12) {
+      this.message.warning(`请在资料中心的基础设定中设定
+        ${this.plant.find(e => { return e.PlantCode == this.newData.Plant }).Plant}
+        的基本资料`)
+      return
+    }
+
+    else {
       this.message.success('获取基本资料成功')
     }
     // 给information模块发送基本资料并且触发方法处理资料
     this.modalService.emitInfo({ type: 'newApplication', data: { status: true, data: baseData } })
 
-    this.isVisible = false;
     this.isConfirmLoading = false;
+    this.isVisible = false;
   }
 
   // 取消申请
@@ -203,6 +226,11 @@ export class ApplicationRepairComponent implements OnInit {
       this.Shipment_Books = '維修賬冊'
     }
 
+  }
+
+  changeMaterial_No(data) {
+    if (!data.replace(/(^\s*)|(\s*$)/g, ''))
+      this.newData.Material_No = '/'
   }
 
 }

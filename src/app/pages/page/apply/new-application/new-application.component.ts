@@ -12,6 +12,7 @@ export class NewApplicationComponent implements OnInit {
   @ViewChild('appRe') appRe: ApplicationRepairComponent
   @ViewChild('information') information: InformationComponent
   show: boolean = false
+  loading: boolean = false
 
   constructor(private modalService: ModalService) { }
 
@@ -24,11 +25,13 @@ export class NewApplicationComponent implements OnInit {
   }
 
   async saveNewData() {
+    this.loading = true
     await this.appRe.saveNewData()
   }
 
-  generateTask(Task_SN) {
-    this.information.generateTask(Task_SN)
+  async generateTask(Task_SN) {
+    await this.information.generateTask(Task_SN)
+    this.loading = false
   }
 
 }

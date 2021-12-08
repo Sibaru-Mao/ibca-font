@@ -202,7 +202,8 @@
 
     <br><br>
     <p style="text-align: center;">
-      <button class="sure" (click)="sure()" nz-button nzType="primary">确定</button>
+      <button nz-popconfirm nzPopconfirmTitle="确定保存？" nzOkText="确定" nzCancelText="取消" (nzOnConfirm)="sure()"
+        class="sure" nz-button nzType="primary">确定</button>
     </p>
 
   </div>

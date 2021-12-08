@@ -45,7 +45,7 @@ export class HttpService {
         .catch((ex) => {
           const msg = this.getErrorMsg(ex);
           const code = this.getErrorCode(ex);
-          this.message.create('error', msg);
+          // this.message.create('error', msg);
           return {
             status: ex.status,
             result: {
@@ -62,7 +62,7 @@ export class HttpService {
         .catch((ex) => {
           const msg = this.getErrorMsg(ex);
           const code = this.getErrorCode(ex);
-          this.message.create('error', msg);
+          // this.message.create('error', msg);
           return ex
           // return {
           //   status: ex.status,
