@@ -47,10 +47,13 @@ export class UploadComponent implements OnInit {
   isVisible: boolean
   isEdit: boolean
   isUpdate: boolean
+
+  Shipment_Books_List = ["生產賬冊", "維修賬冊"]
   // modalInputTitle: any
   // modalInput: any = []
   // tableKey: any
   // id
+
   bodyStyle = {
     'background-color': 'rgba(32, 48, 51, 100)',
     'height': '200px',
@@ -127,11 +130,11 @@ export class UploadComponent implements OnInit {
   formatEditData() {
     this.editInfo = {
       Plant: this.man.Plant,
-      Project_Code: "",
+      Project_Code: "/",
       Material_No: "",
       Battery_PN: "",
       Demand_Year: "",
-      Shipment_Books: "",
+      Shipment_Books: "生產賬冊",
       Transport_Mode: "",
       Testimonials_SN: "點擊上傳",
       Create_ID: "",
@@ -175,9 +178,10 @@ export class UploadComponent implements OnInit {
   }
 
   async saveData() {
+    let date = new Date
     this.editInfo.Create_ID = this.man.User_ID
-    this.editInfo.Create_Time = new Date
-    console.log(this.editInfo);
+    this.editInfo.Create_Time = date.getFullYear() + '.' + (date.getMonth() + 1) + '.' + date.getDate()
+    this.editInfo.Project_Code = this.editInfo.Project_Code == "" ? "/" : this.editInfo.Project_Code
     this.code = await this.http.noSystemMission(this.editInfo)
     if (this.code.status == 200) {
       const file = new FormData()

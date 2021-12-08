@@ -21,7 +21,7 @@
 .searchModal {
   width: 120px;
   height: 25px;
-  font-size: 12px;
+  /* font-size: 12px; */
   background: #404E51;
   color: rgba(255, 255, 255, 100);
   border-radius: 3px;

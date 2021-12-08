@@ -155,7 +155,11 @@
         </tr>
         <tr>
           <td>
-            <p>出貨賬冊：</p><input type="text" [(ngModel)]="editInfo.Shipment_Books" class="searchInput backgroud-1">
+            <p>出貨賬冊：</p>
+            <!-- <input type="text" [(ngModel)]="editInfo.Shipment_Books" class="searchInput backgroud-1"> -->
+            <select [(ngModel)]="editInfo.Shipment_Books" class="searchModal">
+              <option *ngFor="let item of Shipment_Books_List" value={{item}}>{{item}}</option>
+            </select>
           </td>
           <td>
             <p>運輸方式：</p>
