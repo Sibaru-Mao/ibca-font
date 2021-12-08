@@ -167,7 +167,7 @@ export class SpecialChineseComponent implements OnInit {
 
   // 搜索方法
   async search(warn?: boolean) {
-    let data = {
+    let data: any = {
       PlantCode: this.searchInfo.PlantCode,
       Material_No: this.searchInfo.Material_No,
       Project_Code: this.searchInfo.Project_Code
@@ -199,6 +199,11 @@ export class SpecialChineseComponent implements OnInit {
         break
 
       case 'battery':
+        if (data.Material_No) {
+          if (data.Material_No.includes('，'))
+            data.Material_No = data.Material_No.replace(/，/ig, ',')
+          data.Material_No = JSON.stringify(data.Material_No.split(','))
+        }
         this.showTableData = await this.http.getBatteryInfo(data)
         break
 
@@ -206,7 +211,7 @@ export class SpecialChineseComponent implements OnInit {
         break;
     }
     if (!warn) {
-      if (this.showTableData.hasOwnProperty('error'))
+      if (this.showTableData.hasOwnProperty('error') || this.showTableData.status)
         this.message.create('error', '資料查詢失敗')
       else if
         (this.showTableData.length == 0) this.message.create('warning', '查询资料为空')
