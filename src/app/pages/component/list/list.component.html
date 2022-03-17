@@ -8,8 +8,25 @@
   </thead>
   <tbody>
     <tr *ngFor="let data of headerTable.data">
-      <!-- <td *ngFor="let item of td">{{data.item}}</td> -->
-      <td *ngFor="let item of td">{{data[item]}}</td>
+      <td *ngFor="let item of td">
+
+        <ng-container *ngIf="item=='Shipment_Books'">
+          {{data[item]|translateShipmentBooks}}
+        </ng-container>
+
+        <ng-container *ngIf="item=='Transport_Mode'">
+          {{data[item]|translateTransportMode}}
+        </ng-container>
+
+        <ng-container *ngIf="item=='Task_Status'">
+          {{data[item]|taskStatus}}
+        </ng-container>
+
+        <ng-container *ngIf="!(['Shipment_Books', 'Transport_Mode','Task_Status'].includes(item))">
+          {{data[item]}}
+        </ng-container>
+
+      </td>
       <td *ngIf="type=='postpone'">
         <img class="postpone" (click)="operate(data)" src="assets/imgs/postpone.png" alt="图标丢了...">
       </td>
@@ -21,10 +38,7 @@
 </nz-table>
 
 <div class="modal" [hidden]="!modalStatus">
-  <!-- <div class="modal"> -->
-
   <div class="base pmodal1Content" [hidden]="modalType!='pmodal1'">
-    <!-- <div class="base pmodal1Content"> -->
     <header class="modalTitle">警告<img src="assets/imgs/close.png" (click)="close()" alt="图标丢失了"></header>
     <div>
       <p>當前未到12月，不能進行延期</p>
@@ -39,14 +53,14 @@
     <div>
       本公司承诺本“快速复制 ”提供的信息及资料均真实有效。<br>
       如因提供信息不全或有误导致鉴定书出具有误而造成的损失由本公司自行承担。<br>
-      本公司承诺：<br>
-      1、 本委托所述包装件信息与源报告完全一致，包括但不限于：包装材质、尺寸、内部格栅、衬垫材料及内装物性质、数量、重量等；<br>
-      2、 本委托所述电池信息与源报告完全一致，包括但不限于：电池种类、型号、电压、容量／锂含量、放置方式，安全排气装置、防逆电流装置、Wh标识、防短路措施等；<br>
-      3、本委托所述样品外观信息与源报告完全一致，包括但不限于：颜色、材质、设备种类等；<br>
-      4、 本委托所述设备信息与源报告完全一致，包括但不限于：防意外启动措施、防短路措施等；（如适用）<br>
+      本公司承诺:<br>
+      1、 本委托所述包装件信息与源报告完全一致，包括但不限于:包装材质、尺寸、内部格栅、衬垫材料及内装物性质、数量、重量等；<br>
+      2、 本委托所述电池信息与源报告完全一致，包括但不限于:电池种类、型号、电压、容量／锂含量、放置方式，安全排气装置、防逆电流装置、Wh标识、防短路措施等；<br>
+      3、本委托所述样品外观信息与源报告完全一致，包括但不限于:颜色、材质、设备种类等；<br>
+      4、 本委托所述设备信息与源报告完全一致，包括但不限于:防意外启动措施、防短路措施等；（如适用）<br>
       5、本委托同意使用源报告最后一页图片。<br>
       同意上述条款请点击“确认”按钮，不同意请点击“取消”按钮。<br>
-      注：1)“快速复制”功能主要用于快速申请新一年度的鉴定书；2)“快速复制”功能要求新委托与源报告委托信息完全一致；3)“快速复制”委托后，除本页面可修改内容、报告邮寄地址外，其余所有内容均不可更改。
+      注:1)“快速复制”功能主要用于快速申请新一年度的鉴定书；2)“快速复制”功能要求新委托与源报告委托信息完全一致；3)“快速复制”委托后，除本页面可修改内容、报告邮寄地址外，其余所有内容均不可更改。
     </div>
     <div style="text-align: center;">
       <button nz-button class="cancel" (click)="close()" style="margin-right:20px ;" (click)="close()"
@@ -55,26 +69,42 @@
     </div>
   </div>
 
-  <div class="base pmodal3Content" [hidden]="modalType!='pmodal3'">
-    <!-- <div class="base pmodal3Content"> -->
+  <div class="base pmodal3Content" *ngIf="modalType=='pmodal3'">
     <header class="modalTitle">{{modaltitle}}<img src="assets/imgs/close.png" (click)="close()" alt="图标丢失了"></header>
     <div class="modal3Content">
-
+      <!-- 源报告信息S -->
       <p>源报告信息</p>
       <table border="1" width=100% height=20%>
         <tr>
-          <td>源委托单号：{{taskInfo.Entrust_No}}</td>
-          <td>源鉴定书编号：{{taskInfo.Testimonials_SN}}</td>
+          <td>源委托单号:
+            <ng-container *ngIf="nowData.Entrust_No">
+              {{nowData.Entrust_No}}
+            </ng-container>
+            <ng-container *ngIf="!nowData.Entrust_No">
+              <span class="noDate">缺少资料</span>
+            </ng-container>
+          </td>
+
+          <td>源鉴定书编号:
+            <ng-container *ngIf="nowData.Testimonials_SN">
+              {{nowData.Testimonials_SN}}
+            </ng-container>
+            <ng-container *ngIf="!nowData.Testimonials_SN">
+              <span class="noDate">缺少资料</span>
+            </ng-container>
+          </td>
         </tr>
         <tr>
-          <td colspan="2">源使用年份：{{taskInfo.Demand_Year}}年</td>
+          <td colspan="2">源使用年份:{{taskInfo.Demand_Year}}年</td>
         </tr>
       </table>
+      <!-- 源报告信息S -->
 
-      <p>新报告信息</p>
+      <!-- 新报告信息S-->
+      <p style="margin-top: 10px;">新报告信息</p>
       <table border="1" width=100% height=60%>
         <tr>
-          <td>鉴定书使用年份：{{taskInfo.useYear}}年</td>
+          <td>鉴定书使用年份:{{taskInfo.useYear}}年</td>
         </tr>
         <tr>
           <td id="transportReport" style="height: 50%;">
@@ -83,29 +113,34 @@
               <div style="width: 10%;position: relative;flex: 2;">
                 <div style="position: absolute;top: 50%;transform: translate(0,-50%);">運輸方式：</div>
               </div>
-
               <div style="width: 90%;flex: 7;">
 
-                <div style="margin-bottom: 10px;">
-                  <label nz-checkbox nzDisabled=true [ngModel]="info.Transport_Report[1].status">空運</label>
-                  <div class="transportSelect">
-                    <img class="asterisk" style="visibility: hidden;" src="assets/imgs/asterisk.png" alt="">
-                    空運報告份數：
-                    <input [(ngModel)]="info.Transport_Report[1].number" class="transportInput listInput" type="text"
-                      disabled>
-                  </div>
-                </div>
-
                 <ng-container *ngIf="type=='postpone'">
-
                   <div style="margin-bottom: 10px;">
-                    <label nz-checkbox nzDisabled=true [ngModel]="info.Transport_Report[2].status">海運</label>
+                    <label *ngIf="nowData.Transport_Mode==1" nz-checkbox nzDisabled=true
+                      [ngModel]="info.Transport_Report[1].status">空運</label>
+                    <label *ngIf="nowData.Transport_Mode!=1" nz-checkbox nzDisabled=true [ngModel]="false">空運</label>
                     <div class="transportSelect">
                       <img class="asterisk" style="visibility: hidden;" src="assets/imgs/asterisk.png" alt="">
-                      海運報告份數：
-                      <input [(ngModel)]="info.Transport_Report[2].number" class="transportInput listInput" type="text"
+                      空運報告份數:
+                      <input *ngIf="nowData.Transport_Mode==1" [(ngModel)]="info.Transport_Report[1].number"
+                        class="transportInput listInput" type="text" disabled>
+                      <input *ngIf="nowData.Transport_Mode!=1" value="0" class="transportInput listInput" type="text"
                         disabled>
-                      <!-- <div class="transportInput">{{info.Transport_Report[2].number}}</div> -->
+                    </div>
+                  </div>
+
+                  <div style="margin-bottom: 10px;">
+                    <label *ngIf="nowData.Transport_Mode==2" nz-checkbox nzDisabled=true
+                      [ngModel]="info.Transport_Report[2].status">海運</label>
+                    <label *ngIf="nowData.Transport_Mode!=2" nz-checkbox nzDisabled=true [ngModel]="false">海運</label>
+                    <div class="transportSelect">
+                      <img class="asterisk" style="visibility: hidden;" src="assets/imgs/asterisk.png" alt="">
+                      海運報告份數:
+                      <input *ngIf="nowData.Transport_Mode==2" [(ngModel)]="info.Transport_Report[2].number"
+                        class="transportInput listInput" type="text" disabled>
+                      <input *ngIf="nowData.Transport_Mode!=2" value="0" class="transportInput listInput" type="text"
+                        disabled>
                     </div>
                   </div>
 
@@ -113,7 +148,7 @@
                     <label nz-checkbox nzDisabled=true [ngModel]="info.Transport_Report[3].status">公路</label>
                     <div class="transportSelect">
                       <img class="asterisk" style="visibility: hidden;" src="assets/imgs/asterisk.png" alt="">
-                      公路報告份數：
+                      公路報告份數:
                       <input [(ngModel)]="info.Transport_Report[3].number" class="transportInput listInput" type="text"
                         disabled>
                     </div>
@@ -123,37 +158,59 @@
                     <label nz-checkbox nzDisabled=true [ngModel]="info.Transport_Report[4].status">鐵路</label>
                     <div class="transportSelect">
                       <img class="asterisk" style="visibility: hidden;" src="assets/imgs/asterisk.png" alt="">
-                      鐵路報告份數：
+                      鐵路報告份數:
                       <input [(ngModel)]="info.Transport_Report[4].number" class="transportInput listInput" type="text"
                         disabled>
                     </div>
                   </div>
-
                 </ng-container>
 
+                <ng-container *ngIf="title=='运输'">
+                  <div style="margin-bottom: 10px;">
+                    <label nz-checkbox nzDisabled=true [ngModel]="info.airTosea.status">海運</label>
+                    <div class="transportSelect" style="vertical-align: bottom;">
+                      <img class="asterisk" src="assets/imgs/asterisk.png" alt="">
+                      海運報告份數:
+                      <input [(ngModel)]="info.airTosea.number" class="transportInput listInput" type="text">
+                    </div>
+                  </div>
+                </ng-container>
               </div>
-
             </div>
-
           </td>
         </tr>
+
+        <tr *ngIf="title=='运输'">
+          <td>
+            <img style="width: 10px;margin-left: -10px;margin-right: 3px;" src="assets/imgs/asterisk.png" alt="">
+            <span class="change">约定完成时间：</span>
+            <nz-radio-group style="vertical-align: middle;" [(ngModel)]="info.baseWindowsUp.Complete_Time">
+              <label *ngFor="let item of appointLabel" nz-radio nzValue={{item.value}}
+                [ngModel]="info.baseWindowsUp.Complete_Time==item.value">{{item.name}}
+              </label>
+            </nz-radio-group>
+          </td>
+        </tr>
+
         <tr>
-          <td>样品处置方式:&nbsp;&nbsp;&nbsp;{{info.Sample_Dispose}} </td>
+          <td>样品处置方式:&nbsp;&nbsp;&nbsp;{{info.baseWindowsUp.Sample_Dispose|translateSampleDispose}}</td>
         </tr>
         <tr>
           <td>引用编号:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{info.Reference_SN}} </td>
         </tr>
         <tr>
-          <td>委托说明:&nbsp;&nbsp;&nbsp;&nbsp; {{modaltitle}}</td>
+          <td>委托说明:&nbsp;&nbsp;&nbsp;&nbsp; {{info.Entrust_Explain}}</td>
         </tr>
       </table>
-
+      <!-- 新报告信息E -->
     </div>
+
     <div style="text-align: center;">
       <button nz-button class="cancel" (click)="close()" style="margin-right:10px ;" (click)="close()"
         nzType="primary">取消</button>
       <button nz-button class="sure" (click)="pmodal3()" nzType="primary">確定</button>
     </div>
   </div>
-
 </div>
+<app-tasksn-modal (back)="back()" *ngIf="showModal" [taskSn]="Task_SN"></app-tasksn-modal>
+<ngx-loading [show]="loading"></ngx-loading>

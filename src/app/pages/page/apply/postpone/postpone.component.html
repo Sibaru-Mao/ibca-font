@@ -1,7 +1,7 @@
 <div class="base">
   <div class="content">
-    <app-application-repair (sendData)="sendData($event)" title="延期"></app-application-repair>
+    <app-application-repair #appRe (sendData)="sendData($event)" title="延期"></app-application-repair>
     <div class="middle"></div>
-    <app-list #list type='postpone'></app-list>
+    <app-list #list (backInit)="back()" type='postpone' title="延期"></app-list>
   </div>
 </div>

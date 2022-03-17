@@ -1,10 +1,11 @@
 <div id="base">
   <div id="content">
 
+
     <!-- 搜索栏 -->
     <div *ngIf="pageType==1" class="search">
       <div>廠別：</div>
-      <select [(ngModel)]="searchInfo" class="searchSelect">
+      <select [(ngModel)]="searchInfo" disabled class="searchSelect">
         <option *ngFor="let item of plant" value={{item.PlantCode}}>{{item.Plant}}</option>
       </select>
       <button (click)="getBaseData()" class="searchButton" nzSize="small" nz-button nzType="primary">搜索</button>
@@ -73,11 +74,19 @@
           </td>
         </tr>
         <tr>
-          <td colspan="2">
+          <td>
             任務狀態：
-            <select disabled [(ngModel)]="targetInfo.Task_Status" class="taskSelect">
-              <option *ngFor="let item of taskStatus" value="item.Value">{{item.Description_ZH}} </option>
+            <select *ngIf="specialEdit" [(ngModel)]="targetInfo.Task_Status" class="taskSelect">
+              <option *ngFor="let item of taskStatus" value={{item.Value}}>{{item.Description_ZH}} </option>
             </select>
+            <select *ngIf="!specialEdit" disabled [(ngModel)]="targetInfo.Task_Status" class="taskSelect">
+              <option *ngFor="let item of taskStatus" value={{item.Value}}>{{item.Description_ZH}} </option>
+            </select>
+          </td>
+          <td>
+            電池型號：
+            <input *ngIf="specialEdit" [(ngModel)]="targetInfo.Battery_Model" class="taskInput" type="text">
+            <input *ngIf="!specialEdit" [(ngModel)]="targetInfo.Battery_Model" class="taskInput" type="text" disabled>
           </td>
         </tr>
         <tr>
@@ -91,385 +100,629 @@
       </table>
     </div>
 
-    <!-- 基本信息填寫 -->
-    <div class="baseInfo" style="margin-top: 20px;">
-      <header>
-        <span class="title">基本信息填寫</span>
-      </header>
-      <table border="1" width=100% height=80px>
-        <tr *ngIf="pageType!=1">
-          <td width=50%>成品中文品名：{{info.ProductName_ZH}}</td>
-          <td>Product Name：{{info.ProductName_EN}}</td>
-        </tr>
-        <tr>
-          <td>
-            委托单位：
-            <span *ngIf="pageType!=1">{{info.Consignor}}</span>
-            <input class="baseInfoInput" *ngIf="pageType==1" [(ngModel)]="info.Consignor" type="text">
-          </td>
-          <td>
-            生成单位：
-            <span *ngIf="pageType!=1">{{info.Manufacturer}}</span>
-            <input class="baseInfoInput" *ngIf="pageType==1" [(ngModel)]="info.Manufacturer" type="text">
-          </td>
-        </tr>
-      </table>
-    </div>
+    <ng-container *ngIf="!([1,2].includes(condition.Task_Type))">
 
-    <!-- 服務信息填寫 -->
-    <div class="server" style="margin-top: 60px;">
-      <header>
-        <span class="title">服務信息填寫</span>
-      </header>
-      <table border="1" width=100% height=280px>
-        <tr>
-          <td *ngIf="pageType!=1" width=100%>
-            鉴定书使用年份：
-            <!-- <label nz-radio [nzDisabled]="disabled">Disabled</label> -->
-            <label style="margin-left: 6px;" nz-radio nzDisabled=true [ngModel]="true">{{targetInfo.Demand_Year}}
-            </label>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <img class="asterisk" src="assets/imgs/asterisk.png" alt="">
-            <span class="change">约定完成时间：</span>
-            <nz-radio-group style="margin-left: 20px;" [(ngModel)]="info.Complete_Time">
-              <label *ngFor="let item of appointLabel" nz-radio nzValue={{item.value}}
-                [ngModel]="info.Complete_Time==item.value">
-                {{item.name}}
-              </label>
-            </nz-radio-group>
-          </td>
-        </tr>
-        <tr>
-          <td>
-
-            <div style="display: flex;">
-              <div style="width: 10%;position: relative;">
-                <div style="position: absolute;top: 50%;transform: translate(0,-50%);">運輸方式：</div>
-              </div>
-
-              <div style="width: 90%;">
-
-                <div style="margin-bottom: 10px;">
-                  <img *ngIf="pageType==1" class="asterisk" src="assets/imgs/asterisk.png" alt="">
-                  <label nz-checkbox *ngIf="pageType!=1" nzDisabled=true
-                    [(ngModel)]="info.Transport_Report[1].status">空運
-                  </label>
-                  <label nz-checkbox *ngIf="pageType==1" (ngModelChange)="transportWayChange($event)"
-                    [(ngModel)]="info.Transport_Report[1].status">空運
-                  </label>
-                  <div class="transportSelect">
-                    <img class="asterisk" src="assets/imgs/asterisk.png" alt="">
-                    空運報告份數：
-                    <input [(ngModel)]="info.Transport_Report[1].number" class="transportInput" type="text">
-                  </div>
-                </div>
-
-                <div style="margin-bottom: 10px;">
-                  <img *ngIf="pageType==1" class="asterisk" src="assets/imgs/asterisk.png" alt="">
-                  <label nz-checkbox *ngIf="pageType!=1" nzDisabled=true
-                    [(ngModel)]="info.Transport_Report[2].status">海運
-                  </label>
-                  <label nz-checkbox *ngIf="pageType==1" [(ngModel)]="info.Transport_Report[2].status">海運
-                  </label>
-                  <div class="transportSelect">
-                    <img class="asterisk" src="assets/imgs/asterisk.png" alt="">
-                    海運報告份數：
-                    <input [(ngModel)]="info.Transport_Report[2].number" class="transportInput" type="text">
-                  </div>
-                </div>
-
-                <div style="margin-bottom: 10px;">
-                  <label nz-checkbox nzDisabled=true [(ngModel)]="info.Transport_Report[3].status">公路</label>
-                  <div class="transportSelect">
-                    <img class="asterisk" style="visibility: hidden;" src="assets/imgs/asterisk.png" alt="">
-                    公路報告份數：
-                    <input [(ngModel)]="info.Transport_Report[3].number" class="transportInput" type="text" disabled>
-                  </div>
-                </div>
-
-                <div style="margin-bottom: 10px;">
-                  <label nz-checkbox nzDisabled=true [(ngModel)]="info.Transport_Report[4].status">鐵路</label>
-                  <div class="transportSelect">
-                    <img class="asterisk" style="visibility: hidden;" src="assets/imgs/asterisk.png" alt="">
-                    鐵路報告份數：
-                    <input [(ngModel)]="info.Transport_Report[4].number" class="transportInput" type="text" disabled>
-                  </div>
-                </div>
-
-              </div>
-
-            </div>
-
-          </td>
-        </tr>
-        <tr>
-          <td><img class="asterisk" src="assets/imgs/asterisk.png" alt="">
-            樣品處置方式：
-            <nz-radio-group style="margin-left: 18px;" [(ngModel)]="info.Sample_Dispose">
-              <label *ngFor="let item of sample.label" nz-radio nzValue={{item.value}}
-                [ngModel]="info.Sample_Dispose==item.value">{{item.name}}</label>
-            </nz-radio-group>
-          </td>
-        </tr>
-        <tr>
-          <td *ngIf="pageType!=1">
-            引用編號：
-            <div *ngIf="!info.Reference_SN" style="color: red;margin-left: 20px;display: inline-block;">缺少相關資料</div>
-            <div *ngIf="info.Reference_SN" style="display: inline-block;margin-left: 20px;">{{info.Reference_SN}}</div>
-          </td>
-        </tr>
-        <tr>
-          <td><img class="asterisk" src="assets/imgs/asterisk.png" alt="">
-            委托拍摄样品照片：
-            <nz-radio-group style="margin-left: 18px;" [(ngModel)]="info.Sample_Photo">
-              <label *ngFor="let item of need.label" nz-radio nzValue={{item.value}}
-                [ngModel]="info.Sample_Photo==item.value">{{item.name}}
-              </label>
-            </nz-radio-group>
-          </td>
-        </tr>
-      </table>
-    </div>
-
-    <!-- 樣品信息填寫 -->
-    <div class="sample" style="margin-top: 60px;">
-      <header>
-        <span class="title">樣品信息填寫</span>
-      </header>
-      <table border="1" width=100% height=360px>
-        <ng-container *ngIf="pageType!=1">
-          <tr>
-            <td width=50%>電池序號：{{info.Battery_SN}}</td>
-            <td>電池放置方式：{{info.Placement_Mode}}</td>
+      <!-- 基本信息填寫 -->
+      <div class="baseInfo" style="margin-top: 20px;">
+        <header>
+          <span class="title">基本信息填寫</span>
+        </header>
+        <table border="1" width=100% height=80px>
+          <tr *ngIf="pageType!=1">
+            <td width=50%>成品中文品名:{{info.ProductName_ZH}}</td>
+            <td>Product Name:{{info.ProductName_EN}}</td>
           </tr>
           <tr>
-            <td>UN38.3试验概要编号：
-              <div *ngIf="info.UN383_SN" style="display: inline-block;margin-left: 10px;"></div>
-              <div *ngIf="!info.UN383_SN" style="display: inline-block;color: red;margin-left: 10px;">缺少相關資料</div>
+            <td>
+              委托单位:
+              <span *ngIf="pageType!=1">{{info.Consignor}}</span>
+              <input class="baseInfoInput" *ngIf="pageType==1" [(ngModel)]="info.Consignor" type="text">
             </td>
-            <td>驗證碼：{{info.Verification_Code}}</td>
+            <td>
+              生成单位:
+              <span *ngIf="pageType!=1">{{info.Manufacturer}}</span>
+              <input class="baseInfoInput" *ngIf="pageType==1" [(ngModel)]="info.Manufacturer" type="text">
+            </td>
           </tr>
-        </ng-container>
-        <tr>
-          <td *ngIf="pageType!=1">
-            <img class="asterisk" src="assets/imgs/asterisk.png" alt="">是否纽扣电池：
-            <div class="infoRadio">
-              <nz-radio-group [(ngModel)]="info.Button_Battery">
-                <label *ngFor="let item of battery.label" nz-radio nzValue={{item.value}}
-                  [ngModel]="info.Button_Battery==item.value">{{item.name}}</label>
+        </table>
+      </div>
+
+      <!-- 服務信息填寫 -->
+      <div class="server" style="margin-top: 60px;">
+        <header>
+          <span class="title">服務信息填寫</span>
+        </header>
+        <table border="1" width=100% height=280px>
+          <tr>
+            <td *ngIf="pageType!=1" width=100%>
+              鉴定书使用年份：
+              <label style="margin-left: 6px;" nz-radio nzDisabled=true [ngModel]="true">{{info.Demand_Year}}
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <img class="asterisk" src="assets/imgs/asterisk.png" alt="">
+              <span class="change">约定完成时间：</span>
+              <nz-radio-group style="margin-left: 20px;" [(ngModel)]="info.Complete_Time">
+                <label *ngFor="let item of appointLabel" nz-radio nzValue={{item.value}}
+                  [ngModel]="info.Complete_Time==item.value">
+                  {{item.name}}
+                </label>
               </nz-radio-group>
-            </div>
-          </td>
-          <td width="50%"><img class="asterisk" src="assets/imgs/asterisk.png" alt="">安全排气装置：
-            <div class="infoRadio">
-              <nz-radio-group [(ngModel)]="info.Exhaust_Device">
-                <label *ngFor="let item of safeExhaust.label" nz-radio nzValue={{item.value}}
-                  [ngModel]="info.Exhaust_Device==item.value">{{item.name}}</label>
+            </td>
+          </tr>
+          <tr>
+            <td>
+
+              <div style="display: flex;">
+                <div style="width: 10%;position: relative;">
+                  <div style="position: absolute;top: 50%;transform: translate(0,-50%);">運輸方式：</div>
+                </div>
+
+                <div style="width: 90%;">
+                  <!-- 空运s -->
+                  <div style="margin-bottom: 10px;">
+                    <img *ngIf="pageType==1" class="asterisk" src="assets/imgs/asterisk.png" alt="">
+
+                    <ng-container *ngIf="!(['新申请','维修品'].includes(title))">
+                      <label nz-checkbox *ngIf="pageType!=1 " nzDisabled=true
+                        [(ngModel)]="info.Transport_Report[1].status">空運
+                      </label>
+                      <label nz-checkbox *ngIf="pageType==1 " (ngModelChange)="transportWayChange($event)"
+                        [(ngModel)]="info.Transport_Report[1].status">空運
+                      </label>
+                    </ng-container>
+
+                    <ng-container *ngIf="['新申请','维修品'].includes(title)">
+                      <label nz-checkbox *ngIf="selectedTransport_Mode.includes(1)" nzDisabled=true
+                        [(ngModel)]="info.Transport_Report[1].status">空運
+                      </label>
+                      <label nz-checkbox *ngIf="!(selectedTransport_Mode.includes(1))" nzDisabled=true
+                        [ngModel]="false">空運
+                      </label>
+                    </ng-container>
+
+                    <div class="transportSelect">
+                      <img class="asterisk" src="assets/imgs/asterisk.png" alt="">
+                      空運報告份數：
+                      <input *ngIf="pageType!=2" [(ngModel)]="info.Transport_Report[1].number" class="transportInput"
+                        type="text">
+                      <ng-container *ngIf="pageType==2">
+                        <input *ngIf="selectedTransport_Mode.includes(1)" [(ngModel)]="info.Transport_Report[1].number"
+                          class="transportInput" type="text">
+
+                        <input *ngIf="!(selectedTransport_Mode.includes(1))" value="0" class="transportInput"
+                          type="text" disabled>
+                      </ng-container>
+                    </div>
+                  </div>
+                  <!-- 空运e -->
+
+                  <!-- 海运s -->
+                  <div style="margin-bottom: 10px;">
+                    <img *ngIf="pageType==1" class="asterisk" src="assets/imgs/asterisk.png" alt="">
+
+                    <ng-container *ngIf="!(['新申请','维修品'].includes(title))">
+                      <label nz-checkbox *ngIf="pageType!=1 " nzDisabled=true
+                        [(ngModel)]="info.Transport_Report[2].status">海運
+                      </label>
+                      <label nz-checkbox *ngIf="pageType==1&&(!['新申请','维修品'].includes(title)) "
+                        [(ngModel)]="info.Transport_Report[2].status">海運
+                      </label>
+                    </ng-container>
+
+                    <ng-container *ngIf="['新申请','维修品'].includes(title)">
+                      <label nz-checkbox nzDisabled=true *ngIf="selectedTransport_Mode.includes(2)"
+                        [(ngModel)]="info.Transport_Report[2].status">海運
+                      </label>
+                      <label nz-checkbox nzDisabled=true *ngIf="!(selectedTransport_Mode.includes(2))"
+                        [ngModel]="false">海運
+                      </label>
+                    </ng-container>
+
+                    <div class="transportSelect">
+                      <img class="asterisk" src="assets/imgs/asterisk.png" alt="">
+                      海運報告份數：
+                      <input *ngIf="pageType!=2" [(ngModel)]="info.Transport_Report[2].number" class="transportInput"
+                        type="text">
+
+                      <ng-container *ngIf="pageType==2">
+                        <input *ngIf="selectedTransport_Mode.includes(2)" [(ngModel)]="info.Transport_Report[2].number"
+                          class="transportInput" type="text">
+                        <input *ngIf="!(selectedTransport_Mode.includes(2))" value="0" class="transportInput"
+                          type="text" disabled>
+                      </ng-container>
+
+                    </div>
+                  </div>
+                  <!-- 海运e -->
+
+                  <!-- 公路s -->
+                  <div style="margin-bottom: 10px;">
+                    <label nz-checkbox nzDisabled=true [(ngModel)]="info.Transport_Report[3].status">公路</label>
+                    <div class="transportSelect">
+                      <img class="asterisk" style="visibility: hidden;" src="assets/imgs/asterisk.png" alt="">
+                      公路報告份數：
+                      <input [(ngModel)]="info.Transport_Report[3].number" class="transportInput" type="text" disabled>
+                    </div>
+                  </div>
+                  <!-- 公路e -->
+
+                  <!-- 铁路s -->
+                  <div style="margin-bottom: 10px;">
+                    <label nz-checkbox nzDisabled=true [(ngModel)]="info.Transport_Report[4].status">鐵路</label>
+                    <div class="transportSelect">
+                      <img class="asterisk" style="visibility: hidden;" src="assets/imgs/asterisk.png" alt="">
+                      鐵路報告份數：
+                      <input [(ngModel)]="info.Transport_Report[4].number" class="transportInput" type="text" disabled>
+                    </div>
+                  </div>
+                  <!-- 铁路e -->
+
+                </div>
+
+              </div>
+
+            </td>
+          </tr>
+          <tr>
+            <td><img class="asterisk" src="assets/imgs/asterisk.png" alt="">
+              樣品處置方式：
+              <nz-radio-group style="margin-left: 18px;" [(ngModel)]="info.Sample_Dispose">
+                <label *ngFor="let item of sample.label" nz-radio nzValue={{item.value}}
+                  [ngModel]="info.Sample_Dispose==item.value">{{item.name}}</label>
               </nz-radio-group>
-            </div>
-          </td>
-          <td *ngIf="pageType==1"><img class="asterisk" src="assets/imgs/asterisk.png" alt="">防逆电流装置：
-            <div class="infoRadio">
-              <nz-radio-group [(ngModel)]="info.Currents_Device">
-                <label *ngFor="let item of current.label" nz-radio nzValue={{item.value}}
-                  [ngModel]="info.Currents_Device==item.value">{{item.name}}</label>
+            </td>
+          </tr>
+          <tr>
+            <td *ngIf="pageType!=1">
+              引用編號：
+              <div *ngIf="!info.Reference_SN" style="color: red;margin-left: 20px;display: inline-block;">缺少相關資料</div>
+              <div *ngIf="info.Reference_SN" style="display: inline-block;margin-left: 20px;">{{info.Reference_SN}}
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><img class="asterisk" src="assets/imgs/asterisk.png" alt="">
+              委托拍摄样品照片：
+              <nz-radio-group style="margin-left: 18px;" [(ngModel)]="info.Sample_Photo">
+                <label *ngFor="let item of need.label" nz-radio nzValue={{item.value}}
+                  [ngModel]="info.Sample_Photo==item.value">{{item.name}}
+                </label>
               </nz-radio-group>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td *ngIf="pageType!=1"><img class="asterisk" src="assets/imgs/asterisk.png" alt="">防逆电流装置：
-            <div class="infoRadio">
-              <nz-radio-group [(ngModel)]="info.Currents_Device">
-                <label *ngFor="let item of current.label" nz-radio nzValue={{item.value}}
-                  [ngModel]="info.Currents_Device==item.value">{{item.name}}</label>
-              </nz-radio-group>
-            </div>
-          </td>
-          <td>
-            <img class="asterisk" src="assets/imgs/asterisk.png" alt="">Wh标识：
-            <div class="infoRadio">
-              <nz-radio-group [(ngModel)]="info.Wh_Logo">
-                <label *ngFor="let item of Wh.label" nz-radio nzValue={{item.value}}
-                  [ngModel]="info.Wh_Logo==item.value">{{item.name}}</label>
-              </nz-radio-group>
-            </div>
-          </td>
-          <td *ngIf="pageType==1">
-            <img class="asterisk" src="assets/imgs/asterisk.png" alt="">
-            防短路： <input class="baseInfoInput" *ngIf="pageType==1" [(ngModel)]="info.Short_Circuit" type="text">
-          </td>
-        </tr>
-        <tr *ngIf="pageType!=1">
-          <td>包装件内该电池数量(颗)：{{info.Packages_Qty}}</td>
-          <td>防短路：{{info.Short_Circuit}}</td>
-        </tr>
+            </td>
+          </tr>
+        </table>
+      </div>
 
-        <tr>
-          <td colspan="2"><img class="asterisk" src="assets/imgs/asterisk.png" alt="">
-            <img class="asterisk" src="assets/imgs/asterisk.png" alt="">防意外啟動：
-            <nz-checkbox-group [(ngModel)]="unexpectStart">
-            </nz-checkbox-group>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="2"><img class="asterisk" src="assets/imgs/asterisk.png" alt=""><img class="asterisk"
-              src="assets/imgs/asterisk.png" alt="">
-            包装件内每台设备配备电池数量不超过为其提供动力所需的最少电池数量再加2套备用电池的要求：
-            <div class="infoRadio" style="width: 29.5%;">
-              <nz-radio-group [(ngModel)]="info.Special_Require">
-                <label *ngFor="let item of minBattery.label" nz-radio nzValue={{item.value}}
-                  [ngModel]="info.Special_Require==item.value">{{item.name}}</label>
-              </nz-radio-group>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td><img class="asterisk" src="assets/imgs/asterisk.png" alt="">是否贴有"9类锂电池危险性标签"：
-            <div class="infoRadio">
-              <nz-radio-group [(ngModel)]="info.Dangerous_Label">
-                <label *ngFor="let item of dangerSign.label" nz-radio nzValue={{item.value}}
-                  [ngModel]="info.Dangerous_Label==item.value">{{item.name}}</label>
-              </nz-radio-group>
-            </div>
-          </td>
-          <td><img class="asterisk" src="assets/imgs/asterisk.png" alt="">是否贴有锂电池标记：
-            <div class="infoRadio">
-              <nz-radio-group [(ngModel)]="info.LithiumBattery_Label">
-                <label *ngFor="let item of batterySign.label" nz-radio nzValue={{item.value}}
-                  [ngModel]="info.LithiumBattery_Label==item.value">{{item.name}}</label>
-              </nz-radio-group>
-            </div>
-          </td>
-        </tr>
-        <tr *ngIf="pageType!=1">
-          <td colspan="2">委托说明：{{info.Entrust_Explain}}</td>
-        </tr>
-      </table>
-    </div>
-
-
-    <!-- 委託說明 -->
-    <div *ngIf="pageType==1" class="sample" style="margin-top: 60px;">
-      <header>
-        <span class="title">委託說明</span>
-      </header>
-      <table border="1" width=100% height=120px>
-        <tr>
-          <td width="50%">
-            <img class="asterisk" src="assets/imgs/asterisk.png" alt="">
-            新申請：
-            <input [(ngModel)]="info.Entrust_Newapply" style="width: 50%;" placeholder="請輸入委託說明"
-              class="description baseInfoInput" type="text">
-          </td>
-          <td>
-            <img class="asterisk" src="assets/imgs/asterisk.png" alt="">
-            空運轉海運：
-            <input [(ngModel)]="info.Entrust_Transfer" style="width: 50%;" placeholder="請輸入委託說明"
-              class="description baseInfoInput" type="text">
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <img class="asterisk" src="assets/imgs/asterisk.png" alt="">
-            維修品鑑定書：
-            <input [(ngModel)]="info.Entrust_Repair" style="width: 50%;" placeholder="請輸入委託說明"
-              class="description baseInfoInput" type="text">
-          </td>
-          <td>
-            <img class="asterisk" src="assets/imgs/asterisk.png" alt="">
-            延期：
-            <input [(ngModel)]="info.Entrust_Postpone" style="width: 50%;" placeholder="請輸入委託說明"
-              class="description baseInfoInput" type="text">
-          </td>
-        </tr>
-      </table>
-    </div>
-
-
-
-    <!-- 附件 -->
-    <div class="footContent">
-      <ng-container *ngIf="pageType!=1">
-        <header><span class="title">附件</span></header>
-        <div class="foot">
-
-          <div>
-            授權書：
-            <!-- <ng-container *ngIf="info.authorization.AuthBook!='找不到相关资料'">
-              <u style="color: #3BAEE5;">{{info.authorization.AuthBook}}</u>
-              <img (click)="downLoad(info.authorization.File_Name)" class="down" src="assets/imgs/download.png" alt="">
-            </ng-container>
-            <span *ngIf="info.authorization.AuthBook=='找不到相关资料'" style="color: red;">缺少相關資料</span> -->
-          </div>
-
-          <div>
-            報告照片：
-            <!-- <ng-container *ngIf="info.ReportPhoto.PhotoName!='找不到相关资料'">
-              <u style="color: #3BAEE5;">{{info.ReportPhoto.PhotoName}}</u>
-              <img (click)="downLoad(info.ReportPhoto.File_Name)" class="down" src="assets/imgs/download.png" alt="">
-            </ng-container> -->
-            <!-- <span *ngIf="info.ReportPhoto.PhotoName=='找不到相关资料'" style="color: red;">缺少相關資料</span> -->
-          </div>
-
-          <div>
-            1.2m跌落報告：
-            <!-- <ng-container *ngIf="info.FalloffReport.PhotoName!='找不到相关资料'">
-              <u style="color: #3BAEE5;">{{info.FalloffReport .PhotoName}}</u>
-              <img (click)="downLoad(info.FalloffReport.File_Name)" class="down" src="assets/imgs/download.png" alt="">
-            </ng-container> -->
-            <!-- <span *ngIf="info.FalloffReport.PhotoName=='找不到相关资料'" style="color: red;">缺少相關資料</span> -->
-          </div>
-
-          <div>
-            運輸條件鑑定書：
-            <!-- <ng-container *ngIf="info.testimonial[0].TransferName!='找不到相关资料'">
-              <u style="color: #3BAEE5;">{{info.testimonial[0].TransferName}}</u>
-              <img (click)="downLoad(info.testimonial[0].File_Name)" class="down" src="assets/imgs/download.png" alt="">
-            </ng-container>
-            <span *ngIf="info.testimonial[0].TransferName=='找不到相关资料'" style="color: red;">缺少相關資料</span> -->
-          </div>
-
-        </div>
-
-        <div style="margin-top: 30px;">
-          其他文件：
-          <!-- <ng-container *ngIf="info.Other.Name!='找不到相关资料'">
-            <u style="color: #3BAEE5;">{{info.Other.Name}}</u>
-            <img (click)="downLoad(info.Other.File_Name)" class="down" src="assets/imgs/download.png" alt="">
+      <!-- 樣品信息填寫 -->
+      <div class="sample" style="margin-top: 60px;">
+        <header>
+          <span class="title">樣品信息填寫</span>
+        </header>
+        <table border="1" width=100% height=360px>
+          <ng-container *ngIf="pageType!=1">
+            <tr>
+              <td width=50%>電池序號：{{info.Battery_SN}}</td>
+              <td>電池放置方式：{{info.Placement_Mode|batteryPlacement}}</td>
+            </tr>
+            <tr>
+              <td>UN38.3试验概要编号：
+                <div *ngIf="info.UN383_SN" style="display: inline-block;margin-left: 10px;">{{info.UN383_SN}}
+                </div>
+                <div *ngIf="!info.UN383_SN" style="display: inline-block;color: red;margin-left: 10px;">缺少相關資料</div>
+              </td>
+              <td>驗證碼：{{info.Verification_Code}}</td>
+            </tr>
           </ng-container>
-          <span *ngIf="info.Other.Name=='找不到相关资料'" style="color: red;">缺少相關資料</span> -->
-        </div>
+          <tr>
+            <td *ngIf="pageType!=1">
+              <img class="asterisk" src="assets/imgs/asterisk.png" alt="">是否纽扣电池：
+              <div class="infoRadio">
+                <nz-radio-group [(ngModel)]="info.Button_Battery">
+                  <label *ngFor="let item of battery.label" nz-radio nzValue={{item.value}}
+                    [ngModel]="info.Button_Battery==item.value">{{item.name}}</label>
+                </nz-radio-group>
+              </div>
+            </td>
+            <td width="50%"><img class="asterisk" src="assets/imgs/asterisk.png" alt="">安全排气装置：
+              <div class="infoRadio">
+                <nz-radio-group [(ngModel)]="info.Exhaust_Device">
+                  <label *ngFor="let item of safeExhaust.label" nz-radio nzValue={{item.value}}
+                    [ngModel]="info.Exhaust_Device==item.value">{{item.name}}</label>
+                </nz-radio-group>
+              </div>
+            </td>
+            <td *ngIf="pageType==1"><img class="asterisk" src="assets/imgs/asterisk.png" alt="">防逆电流装置：
+              <div class="infoRadio">
+                <nz-radio-group [(ngModel)]="info.Currents_Device">
+                  <label *ngFor="let item of current.label" nz-radio nzValue={{item.value}}
+                    [ngModel]="info.Currents_Device==item.value">{{item.name}}</label>
+                </nz-radio-group>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td *ngIf="pageType!=1"><img class="asterisk" src="assets/imgs/asterisk.png" alt="">防逆电流装置：
+              <div class="infoRadio">
+                <nz-radio-group [(ngModel)]="info.Currents_Device">
+                  <label *ngFor="let item of current.label" nz-radio nzValue={{item.value}}
+                    [ngModel]="info.Currents_Device==item.value">{{item.name}}</label>
+                </nz-radio-group>
+              </div>
+            </td>
+            <td>
+              <img class="asterisk" src="assets/imgs/asterisk.png" alt="">Wh标识：
+              <div class="infoRadio">
+                <nz-radio-group [(ngModel)]="info.Wh_Logo">
+                  <label *ngFor="let item of Wh.label" nz-radio nzValue={{item.value}}
+                    [ngModel]="info.Wh_Logo==item.value">{{item.name}}</label>
+                </nz-radio-group>
+              </div>
+            </td>
+            <td *ngIf="pageType==1">
+              <img class="asterisk" src="assets/imgs/asterisk.png" alt="">
+              防短路：&nbsp;&nbsp;&nbsp;
+              <select [(ngModel)]="info.Short_Circuit" class="searchSelect1">
+                <option *ngFor="let item of preventShortCircuit" value={{item}}>{{item}}</option>
+              </select>
+            </td>
+          </tr>
+          <tr *ngIf="pageType!=1">
+            <td>包装件内该电池数量(颗)：{{info.Packages_Qty}}</td>
+            <td><img class="asterisk" src="assets/imgs/asterisk.png" alt="">
+              防短路：&nbsp;&nbsp;&nbsp;
+              <select [(ngModel)]="info.Short_Circuit" class="searchSelect1">
+                <option *ngFor="let item of preventShortCircuit" value={{item}}>{{item}}</option>
+              </select>
+            </td>
+          </tr>
 
-      </ng-container>
+          <tr>
+            <td colspan="2"><img class="asterisk" src="assets/imgs/asterisk.png" alt="">
+              <img class="asterisk" src="assets/imgs/asterisk.png" alt="">防意外啟動：
+              <nz-checkbox-group [(ngModel)]="unexpectStart">
+              </nz-checkbox-group>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2"><img class="asterisk" src="assets/imgs/asterisk.png" alt=""><img class="asterisk"
+                src="assets/imgs/asterisk.png" alt="">
+              包装件内每台设备配备电池数量不超过为其提供动力所需的最少电池数量再加2套备用电池的要求：
+              <div class="infoRadio" style="width: 29.5%;">
+                <nz-radio-group [(ngModel)]="info.Special_Require">
+                  <label *ngFor="let item of minBattery.label" nz-radio nzValue={{item.value}}
+                    [ngModel]="info.Special_Require==item.value">{{item.name}}</label>
+                </nz-radio-group>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><img class="asterisk" src="assets/imgs/asterisk.png" alt="">是否贴有"9类锂电池危险性标签"：
+              <div class="infoRadio">
+                <nz-radio-group [(ngModel)]="info.Dangerous_Label">
+                  <label *ngFor="let item of dangerSign.label" nz-radio nzValue={{item.value}}
+                    [ngModel]="info.Dangerous_Label==item.value">{{item.name}}</label>
+                </nz-radio-group>
+              </div>
+            </td>
+            <td><img class="asterisk" src="assets/imgs/asterisk.png" alt="">是否贴有锂电池标记：
+              <div class="infoRadio">
+                <nz-radio-group [(ngModel)]="info.LithiumBattery_Label">
+                  <label *ngFor="let item of batterySign.label" nz-radio nzValue={{item.value}}
+                    [ngModel]="info.LithiumBattery_Label==item.value">{{item.name}}</label>
+                </nz-radio-group>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="pageType!=1">
+            <td colspan="2">委托说明：
+              <span [ngSwitch]="title">
+                <ng-container *ngSwitchCase="'新申请'">
+                  {{info.Entrust_Newapply}}
+                </ng-container>
+                <ng-container *ngSwitchCase="'维修品'">
+                  {{info.Entrust_Repair}}
+                </ng-container>
+                <ng-container *ngSwitchDefault>
+                  <span *ngIf="info.Entrust_Explain">{{info.Entrust_Explain}}</span>
+                  <span *ngIf="!info.Entrust_Explain" style="color: red;">暂无说明</span>
+                </ng-container>
+              </span>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+
+      <!-- 委託說明 -->
+      <div *ngIf="pageType==1" class="sample" style="margin-top: 60px;">
+        <header>
+          <span class="title">委託說明</span>
+        </header>
+        <table border="1" width=100% height=120px>
+          <tr>
+            <td width="50%">
+              <img class="asterisk" src="assets/imgs/asterisk.png" alt="">
+              新申請：
+              <input [(ngModel)]="info.Entrust_Newapply" style="width: 50%;" placeholder="請輸入委託說明"
+                class="description baseInfoInput" type="text">
+            </td>
+            <td>
+              <img class="asterisk" src="assets/imgs/asterisk.png" alt="">
+              空運轉海運：
+              <input [(ngModel)]="info.Entrust_Transfer" style="width: 50%;" placeholder="請輸入委託說明"
+                class="description baseInfoInput" type="text">
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <img class="asterisk" src="assets/imgs/asterisk.png" alt="">
+              維修品鑑定書：
+              <input [(ngModel)]="info.Entrust_Repair" style="width: 50%;" placeholder="請輸入委託說明"
+                class="description baseInfoInput" type="text">
+            </td>
+            <td>
+              <img class="asterisk" src="assets/imgs/asterisk.png" alt="">
+              延期：
+              <input [(ngModel)]="info.Entrust_Postpone" style="width: 50%;" placeholder="請輸入委託說明"
+                class="description baseInfoInput" type="text">
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- 附件 -->
+      <div class="footContent">
+        <ng-container *ngIf="pageType!=1">
+          <header><span class="title">附件</span></header>
+          <div class="foot">
+
+            <div>
+              授權書：
+              <ng-container *ngIf="info.authorization.AuthBook!='找不到相关资料'">
+                <u style="color: #3BAEE5;">{{info.authorization.AuthBook}}</u>
+                <img (click)="downLoad(info.authorization.File_Name)" class="down" src="assets/imgs/download.png"
+                  alt="">
+              </ng-container>
+              <span *ngIf="info.authorization.AuthBook=='找不到相关资料'" style="color: red;">缺少相關資料</span>
+            </div>
+
+            <div>
+              報告照片：
+              <ng-container *ngIf="['新申请','维修品'].includes(title)">
+                <span style="color: red;">待任务生成后查看</span>
+              </ng-container>
+
+              <ng-container *ngIf="!(['新申请','维修品'].includes(title))">
+                <ng-container *ngIf="info.ReportPicture.ReportName!='缺少相關資料'">
+                  <span class="limit">
+                    <u style="color: #3BAEE5;"
+                      title="{{info.ReportPicture.ReportName}}">{{info.ReportPicture.ReportName}}</u>
+                  </span>
+                  <img (click)="downLoad(info.ReportPicture.File_Name)" class="down" src="assets/imgs/download.png"
+                    alt="">
+                </ng-container>
+                <span *ngIf="info.ReportPicture.ReportName=='缺少相關資料'" style="color: red;">缺少相關資料</span>
+              </ng-container>
+            </div>
+
+            <div style="width: 28%;">
+              1.2m跌落報告：
+              <ng-container *ngIf="!(['缺少相關資料','/'].includes(info.FalloffReport.PhotoName))">
+                <u style="color: #3BAEE5;">{{info.FalloffReport .PhotoName}}</u>
+                <img (click)="downLoad(info.FalloffReport.File_Name)" class="down" src="assets/imgs/download.png"
+                  alt="">
+              </ng-container>
+              <span *ngIf="['缺少相關資料','/'].includes(info.FalloffReport.PhotoName)"
+                style="color: red;">{{info.FalloffReport.PhotoName}}</span>
+            </div>
+
+            <div>
+              運輸條件鑑定書：
+              <ng-container *ngIf="info.testimonial[0].TransferName!='找不到相关资料'">
+                <ng-container *ngFor="let item of info.testimonial">
+                  <span class="limit" style="max-width: 8em;">
+                    <u style="color: #3BAEE5;" title="{{item.TransferName}}">{{item.TransferName}}</u>
+                  </span>
+                  <img (click)="downLoad(item.File_Name)" class="down" src="assets/imgs/download.png" alt="">
+                  <br>
+                </ng-container>
+              </ng-container>
+              <span *ngIf="info.testimonial[0].TransferName=='找不到相关资料'" style="color: red;">缺少相關資料</span>
+            </div>
+
+          </div>
+
+          <div style="margin-top: 30px;">
+            其他文件：
+            <ng-container *ngIf="info.Other.Name!='找不到相关资料'">
+              <u style="color: #3BAEE5;">{{info.Other.Name}}</u>
+              <img (click)="downLoad(info.Other.File_Name)" class="down" src="assets/imgs/download.png" alt="">
+            </ng-container>
+            <span *ngIf="info.Other.Name=='找不到相关资料'" style="color: red;"></span>
+          </div>
+
+        </ng-container>
+
+        <div style="text-align: center;margin-top: 20px;">
+          <button *ngIf="condition.num==2||pageType==1" (click)="save()" nz-button style="width: 80px;"
+            nzType="primary">保存</button>
+          <button *ngIf="pageType==2||pageType==3" (click)="startTask()" nz-button nzType="primary">生成任務</button>
+          <button (click)="showModal()" *ngIf="condition.num==1" nz-button style="width: 80px;" nzDanger
+            nzType="primary">刪除</button>
+        </div>
+      </div>
+
+    </ng-container>
+
+    <!-- start延期、空转海 -->
+    <ng-container *ngIf="[1,2].includes(condition.Task_Type)">
+      <div class="modal3Content">
+
+        <p>源报告信息</p>
+        <table border="1" width=100% height=80px>
+          <tr>
+
+            <td>源委托单号：
+              <ng-container *ngIf="targetInfo.source.Entrust_No">
+                {{targetInfo.source.Entrust_No|translateFileName}}
+              </ng-container>
+              <ng-container *ngIf="!targetInfo.source.Entrust_No">
+                <span class="noDate">缺少资料</span>
+              </ng-container>
+            </td>
+
+            <td>源鉴定书编号：
+              <ng-container *ngIf="targetInfo.source.Testimonials_SN">
+                {{ targetInfo.source.Testimonials_SN}}
+              </ng-container>
+              <ng-container *ngIf="!targetInfo.source.Testimonials_SN">
+                <span class="noDate">缺少资料</span>
+              </ng-container>
+            </td>
+
+          </tr>
+          <tr>
+            <td colspan="2">源使用年份：
+              <span [ngSwitch]="condition.Task_Type">
+                <span *ngSwitchCase="1">
+                  {{targetInfo.Demand_Year-1}}年
+                </span>
+                <span *ngSwitchCase="2">
+                  {{targetInfo.Demand_Year}}年
+                </span>
+              </span>
+            </td>
+          </tr>
+        </table>
+
+        <p>新报告信息</p>
+        <table border="1" width=100% height=360px>
+          <tr>
+            <td>鉴定书使用年份：{{info.Demand_Year}}年</td>
+          </tr>
+          <tr>
+            <td id="transportReport" style="height: 50%;">
+
+              <div style="display: flex;">
+                <div style="width: 10%;position: relative;flex: 2;">
+                  <div style="position: absolute;top: 50%;transform: translate(0,-50%);">運輸方式：</div>
+                </div>
+
+                <div style="width: 90%;flex: 7;">
+
+                  <ng-container *ngIf="condition.Task_Type==1">
+
+                    <div style="margin-bottom: 10px;">
+                      <label nz-checkbox nzDisabled=true [ngModel]="info.Transport_Report[1].status">空運</label>
+                      <div class="transportSelect">
+                        <img *ngIf="info.Transport_Report[1].status" class="asterisk" src="assets/imgs/asterisk.png"
+                          alt="">
+                        <img *ngIf="!info.Transport_Report[1].status" style="visibility: hidden;" class="asterisk"
+                          src="assets/imgs/asterisk.png" alt="">
+                        空運報告份數：
+                        <input [(ngModel)]="info.Transport_Report[1].number" class="transportInput listInput"
+                          type="text" *ngIf="info.Transport_Report[1].status">
+                        <input [(ngModel)]="info.Transport_Report[1].number" class="transportInput listInput"
+                          type="text" *ngIf="!info.Transport_Report[1].status" disabled>
+                      </div>
+                    </div>
+
+                  </ng-container>
+
+                  <div style="margin-bottom: 10px;">
+                    <label nz-checkbox nzDisabled=true [ngModel]="info.Transport_Report[2].status">海運</label>
+                    <div class="transportSelect">
+                      <img *ngIf="info.Transport_Report[2].status" class="asterisk" src="assets/imgs/asterisk.png"
+                        alt="">
+                      <img *ngIf="!info.Transport_Report[2].status" style="visibility: hidden;" class="asterisk"
+                        src="assets/imgs/asterisk.png" alt="">
+                      海運報告份數：
+                      <input [(ngModel)]="info.Transport_Report[2].number" class="transportInput listInput" type="text"
+                        *ngIf="info.Transport_Report[2].status">
+                      <input [(ngModel)]="info.Transport_Report[2].number" class="transportInput listInput" type="text"
+                        *ngIf="!info.Transport_Report[2].status" disabled>
+                    </div>
+                  </div>
+
+                  <ng-container *ngIf="condition.Task_Type==1">
+
+                    <div style="margin-bottom: 10px;">
+                      <label nz-checkbox nzDisabled=true [ngModel]="info.Transport_Report[3].status">公路</label>
+                      <div class="transportSelect">
+                        <img class="asterisk" style="visibility: hidden;" src="assets/imgs/asterisk.png" alt="">
+                        公路報告份數：
+                        <input [(ngModel)]="info.Transport_Report[3].number" class="transportInput listInput"
+                          type="text" disabled>
+                      </div>
+                    </div>
+
+                    <div style="margin-bottom: 10px;">
+                      <label nz-checkbox nzDisabled=true [ngModel]="info.Transport_Report[4].status">鐵路</label>
+                      <div class="transportSelect">
+                        <img class="asterisk" style="visibility: hidden;" src="assets/imgs/asterisk.png" alt="">
+                        鐵路報告份數：
+                        <input [(ngModel)]="info.Transport_Report[4].number" class="transportInput listInput"
+                          type="text" disabled>
+                      </div>
+                    </div>
+                  </ng-container>
+
+                </div>
+
+              </div>
+
+            </td>
+          </tr>
+          <tr *ngIf="condition.Task_Type==2">
+            <td>
+              <img class="asterisk" src="assets/imgs/asterisk.png" alt="">
+              <span class="change">约定完成时间：</span>
+              <nz-radio-group style="margin-left: 20px;" [(ngModel)]="info.Complete_Time">
+                <label *ngFor="let item of appointLabel" nz-radio nzValue={{item.value}}
+                  [ngModel]="info.Complete_Time==item.value">
+                  {{item.name}}
+                </label>
+              </nz-radio-group>
+            </td>
+          </tr>
+          <tr>
+            <td>样品处置方式：&nbsp;&nbsp;&nbsp;{{info.Sample_Dispose|translateSampleDispose}} </td>
+          </tr>
+          <tr>
+            <td>引用编号：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{info.Reference_SN}} </td>
+          </tr>
+          <tr>
+            <td>委托说明：&nbsp;&nbsp;&nbsp;&nbsp; {{info.Entrust_Explain}}</td>
+          </tr>
+        </table>
+
+      </div>
       <div style="text-align: center;margin-top: 20px;">
         <button *ngIf="condition.num==2||pageType==1" (click)="save()" nz-button style="width: 80px;"
           nzType="primary">保存</button>
-        <button *ngIf="pageType==2||pageType==3" (click)="startTask()" nz-button nzType="primary">生成任務</button>
         <button (click)="showModal()" *ngIf="condition.num==1" nz-button style="width: 80px;" nzDanger
           nzType="primary">刪除</button>
       </div>
-    </div>
+    </ng-container>
+    <!-- end延期、空转海 -->
+
   </div>
 </div>
 
 <!-- 删除的模态框 -->
-<nz-modal [(nzVisible)]="isVisible" [nzFooter]="null">
+<nz-modal [(nzVisible)]=" isVisible" [nzFooter]="null">
   <ng-container *nzModalContent>
     <div class="modalTitle">
       <span>刪除原因</span>
       <img (click)="close()" src="assets/imgs/close.png" alt="">
     </div>
     <div class="modalBody">
-      <!-- <div style="height: 70%;"> -->
       <textarea [(ngModel)]="Delete_Reason" cols="68" rows="8"></textarea>
-      <!-- </div> -->
-      <!-- <div style="height: 30%;"> -->
       <button (click)="delete()" nz-button class="delete" nzType="primary">保存</button>
-      <!-- </div> -->
     </div>
   </ng-container>
 </nz-modal>
+<ngx-loading [show]="loading"></ngx-loading>

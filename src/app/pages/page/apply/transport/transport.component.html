@@ -1,7 +1,7 @@
 <div class="base">
   <div class="content">
-    <app-application-repair (sendData)="sendData($event)" title="运输"></app-application-repair>
+    <app-application-repair #appRe (sendData)="sendData($event)" title="运输"></app-application-repair>
     <div class="middle"></div>
-    <app-list #list type="transport"></app-list>
+    <app-list #list (backInit)="back()" type="transport" title="运输"></app-list>
   </div>
 </div>

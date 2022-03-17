@@ -12,6 +12,10 @@ export class RepairComponent implements OnInit {
   @ViewChild('appRe') appRe: ApplicationRepairComponent
   @ViewChild('information') information: InformationComponent
   show: boolean = false
+  loading: boolean = false
+  Task_SN: string = ''
+  showModal: boolean = false
+  selectedTransport_Mode: number[]
 
   constructor(private modalService: ModalService) { }
 
@@ -24,11 +28,27 @@ export class RepairComponent implements OnInit {
   }
 
   async saveNewData() {
-    await this.appRe.saveNewData()
+    this.loading = true
+    this.Task_SN = await this.appRe.saveNewData()
+    if (!this.Task_SN)
+      this.loading = false
   }
 
-  generateTask(Task_SN) {
-    this.information.generateTask(Task_SN)
+  async generateTask(Task_SN) {
+    const status = await this.information.generateTask(Task_SN)
+    if (status)
+      this.showModal = true
+    this.loading = false
+  }
+
+  getTransport_Mode(event) {
+    this.selectedTransport_Mode = event
+  }
+
+  back() {
+    this.appRe.initData()
+    this.show = false
+    this.showModal = false
   }
 
 }

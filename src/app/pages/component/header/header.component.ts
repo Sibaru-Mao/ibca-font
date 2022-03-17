@@ -12,7 +12,8 @@ export class HeaderComponent implements OnInit {
   navigationBar = [
     { name: '任務管理', link: 'taskManagement' },
     { name: '資料中心', link: 'dataCenter' },
-    { name: '申請', link: 'apply' }
+    { name: '申請', link: 'apply' },
+    { name: '歷史資料', link: 'historyData' }
   ]
   man: any = JSON.parse(sessionStorage.getItem('man'))
 
@@ -25,6 +26,8 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
+    let url = (document.location.href).split('?yes')[0]
+    window.location.href = url
     this.keycloak.logout();
   }
 

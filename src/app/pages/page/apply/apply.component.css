@@ -64,14 +64,12 @@
 .infoBase {
   width: 100%;
   height: 95%;
-  /* background-color: red; */
   padding: .5%;
 }
 
 .infoContent {
   width: 100%;
   height: 100%;
-  /* background-color: blue; */
 }
 
 .pointOut {

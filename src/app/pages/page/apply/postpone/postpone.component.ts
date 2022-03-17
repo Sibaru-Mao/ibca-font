@@ -1,5 +1,6 @@
 import { ListComponent } from './../../../component/list/list.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { ApplicationRepairComponent } from 'src/app/pages/component/application-repair/application-repair.component';
 
 @Component({
   selector: 'app-postpone',
@@ -8,7 +9,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 })
 export class PostponeComponent implements OnInit {
   @ViewChild('list') list: ListComponent
+  @ViewChild('appRe') appRe: ApplicationRepairComponent
   show: boolean = false
+
   constructor() { }
 
   ngOnInit(): void {
@@ -16,6 +19,10 @@ export class PostponeComponent implements OnInit {
 
   sendData(data) {
     this.list.getData(data)
+  }
+
+  back() {
+    this.appRe.initData()
   }
 
 }

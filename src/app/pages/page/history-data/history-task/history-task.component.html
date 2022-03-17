@@ -1,0 +1,75 @@
+<div class="content">
+  <table class="tableModal">
+    <tbody>
+      <tr>
+        <td>
+          <p>廠別:</p><input type="text" [(ngModel)]="editInfo.Plant" class="searchInput backgroud-1" disabled>
+        </td>
+        <td>
+          <p>任務編碼:</p><input type="text" [(ngModel)]="editInfo.Task_SN" class="searchInput backgroud-1">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p>產品系列:</p><input type="text" (change)="handleEmpty()" [(ngModel)]="editInfo.Project_Code"
+            class="searchInput backgroud-1">
+        </td>
+        <td>
+          <p>特殊架構:</p><input type="text" [(ngModel)]="editInfo.Material_No" class="searchInput backgroud-1">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p>電池料號:</p><input type="text" [(ngModel)]="editInfo.Battery_PN" class="searchInput backgroud-1">
+        </td>
+        <td>
+          <p>需求年份:</p>
+          <select [(ngModel)]="editInfo.Demand_Year" class="searchSelect backgroud-1">
+            <option *ngFor="let item of year" value={{item.Demand_Year}}>{{item.Demand_Year}}</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p>出貨賬冊:</p>
+          <select [(ngModel)]="editInfo.Shipment_Books" class="searchSelect backgroud-1">
+            <option *ngFor="let item of Shipment_Books" value={{item}}>{{item}}</option>
+          </select>
+        </td>
+        <td>
+          <p>運輸方式:</p>
+          <nz-checkbox-group [(ngModel)]="editInfo.Transport_Mode">
+            <label *ngFor="let item of editInfo.Transport_Mode" nz-radio>
+              {{item.label}}
+            </label>
+          </nz-checkbox-group>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p>委託單號:</p><input type="text" [(ngModel)]="editInfo.Entrust_No" class="searchInput backgroud-1">
+        </td>
+        <td>
+          <p>鑑定書編碼:</p><input type="text" [(ngModel)]="editInfo.Testimonials_SN" class="searchInput backgroud-1">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p>任務日期:</p>
+          <nz-date-picker nzInputReadOnly=true nzSize=small nzSuffixIcon=null nzAllowClear=false nzPlaceHolder="開始"
+            [(ngModel)]="editInfo.DateStart" (ngModelChange)="onChange($event)">
+          </nz-date-picker>
+          &nbsp;<span>——</span>&nbsp;
+          <nz-date-picker nzInputReadOnly=true nzSize=small nzSuffixIcon=null nzAllowClear=false nzPlaceHolder="結束"
+            [(ngModel)]="editInfo.DateEnd" (ngModelChange)="onChange($event)">
+          </nz-date-picker>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div style="float: right;">
+    <button (click)="submit()" nz-button class="button" nzType="primary">下载</button>
+    &nbsp;
+    <button (click)="formatEditData()" nz-button class="button color" nzType="primary">重置</button>
+  </div>
+</div>

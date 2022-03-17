@@ -5,7 +5,6 @@ import { Directive, ElementRef, Input, SimpleChanges } from '@angular/core'
 })
 export class GetIntNumDirective {
   @Input() getIntNum: any;
-  // @Input() num:any
   constructor(private el: ElementRef) { }
 
   ngOnChanges(changes: SimpleChanges): void {

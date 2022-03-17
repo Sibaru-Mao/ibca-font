@@ -26,7 +26,6 @@
   display: inline-block;
 }
 
-
 .navigationBar {
   flex-grow: 1;
   color: #B6C3CC;
@@ -35,7 +34,7 @@
 
 .navigationBar>div {
   display: inline-block;
-  width: 33%;
+  width: 25%;
 }
 
 .navigation {

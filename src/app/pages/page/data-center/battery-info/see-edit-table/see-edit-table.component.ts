@@ -85,21 +85,15 @@ export class SeeEditTableComponent implements OnInit {
 
   async getBatteryDetails() {
     this.allData = await this.http.getBatteryDetails(this.baseInfo)
-    // this.sendPhoto.emit(this.allData.Photo)
-    console.log(this.allData, 1111111111111);
   }
 
   seeOrDownload(item, type) {
-
     if (type == 'see') {
       window.open(item.File_Name)
     }
-
     if (type == 'download') {
-      // window.location.href = item.File_Name
       window.open(item.File_Name)
     }
-
   }
 
   async deleteBatteryData(item) {
@@ -109,29 +103,24 @@ export class SeeEditTableComponent implements OnInit {
       case '鑑定書':
         status = await this.http.delTestimonial(item, this.baseInfo)
         break;
-
       case 'UN38.3试验概要':
-
         status = await this.http.delUN383(item, this.baseInfo)
         break;
-
       case '授权书':
-
-        status = await this.http.delAuthorization(item, this.baseInfo)
+        const data = JSON.parse(JSON.stringify(item))
+        data['Start_Date'] = this.handleDate(data['Start_Date'])
+        data['End_Date'] = this.handleDate(data['End_Date'])
+        status = await this.http.delAuthorization(data, this.baseInfo)
         break;
-
       case '其他':
-
         status = await this.http.delOther(item, this.baseInfo)
         break;
-
       default:
         break;
     }
 
     if (status.statusCode)
       this.message.create('error', '不好意思，删除失败')
-
     else {
       this.message.create('success', '恭喜，删除成功')
       await this.getBatteryDetails()
@@ -145,6 +134,16 @@ export class SeeEditTableComponent implements OnInit {
       'home/dataCenter/batteryInfo/littleAdd',
       { battery_pn: this.baseInfo.battery_pn, plant: this.baseInfo.plant, type: this.title }
     ])
+  }
+
+  handleDate(data) {
+    const date = new Date(data)
+    let month: any = date.getMonth() + 1
+    month = month.toString().length == 1 ? `0${month}` : month
+    let day: any = date.getDate()
+    day = day.toString().length == 1 ? `0${day}` : day
+    const newDate = `${date.getFullYear()}-${month}-${day}`
+    return newDate
   }
 
 }

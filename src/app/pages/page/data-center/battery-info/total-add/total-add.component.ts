@@ -1,6 +1,7 @@
 import { DataService } from 'src/app/services/data.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Component, OnInit } from '@angular/core';
+import { EncryptService } from 'src/app/services/encrypt/encrypt.service';
 
 @Component({
   selector: 'app-total-add',
@@ -89,7 +90,11 @@ export class TotalAddComponent implements OnInit {
     { name: '局部', en: 'PART', url: '', file: '' }
   ]
 
-  constructor(private message: NzMessageService, private http: DataService) { }
+  constructor(
+    private message: NzMessageService,
+    private http: DataService,
+    private encrypt: EncryptService
+  ) { }
 
   ngOnInit(): void {
     this.init()
@@ -117,7 +122,7 @@ export class TotalAddComponent implements OnInit {
         this.message.create('warning', '请上传PDF文件，谢谢')
         return
       }
-      key.data.File_Name = file.name
+      key.data.File_Name = Date.now() + '^' + this.encrypt.encrypt(file.name)
       key.file = new FormData()
       key.file.append('file', file)
     } else {
@@ -137,7 +142,6 @@ export class TotalAddComponent implements OnInit {
   }
 
   async sure() {
-
     if (!(this.base.Plant && this.base.battery_pn)) {
       this.message.create('warning', '不好意思，请将廠別和料号填写完整')
       return
@@ -214,20 +218,14 @@ export class TotalAddComponent implements OnInit {
 
     if (this.status) {
       this.message.create('success', '恭喜你，资料上传成功')
-      setTimeout(() => {
-        this.goBack()
-      }, 1000);
+      this.goBack()
     }
     this.loading = false
-    console.log(this.allTestimonialInfo, this.allUn38, this.allAuthorization, this.allOther);
   }
 
   handleEmptyData(data: any, name: string): boolean {
     let emptyStatus: boolean = false
     data.forEach((item, index) => {
-      // const value = Object.values(item.data)
-      // const valueStatus = value.every(e => { return e })
-
       const value = Object.keys(item.data)
       let valueStatus: boolean = true
       value.forEach(e => {
@@ -259,28 +257,28 @@ export class TotalAddComponent implements OnInit {
       case '鑑定書':
         if (data.data && data.file) {
           dataStatus = await this.http.addTestimonial(data.data)
-          pdfStatus = await this.http.uploadBatteryPdf('Battery\\Testimonial', data.file)
+          pdfStatus = await this.http.uploadBatteryPdf('Battery\\Testimonial', data.file, data.data.File_Name)
         }
         break;
 
       case 'UN38.3试验概要':
         if (data.data && data.file) {
           dataStatus = await this.http.addUN38(data.data)
-          pdfStatus = await this.http.uploadBatteryPdf('Battery\\UN383', data.file)
+          pdfStatus = await this.http.uploadBatteryPdf('Battery\\UN383', data.file, data.data.File_Name)
         }
         break;
 
       case '授权书':
         if (data.data && data.file) {
           dataStatus = await this.http.addAuthorization(data.data)
-          pdfStatus = await this.http.uploadBatteryPdf('Battery\\Authorization', data.file)
+          pdfStatus = await this.http.uploadBatteryPdf('Battery\\Authorization', data.file, data.data.File_Name)
         }
         break;
 
       case '其他':
         if (data.data && data.file) {
           dataStatus = await this.http.addOther(data.data)
-          pdfStatus = await this.http.uploadBatteryPdf('Battery\\Other', data.file)
+          pdfStatus = await this.http.uploadBatteryPdf('Battery\\Other', data.file, data.data.File_Name)
         }
 
         break;
@@ -307,7 +305,6 @@ export class TotalAddComponent implements OnInit {
       Battery_PN: this.base.battery_pn,
       place: ''
     }
-
     this.allPhoto.forEach(async (e, i) => {
       data.place = e.en
       const photoStatus = await this.http.uploadBatteryPhoto(data, e.file)
@@ -316,7 +313,6 @@ export class TotalAddComponent implements OnInit {
         this.status = false
       }
     });
-
   }
 
 
@@ -369,7 +365,6 @@ export class TotalAddComponent implements OnInit {
       this.allPhoto[index].file = ''
       this.allPhoto[index].url = ''
     }
-    console.log(this.allPhoto);
   }
 
   seePhoto(item) {

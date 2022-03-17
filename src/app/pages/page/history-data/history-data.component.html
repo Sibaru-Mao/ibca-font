@@ -1,0 +1,18 @@
+<div id="base">
+  <div id="content">
+
+    <header class="navigate">
+      <div style="display: inline-block;margin-right: 20px;" *ngFor="let item of tab;let i=index">
+        <div class="navigation" [routerLink]="item.link" routerLinkActive="selected">
+          {{item.name}}
+        </div>
+      </div>
+    </header>
+
+
+    <div class="view">
+      <router-outlet></router-outlet>
+    </div>
+
+  </div>
+</div>

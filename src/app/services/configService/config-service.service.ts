@@ -25,11 +25,9 @@ export class ConfigServiceService {
       assets.forEach(async (asset) => {
         this.configure[asset.type] = await this.http.get<any>(asset.path)
           .toPromise();
-
         if (asset.type == 'datasources') {
           sessionStorage.setItem('config', JSON.stringify(this.configure[asset.type]))
         }
-
         assetsCount++;
         if (assetsCount === assets.length) {
           resolve(true);

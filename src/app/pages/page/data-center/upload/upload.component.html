@@ -1,26 +1,24 @@
 <div class="content">
   <div class="searchContent">
     <div>
-      <span>廠別：</span>
-      <select [(ngModel)]="searchInfo.Plant" class="searchSelect">
-        <option *ngFor="let item of plant" value={{item.PlantCode}}>{{item.PlantCode}}</option>
+      <span>廠別:</span>
+      <select [(ngModel)]="searchInfo.Plant" disabled class="searchSelect">
+        <option *ngFor="let item of plant" value={{item.PlantCode}}>{{item.Plant}}</option>
       </select>
     </div>
     <div *ngFor="let item of searchTitle">
-      <!-- <span *ngIf="id=='special'">特殊架構：</span> -->
       <span>{{item.name}}</span>
       <input [(ngModel)]="item.data" class="searchInput" type="text">
     </div>
   </div>
   <div class="searchContent">
     <div>
-      <span>年份：</span>
+      <span>年份:</span>
       <select [(ngModel)]="searchInfo.Demand_Year" class="searchSelect">
         <option *ngFor="let item of year" value={{item.Demand_Year}}>{{item.Demand_Year}}</option>
       </select>
     </div>
     <div *ngFor="let item of searchTitleOne">
-      <!-- <span *ngIf="id=='special'">特殊架構：</span> -->
       <span>{{item.name}}</span>
       <input [(ngModel)]="item.data" class="searchInput" type="text">
     </div>
@@ -38,19 +36,18 @@
         </tr>
       </thead>
       <tbody>
-        <!-- *ngIf="id!='product'" -->
         <ng-container>
           <tr *ngFor="let item of headerTable.data;let i=index">
             <td>{{i+1}}</td>
             <td>{{item.Plant}}</td>
             <td>{{item.Task_SN}}</td>
-            <td>{{item.Progress }}</td>
+            <td>{{item.Item_Time }}</td>
             <td>{{item.Project_Code}}</td>
-            <td>{{item.Special_Flag}}</td>
+            <td>{{item.Material_No}}</td>
             <td>{{item.Battery_PN }}</td>
-            <td>{{item.Plant}}</td>
+            <td>{{item.Battery_Model}}</td>
             <td>{{item.Demand_Year}}</td>
-            <td>{{item.Plant }}</td>
+            <td>{{item.Shipment_Books|translateShipmentBooks}}</td>
             <ng-container [ngSwitch]="item.Transport_Mode">
               <td *ngSwitchCase=1>空運</td>
               <td *ngSwitchCase=2>海運</td>
@@ -58,14 +55,13 @@
               <td *ngSwitchCase=4>鐵路</td>
               <td *ngSwitchDefault></td>
             </ng-container>
-            <!-- <td>{{item.Transport_Mode}}</td> -->
-            <td>{{item.Plant}}</td>
-            <td>{{item.Plant }}</td>
+            <td>{{item.Entrust_No}}</td>
+            <td>{{item.Testimonials_SN|translateFileName}}</td>
             <td>
-              <span class="operation">查看</span>&nbsp;
-              <!-- <img nz-popconfirm nzPopconfirmTitle="確定刪除嗎?" nzPopconfirmPlacement="bottom"
-                (nzOnConfirm)="delete(item.id)" class="delete" src="assets/imgs/delete.png" alt="图片跑路了"> -->
-              <span class="operation">下载</span>
+              <ng-container *ngIf="item.Task_Status!=9">
+                <span (click)="showPdf(item,0)" class="operation">查看</span>&nbsp;
+                <span (click)="showPdf(item,1)" class="operation">下载</span>
+              </ng-container>
             </td>
           </tr>
         </ng-container>
@@ -74,7 +70,6 @@
   </div>
 
   <!-- 新增模态框 -->
-
   <nz-modal [(nzVisible)]="isVisible" nzClosable="false" [nzBodyStyle]="bodyStyle" [nzFooter]="null" nzWidth='26%'>
     <ng-container *nzModalContent>
       <div class="modalTitle">
@@ -128,55 +123,58 @@
       <tbody>
         <tr>
           <td>
-            <p>廠別：</p>
-            <select [(ngModel)]="editInfo.Plant" class="searchModal">
-              <option *ngFor="let item of plant" value={{item.PlantCode}}>{{item.PlantCode}}</option>
+            <p>廠別:</p>
+            <select disabled [(ngModel)]="editInfo.Plant" class="searchModal">
+              <option *ngFor="let item of plant" value={{item.PlantCode}}>{{item.Plant}}</option>
             </select>
           </td>
           <td>
-            <p>產品系列：</p><input type="text" [(ngModel)]="editInfo.Material_No" class="searchInput backgroud-1">
+            <p>產品系列:</p><input type="text" [(ngModel)]="editInfo.Project_Code" class="searchInput backgroud-1">
           </td>
         </tr>
         <tr>
           <td>
-            <p>特殊架構：</p><input type="text" [(ngModel)]="editInfo.Project_Code" class="searchInput backgroud-1">
+            <p>特殊架構:</p><input type="text" (change)="handleEmpty()" [(ngModel)]="editInfo.Material_No"
+              class="searchInput backgroud-1">
           </td>
           <td>
-            <p>電池料號：</p><input type="text" [(ngModel)]="editInfo.Battery_MO" class="searchInput backgroud-1">
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <p>電池型號：</p><input type="text" [(ngModel)]="editInfo.Battery_PN" class="searchInput backgroud-1">
-          </td>
-          <td>
-            <p>需求年份：</p><input type="text" [(ngModel)]="editInfo.Demand_Year" class="searchInput backgroud-1">
+            <p>電池料號:</p><input type="text" [(ngModel)]="editInfo.Battery_PN" class="searchInput backgroud-1">
           </td>
         </tr>
         <tr>
           <td>
-            <p>出貨賬冊：</p>
-            <!-- <input type="text" [(ngModel)]="editInfo.Shipment_Books" class="searchInput backgroud-1"> -->
+            <p>電池型號:</p><input type="text" [(ngModel)]="editInfo.Battery_Model" class="searchInput backgroud-1">
+          </td>
+          <td>
+            <p>需求年份:</p><input type="text" [(ngModel)]="editInfo.Demand_Year" class="searchInput backgroud-1">
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p>出貨賬冊:</p>
             <select [(ngModel)]="editInfo.Shipment_Books" class="searchModal">
-              <option *ngFor="let item of Shipment_Books_List" value={{item}}>{{item}}</option>
+              <option *ngFor="let item of Shipment_Books_List" value={{item.value}}>{{item.name}}</option>
             </select>
           </td>
           <td>
-            <p>運輸方式：</p>
+            <p>運輸方式:</p>
             <nz-radio-group [(ngModel)]="editInfo.Transport_Mode">
               <label *ngFor="let item of transportWay" nz-radio nzValue={{item.value}}
                 [ngModel]="transport==item.value">
                 {{item.label}}
               </label>
             </nz-radio-group>
-            <!-- <nz-checkbox-group [(ngModel)]="transportWay">
-            </nz-checkbox-group> -->
           </td>
         </tr>
         <tr>
           <td>
-            <p>上傳鑑定書：</p><label for="up" class="file">{{editInfo.Testimonials_SN}}<input (change)="uploadPdf($event)"
-                type="file" id="up"></label>
+            <p>上傳鑑定書:</p>
+            <label for="up" class="file">{{editInfo.Testimonials_SN|translateFileName}}<input
+                (change)="uploadPdf($event)" type="file" id="up"></label>
+            &nbsp;(请确保文件名为：鑑定書編碼)
+          </td>
+          <td>
+            <p>委託單號:</p><input type="text" [(ngModel)]="editInfo.Entrust_No" class="searchInput backgroud-1">
           </td>
         </tr>
       </tbody>
@@ -186,3 +184,4 @@
     </div>
   </nz-modal>
 </div>
+<ngx-loading [show]="load"></ngx-loading>

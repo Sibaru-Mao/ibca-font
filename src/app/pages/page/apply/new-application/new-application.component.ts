@@ -13,6 +13,9 @@ export class NewApplicationComponent implements OnInit {
   @ViewChild('information') information: InformationComponent
   show: boolean = false
   loading: boolean = false
+  Task_SN: string = ''
+  showModal: boolean = false
+  selectedTransport_Mode: number[]
 
   constructor(private modalService: ModalService) { }
 
@@ -26,12 +29,26 @@ export class NewApplicationComponent implements OnInit {
 
   async saveNewData() {
     this.loading = true
-    await this.appRe.saveNewData()
+    this.Task_SN = await this.appRe.saveNewData()
+    if (!this.Task_SN)
+      this.loading = false
   }
 
   async generateTask(Task_SN) {
-    await this.information.generateTask(Task_SN)
+    const status = await this.information.generateTask(Task_SN)
+    if (status)
+      this.showModal = true
     this.loading = false
+  }
+
+  getTransport_Mode(event) {
+    this.selectedTransport_Mode = event
+  }
+
+  back() {
+    this.appRe.initData()
+    this.show = false
+    this.showModal = false
   }
 
 }

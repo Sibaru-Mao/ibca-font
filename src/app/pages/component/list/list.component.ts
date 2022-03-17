@@ -1,7 +1,6 @@
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { DataService } from './../../../services/data.service';
-import { Component, OnInit, Input } from '@angular/core';
-import { title } from 'process';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 interface defer {
   Site: string,
   Plant: string,
@@ -13,7 +12,13 @@ interface defer {
   Transport_Report: object,
   Task_SN: string,
   Shipment_Books: number,
-  Create_ID: string
+  Create_ID: string,
+  Entrust_No: string,
+  Source_Task_SN: string,
+  Battery_Model: string,
+  Entrust_Explain: string,
+  Reference_SN: string,
+  Sample_Dispose: string
 }
 
 interface airToSea {
@@ -28,7 +33,12 @@ interface airToSea {
   Task_Status: number,
   Shipment_Books: number,
   Create_ID: string,
-  Complete_Time: string
+  Complete_Time: string,
+  Source_Task_SN: string,
+  Battery_Model: string,
+  Entrust_Explain: string,
+  Reference_SN: string,
+  Sample_Dispose: string
 }
 
 @Component({
@@ -38,6 +48,8 @@ interface airToSea {
 })
 export class ListComponent implements OnInit {
   @Input() type: string
+  @Input() title: string  //延期、运输
+  @Output() backInit = new EventEmitter<any>()
   tableScrollHeight: string
   tableHead: string[] = [
     '廠別', '任務編碼', '項次', '任務狀態', 'Project code',
@@ -51,10 +63,8 @@ export class ListComponent implements OnInit {
     'Material_No', 'Battery_PN', 'Demand_Year', 'Shipment_Books', 'Transport_Mode',
     'Task_Type', 'Entrust_No', 'Testimonials_SN'
   ]
-
   modalStatus: boolean = false
   modalType: string
-  // 当前延期或者运输的资料信息
   nowData: any
 
   taskInfo: any = {
@@ -114,12 +124,23 @@ export class ListComponent implements OnInit {
     id: ''//number
   }
 
-  modaltitle: string = title == '延期' ? '延期申请' : '空轉海'
+  appointLabel = [
+    { name: '2個工作日（正常）', value: '0' },
+    { name: '1個工作日（加急）', value: 1 },
+    { name: '6～24小時（特急）', value: 2 },
+    { name: '3小时特急', value: 3 }
+  ]
+
+  modaltitle: string
+  loading: boolean = false
+  showModal: boolean = false
+  Task_SN: string = ''
 
   constructor(private http: DataService, private message: NzMessageService) { }
 
   ngOnInit(): void {
     this.tableScrollHeight = 0.4 * Number(sessionStorage.getItem('height')) + 'px'
+    this.modaltitle = this.title == '延期' ? '延期申请' : '空轉海'
   }
 
   // 接收来自application-repair查询的资料
@@ -128,7 +149,7 @@ export class ListComponent implements OnInit {
   }
 
   // 点击操作栏触发的方法
-  operate(data) {
+  async operate(data) {
     this.nowData = data
     if (this.type == 'postpone') {
       const month = new Date().getMonth() + 1
@@ -141,13 +162,13 @@ export class ListComponent implements OnInit {
       this.modalType = 'pmodal2'
     }
     if (this.type == 'transport') {
-      this.pmodal2()
+      await this.pmodal2()
       this.modalStatus = true
-      let transport = document.getElementById('transportReport')
-      transport.style.height = ''
-      console.log(transport);
+      setTimeout(() => {
+        let transport = document.getElementById('transportReport')
+        transport.style.height = ''
+      }, 20);
     }
-    console.log(data, 111111111111111);
   }
 
   // 关闭模态框
@@ -157,29 +178,48 @@ export class ListComponent implements OnInit {
 
   // 客户声明同意按钮触发的方法
   async pmodal2() {
-    this.taskInfo = (await this.http.getTargetInfo(this.nowData.Task_SN))[0]
-
-
-    if (this.taskInfo) this.taskInfo['useYear'] = Number(this.taskInfo.Demand_Year) + 1
-    let input = document.getElementsByClassName('listInput')
-    for (let i = 0; i < input.length; i++) {
-      input[i].setAttribute('disabled', 'disabled')
+    this.taskInfo = await this.http.getTargetInfo(this.nowData.Task_SN)
+    if (this.taskInfo) {
+      if (this.title == '延期')
+        this.taskInfo['useYear'] = Number(this.taskInfo.Demand_Year) + 1
+      else
+        this.taskInfo['useYear'] = Number(this.taskInfo.Demand_Year)
     }
-    input[this.nowData.Transport_Mode - 1].removeAttribute('disabled')
-    let img: any = document.getElementsByClassName('asterisk')
-    for (let i = 0; i < img.length; i++) {
-      img[i]['style'].visibility = 'hidden'
+    this.info = await this.http.getInfo(this.nowData.Task_SN)
+    if (this.info.status) {
+      this.message.error('获取基本信息失败')
+      return
+    } else {
+      this.info = this.info[0]
     }
-    img[this.nowData.Transport_Mode - 1]['style'].visibility = 'visible'
 
-    this.info = (await this.http.getInfo(this.nowData.Task_SN))[0]
+    if (this.title == '延期')
+      this.info.Entrust_Explain = this.taskInfo.Entrust_Postpone
+
+    if (this.title == '运输')
+      this.info.Entrust_Explain = this.taskInfo.Entrust_Transfer
+
     this.modalType = 'pmodal3'
 
+    if (this.title == '延期')
+      setTimeout(() => {
+        let input = document.getElementsByClassName('listInput')
+        for (let i = 0; i < input.length; i++) {
+          input[i].setAttribute('disabled', 'disabled')
+        }
+        input[this.nowData.Transport_Mode - 1].removeAttribute('disabled')
+        let img: any = document.getElementsByClassName('asterisk')
+        for (let i = 0; i < img.length; i++) {
+          img[i]['style'].visibility = 'hidden'
+        }
+        img[this.nowData.Transport_Mode - 1]['style'].visibility = 'visible'
+      }, 20);
   }
 
   // 延期申请或空转海里的确定触发的方法
   async pmodal3() {
     let status: any
+    this.loading = true
     if (this.type == 'postpone') {
       let data: defer = {
         Site: this.info.Site,
@@ -188,11 +228,17 @@ export class ListComponent implements OnInit {
         Material_No: this.taskInfo.Material_No,
         Battery_PN: this.taskInfo.Battery_PN,
         Demand_Year: this.taskInfo.Demand_Year,
-        Transport_Mode: this.taskInfo.Transport_Mode[0],
+        Transport_Mode: this.nowData.Transport_Mode,
         Transport_Report: this.info.Transport_Report,
         Task_SN: this.info.Task_SN,
         Shipment_Books: this.taskInfo.Shipment_Books,
-        Create_ID: JSON.parse(sessionStorage.getItem('man')).User_ID
+        Create_ID: JSON.parse(sessionStorage.getItem('man')).User_ID,
+        Entrust_No: this.taskInfo.Entrust_No,
+        Source_Task_SN: this.info.Task_SN,
+        Battery_Model: this.nowData.Battery_Model ? this.nowData.Battery_Model : '',
+        Entrust_Explain: this.info.Entrust_Explain,
+        Reference_SN: this.info.Reference_SN,
+        Sample_Dispose: this.info.baseWindowsUp.Sample_Dispose
       }
       status = await this.http.applyForDefer(data)
     } else {
@@ -208,19 +254,31 @@ export class ListComponent implements OnInit {
         Task_Status: this.taskInfo.Task_Status,
         Shipment_Books: this.taskInfo.Shipment_Books,
         Create_ID: JSON.parse(sessionStorage.getItem('man')).User_ID,
-        Complete_Time: `${this.info.Complete_Time}`
+        Complete_Time: `${this.info.baseWindowsUp.Complete_Time}`,
+        Source_Task_SN: this.info.Task_SN,
+        Battery_Model: this.nowData.Battery_Model ? this.nowData.Battery_Model : '',
+        Entrust_Explain: this.info.Entrust_Explain,
+        Reference_SN: this.info.Reference_SN,
+        Sample_Dispose: this.info.baseWindowsUp.Sample_Dispose
       }
+      data.Transport_Report[2] = this.info.airTosea
       status = await this.http.airToSea(data)
     }
-
     if (status.code == 200) {
       this.message.create('success', status.msg)
       this.modalStatus = false
+      this.Task_SN = status.Task_SN
+      this.showModal = true
     }
-    else this.message.create('error', status.msg)
-    console.log(status);
+    else
+      this.message.create('error', status.msg)
+    this.loading = false
   }
 
-
+  back() {
+    this.backInit.next()
+    this.tableData = []
+    this.showModal = false
+  }
 
 }

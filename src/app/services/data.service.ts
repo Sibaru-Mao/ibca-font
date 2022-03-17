@@ -25,13 +25,13 @@ export class DataService {
   async getTableData(data) {
     return await this.http.get(
       `v_task_Lists/search?Plant=${this.String(data.Plant)}&Project_Code=${data.Project_Code}&Battery_PN=${data.Battery_PN}` +
-      `&Demand_Year=${data.Demand_Year}&Transport_Mode_Desc=${data.Transport_Mode_Desc}`)
+      `&Demand_Year=${data.Demand_Year}&Transport_Mode_Desc=${data.Transport_Mode_Desc}&Task_SN=${data.Task_SN}`)
   }
 
   async getNavigation(data) {
     return await this.http.get(
       `v_task_Lists/taskstatusqty?Plant=${this.String(data.Plant)}&Project_Code=${data.Project_Code}&Battery_PN=${data.Battery_PN}` +
-      `&Demand_Year=${data.Demand_Year}&Transport_Mode_Desc=${data.Transport_Mode_Desc}`)
+      `&Demand_Year=${data.Demand_Year}&Transport_Mode_Desc=${data.Transport_Mode_Desc}&Task_SN=${data.Task_SN}`)
   }
 
   String(data) {
@@ -52,8 +52,8 @@ export class DataService {
     return await this.http.get(`v_task_Lists/targetinfo?Task_SN=${task}`)
   }
 
-  async getManInfo() {
-    return await this.http.get('v_role_Permissions/permission')
+  async gteMan(id) {
+    return await this.http.get(`v_role_Permissions/getPagePermissionByUserId?User_ID=${id}`)
   }
 
   async delete(data) {
@@ -72,7 +72,7 @@ export class DataService {
   // 查询中文品名的信息
   async getChineseProduct(data) {
     return await this.http.get(`manual_ProductNames/getproductbycondition?Plant=${data.PlantCode}
-    &ProductName_ZH=${data.Project_Code}&ProductName_EN=${data.Material_No}`)
+    &ProductName_ZH=${data.Material_No}&ProductName_EN=${data.Project_Code}`)
   }
 
   // 查询产品包装信息PlantCode
@@ -115,14 +115,13 @@ export class DataService {
 
   // 获取新申请或运输的table资料
   async getNewApplyBaseData(data) {
-    // return await this.http.get(`newApply/BaseData?Material_No=${data.Material_No}&ModelFamily=${data.Project_Code}&Plant=${data.Plant}`)
     return await this.http.get(`newApply/BaseData?Material_No=${data.Material_No}&ModelFamily=${data.Project_Code}
     &Plant=${data.Plant}&Battery_PN=${data.Battery_PN}&Use_Year=${data.Demand_Year}
     &Transport_Mode=${JSON.stringify(data.Transport_Mode)}&Project_Code=${data.Project_Code}
     &Shipment_Books=${data.Shipment_Books}`)
   }
 
-  // 提交新申请或者维修品的基本资料
+  // 提交新申请、维修品的基本资料或者提交任务管理编辑的资料
   async generateTask(data) {
     return await this.http.post('newApply/BasedataInsert', data)
   }
@@ -161,11 +160,8 @@ export class DataService {
       data.pdf)
   }
 
-  //Plant \Project_Code \Special_SKU \PhotoType \place
   async uploadPhoto(data) {
-    return await this.http.post(
-      `files/${data.Plant}_${data.Project_Code}_${data.Special_SKU}_${data.PhotoType}_${data.place}`,
-      data.file)
+    return await this.http.post(`files?Plant=${data.Plant}&Project_Code=${data.Project_Code}&Special_SKU=${data.Special_SKU}&PhotoType=${data.PhotoType}&place=${data.place}`, data.file)
   }
 
   async dropNewAdd(data) {
@@ -228,8 +224,8 @@ export class DataService {
     return await this.http.post('batteryInfo/Other/edit/NewAdd', data)
   }
 
-  async uploadBatteryPdf(path, file) {
-    return await this.http.post(`OriginFileUpload?path=${path}`, file)
+  async uploadBatteryPdf(path, file, fileName) {
+    return await this.http.post(`OriginFileUpload?path=${path}&fileName=${fileName}`, file)
   }
 
   async uploadBatteryPhoto(data, file) {
@@ -240,17 +236,21 @@ export class DataService {
     return await this.http.get(`batteryInfo/searchFilter?Plant=${data.Plant}&battery_pn=${JSON.stringify(data.battery_pn)}`)
   }
 
+  handleFilelName(name: string) {
+    return name.split('/').pop()
+  }
+
   async delTestimonial(data, base) {
-    return await this.http.get(`batteryInfo/Testimonial/edit/delete?Plant=${base.plant}&battery_pn=${base.battery_pn}&FileName=${data.File_Name}&Testimonial_SN=${data.Testimonial_SN}`)
+    return await this.http.get(`batteryInfo/Testimonial/edit/delete?Plant=${base.plant}&battery_pn=${base.battery_pn}&FileName=${this.handleFilelName(data.File_Name)}&Testimonial_SN=${data.Testimonial_SN}`)
   }
   async delUN383(data, base) {
-    return await this.http.get(`batteryInfo/UN383/edit/delete?Plant=${base.plant}&battery_pn=${base.battery_pn}&FileName=${data.File_Name}&File_Encoding=${data.File_Encoding}`)
+    return await this.http.get(`batteryInfo/UN383/edit/delete?Plant=${base.plant}&battery_pn=${base.battery_pn}&FileName=${this.handleFilelName(data.File_Name)}&File_Encoding=${data.File_Encoding}`)
   }
   async delAuthorization(data, base) {
-    return await this.http.get(`batteryInfo/Authorization/edit/delete?Plant=${base.plant}&battery_pn=${base.battery_pn}&FileName=${data.File_Name}&Start_Date=${data.Start_Date}&End_Date=${data.End_Date}`)
+    return await this.http.get(`batteryInfo/Authorization/edit/delete?Plant=${base.plant}&Battery_PN=${base.battery_pn}&File_Name=${this.handleFilelName(data.File_Name)}&Start_Date=${data.Start_Date}&End_Date=${data.End_Date}`)
   }
   async delOther(data, base) {
-    return await this.http.get(`batteryInfo/Other/edit/delete?Plant=${base.plant}&Battery_PN=${base.battery_pn}&File_Name=${(data.File_Name).split('/').pop()}`)
+    return await this.http.get(`batteryInfo/Other/edit/delete?Plant=${base.plant}&Battery_PN=${base.battery_pn}&File_Name=${(this.handleFilelName(data.File_Name)).split('/').pop()}`)
   }
 
   async delBatteryInfo(data) {
@@ -259,6 +259,10 @@ export class DataService {
 
   async upBatteryPhotoInfo(data) {
     return await this.http.post(`batteryInfo/Testimonial/edit/PhotoNewAdd`, data)
+  }
+
+  async updateTargetInfo(data) {
+    return await this.http.get(`newApply/updatelist?Task_SN=${data.Task_SN}&Entrust_No=${data.Entrust_No}&Testimonials_SN=${data.Testimonials_SN}&Task_Status=${data.Task_Status}&Communication_Record=${data.Communication_Record}&Battery_Model=${data.Battery_Model}`)
   }
 
   /* 鉴定书上传 */
@@ -271,7 +275,12 @@ export class DataService {
   async noSystemMission(data) {
     return await this.http.post('testimonial/noSystemMission', data)
   }
-  async originFileUpload(data) {
-    return await this.http.post('OriginFileUpload?path=Task_Testimonial', data)
+  async originFileUpload(data, fileName) {
+    return await this.http.post(`OriginFileUpload?path=Task_Testimonial&fileName=${fileName}`, data)
+  }
+
+  /* 历史资料查询 */
+  async historyDownload(data) {
+    return await this.http.post(`historylist`, data)
   }
 }

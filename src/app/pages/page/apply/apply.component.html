@@ -2,13 +2,11 @@
   <div class="content">
 
     <div class="navigationBar">
-      <!-- 嵌套导航 -->
       <div style="display: inline-block;width: 8%;" *ngFor="let item of tab;let i=index">
         <div class="navigation" (click)="getIndex(i)" [routerLink]="item.link" routerLinkActive="selected">
           {{item.name}}
         </div>
       </div>
-
       <div class="pointOut">
         <img src="assets/imgs/asterisk.png" alt="">
         <span>可修改</span>

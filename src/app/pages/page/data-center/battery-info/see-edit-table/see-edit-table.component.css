@@ -14,7 +14,7 @@
 }
 
 ::ng-deep .ant-table-tbody>tr>td {
-  padding: 15px 5px;
+  padding: 10px 5px;
   text-align: center;
   background-color: #202E31;
   color: #FFFFFF;

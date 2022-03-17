@@ -12,6 +12,8 @@ import { ActivatedRoute, } from '@angular/router';
 export class InformationComponent implements OnInit {
   @Output() saveNewData = new EventEmitter<any>()
   @Input() pageType: number = 0 //0任务管理中的查看、编辑、删除，1资料中心的基础设定，2申请中的新申请、维修品，3
+  @Input() title: string
+  @Input() selectedTransport_Mode: number[] //新申请或维修品已经选择的运输方式
 
   isVisible = false;
   transportWay: any = [
@@ -35,9 +37,10 @@ export class InformationComponent implements OnInit {
   taskStatus = []
 
   appointLabel = [
-    { name: '2個工作日（正常）', value: '1' },
-    { name: '1個工作日（加急）', value: '2' },
-    { name: '6～24小時（特急）', value: '3' }
+    { name: '2個工作日（正常）', value: '0' },
+    { name: '1個工作日（加急）', value: 1 },
+    { name: '6～24小時（特急）', value: 2 },
+    { name: '3小时特急', value: 3 }
   ]
 
   sample = {
@@ -51,60 +54,60 @@ export class InformationComponent implements OnInit {
   need = {
     label: [
       { name: '需要', value: 1 },
-      { name: '不需要', value: 2 },
+      { name: '不需要', value: '0' },
     ]
   }
 
   battery = {
     label: [
       { name: '是', value: 1 },
-      { name: '否', value: 2 },
+      { name: '否', value: '0' },
     ]
   }
 
   safeExhaust = {
     label: [
       { name: '有', value: 1 },
-      { name: '無', value: 2 },
+      { name: '無', value: '0' },
     ]
   }
 
   current = {
     label: [
       { name: '有', value: 1 },
-      { name: '無', value: 2 },
+      { name: '無', value: '0' },
     ]
   }
 
   Wh = {
     label: [
       { name: '有', value: 1 },
-      { name: '無', value: 2 },
+      { name: '無', value: '0' },
     ]
   }
 
   minBattery = {
     label: [
       { name: '有', value: 1 },
-      { name: '無', value: 2 },
+      { name: '無', value: '0' },
     ]
   }
 
   dangerSign = {
     label: [
       { name: '有', value: 1 },
-      { name: '無', value: 2 },
+      { name: '無', value: '0' },
     ]
   }
 
   batterySign = {
     label: [
       { name: '是', value: 1 },
-      { name: '否', value: 2 },
+      { name: '否', value: '0' },
     ]
   }
 
-  condition: any = { task: '', num: 0, index: 0 }
+  condition: any = { task: '', num: 0, index: 0, Transport_Mode: '', Task_Type: '' }
 
   info: any = {
     Battery_SN: '',//number
@@ -136,13 +139,18 @@ export class InformationComponent implements OnInit {
       3: { status: false, number: 0 },
       4: { status: false, number: 0 }
     },
-    UN383_SN: '',
+    File_Encoding: '',
     Unexpected_Start: [],
     Update_Time: '',
     Urgent: '',//number
     Verification_Code: '',
     Wh_Logo: '',//number
-    id: ''//number
+    id: '',//number
+    Other: { Name: '找不到相关资料' },
+    FalloffReport: { PhotoName: '找不到相关资料' },
+    authorization: { AuthBook: '找不到相关资料' },
+    testimonial: [{ TransferName: '找不到相关资料', File_Name: '找不到相关资料' }],
+    ReportPicture: { ReportName: '找不到相关资料' }
   }
 
   targetInfo: any = {
@@ -160,14 +168,27 @@ export class InformationComponent implements OnInit {
     Task_Type: '',//number
     Task_Type_Desc: '',
     Testimonials_SN: '',
-    Transport_Mode: []
+    Transport_Mode: [],
+    Battery_Model: '',
+    source: { Entrust_No: '', Testimonials_SN: '' }
   }
   Delete_Reason: string
 
   plant = JSON.parse(sessionStorage.getItem('plant'))
-  searchInfo: string = JSON.parse(sessionStorage.getItem('man')).Plant
+  // searchInfo: string = JSON.parse(sessionStorage.getItem('man')).Plant
+  searchInfo: string = JSON.parse(sessionStorage.getItem('nowPlant')).PlantCode
   permission: any = JSON.parse(sessionStorage.getItem('man')).Permission
+  // nowPlant: any = JSON.parse(sessionStorage.getItem('nowPlant'))
+  man: any = JSON.parse(sessionStorage.getItem('man'))
   specialEdit: number = 0
+  preventShortCircuit: string[] = [
+    '每颗电池完全封装于用非导电材料制成的内包装内', '包装件内电池与其他电池、设备或导电材质之间有效隔离，防止接触',
+    '电池极端使用绝缘帽、绝缘胶带或其他恰当方式妥善保护', '其他'
+  ]
+
+  loading: boolean = false
+  manAllInfo: any = JSON.parse(sessionStorage.getItem('manAllInfo'))
+
 
   constructor(
     private http: DataService,
@@ -186,21 +207,24 @@ export class InformationComponent implements OnInit {
 
         this.handleUnexpected_Start()
       }
-      console.log(this.info, this.targetInfo, 111111111);
     })
   }
 
   async ngOnInit() {
+    this.permission = this.manAllInfo.Permission[this.searchInfo]
+    this.man.Permission = this.permission
+    sessionStorage.setItem('man', JSON.stringify(this.man))
     await this.getTaskStatus()
 
     if (this.pageType == 0) {
-      // 任务管理模块里的 编辑（num=2） 删除（num=1）功能
+      // 任务管理模块里的 编辑（num=2） 删除（num=1）查看(num=0)功能
       this.route.params.subscribe(res => {
         this.condition = JSON.parse(JSON.stringify(res))
         this.condition.index = Number(this.condition.index)
         this.condition.num = Number(this.condition.num)
         this.condition.Transport_Mode = Number(this.condition.Transport_Mode)
-        this.specialEdit = this.permission['HOMEPAGE' + this.condition.index].Special_Edit
+        this.condition.Task_Type = Number(this.condition.Task_Type)
+        this.specialEdit = this.permission['HOMEPAGE' + this.condition.index].SpecialEdit
       })
       await this.getTargetInfo(this.condition['task'])
       await this.getInfo(this.condition['task'])
@@ -208,13 +232,9 @@ export class InformationComponent implements OnInit {
 
     if (this.pageType == 1) {
       await this.getBaseData()
-      console.log(this.info);
       this.plant.splice(0, 1)
     }
-
     this.changeStyle()
-
-
   }
 
 
@@ -229,7 +249,7 @@ export class InformationComponent implements OnInit {
 
   // 获取任务信息并处理数据
   async getTargetInfo(task) {
-    let data = (await this.http.getTargetInfo(task))[0]
+    let data = await this.http.getTargetInfo(task)
     if (data) {
       this.targetInfo = data
       this.handleTransport_Mode()
@@ -282,8 +302,24 @@ export class InformationComponent implements OnInit {
 
   // 任務管理模塊的編輯保存，以及資料中心基礎設定的保存觸發的事件
   async save() {
+    this.loading = true
     this.saveUnexpected_Start()
     if (this.pageType == 1) {
+      const nowPlant = JSON.parse(sessionStorage.getItem('nowPlant'))
+      this.permission = this.manAllInfo.Permission[nowPlant.PlantCode]
+
+      if (!this.permission.BASESET) {
+        this.message.warning('不好意思，你没有权限！！！')
+        this.loading = false
+        return
+      } else {
+        if (!this.permission.BASESET.Edit) {
+          this.message.warning('不好意思，你没有权限！！！')
+          this.loading = false
+          return
+        }
+      }
+
       delete this.info.id
       delete this.info.Update_Time
 
@@ -296,6 +332,7 @@ export class InformationComponent implements OnInit {
       this.info.Special_Require = Number(this.info.Special_Require)
       this.info.Dangerous_Label = Number(this.info.Dangerous_Label)
       this.info.LithiumBattery_Label = Number(this.info.LithiumBattery_Label)
+      // this.info.Transport_Report = JSON.stringify(this.info.Transport_Report)
 
       let res = await this.http.saveBasesata(this.info)
       // if (res.hasOwnProperty('error')) this.message.create('error', '保存失敗')
@@ -306,14 +343,32 @@ export class InformationComponent implements OnInit {
         await this.getBaseData()
       }
     }
+    if (this.pageType == 0) {
+      const data = {
+        Task_SN: this.info.Task_SN,
+        Entrust_No: this.targetInfo.Entrust_No,
+        Testimonials_SN: this.targetInfo.Testimonials_SN ? this.targetInfo.Testimonials_SN : '',
+        Task_Status: this.targetInfo.Task_Status,
+        Communication_Record: this.targetInfo.Communication_Record ? this.targetInfo.Communication_Record : '',
+        Battery_Model: this.targetInfo.Battery_Model ? this.targetInfo.Battery_Model : ''
+      }
+      const targetInfoStatus = await this.http.updateTargetInfo(data)
+      if (targetInfoStatus.code != 200 || targetInfoStatus.hasOwnProperty('error')) {
+        this.message.error(targetInfoStatus.msg)
+        this.loading = false
+        return
+      }
+      await this.generateTask(this.info.Task_SN)
+    }
+    this.loading = false
   }
 
-  // 触发生成任务的方法（触发须填写信息的保存）
+  // 触发生成任务的方法（触发需填寫信息的保存）
   startTask() {
     this.saveNewData.next()
   }
 
-  // 申请中的新申请和维修品，点击"生成任务"按钮触发的方法（生成任务）
+  // 申请中的新申请和维修品，点击"生成任务"按钮触发的方法（生成任务），任务管理的编辑之后的保存
   async generateTask(Task_SN) {
     // this.saveNewData.next()
     let newData = {
@@ -343,49 +398,61 @@ export class InformationComponent implements OnInit {
       Special_Require: 0,
       Dangerous_Label: 0,
       LithiumBattery_Label: 0,
-      Entrust_Explain: ''
+      Entrust_Explain: '',
+      Consignor: '',
+      Transport_Mode: JSON.stringify(this.selectedTransport_Mode),
     }
 
     newData.TaskSn = Task_SN
     newData.Site = this.info.Site
     newData.Plant = this.info.Plant
     newData.Urgent = 0
-    newData.ProductName_ZH = this.info.ProductName_ZH
-    newData.ProductName_EN = this.info.ProductName_EN
-    newData.Manufacturer = this.info.Manufacturer
+    newData.ProductName_ZH = this.info.ProductName_ZH ? this.info.ProductName_ZH : ''
+    newData.ProductName_EN = this.info.ProductName_EN ? this.info.ProductName_EN : ''
+    newData.Manufacturer = this.info.Manufacturer ? this.info.Manufacturer : ''
     newData.Complete_Time = this.toNumber(this.info.Complete_Time)
-    newData.Transport_Report = JSON.stringify(this.info.Transport_Report)
+    newData.Transport_Report = this.info.Transport_Report ? this.info.Transport_Report : ''
     newData.Sample_Dispose = this.toNumber(this.info.Sample_Dispose)
-    newData.Reference_SN = this.info.Reference_SN
+    newData.Reference_SN = this.info.Reference_SN ? this.info.Reference_SN : ''
     newData.Sample_Photo = this.toNumber(this.info.Sample_Photo)
     newData.Battery_SN = 1
     // newData.Battery_SN = this.toNumber(this.info.Battery_SN)
     newData.Placement_Mode = this.handlePlacement_Mode(this.info.Placement_Mode)
-    newData.UN383_SN = this.info.UN383_SN
-    newData.Verification_Code = this.info.Verification_Code
+    newData.UN383_SN = this.info.UN383_SN ? this.info.UN383_SN : ''
+    newData.Verification_Code = this.info.Verification_Code ? this.info.Verification_Code : ''
     newData.Button_Battery = this.toNumber(this.info.Button_Battery)
     newData.Exhaust_Device = this.toNumber(this.info.Exhaust_Device)
     newData.Currents_Device = this.toNumber(this.info.Currents_Device)
     newData.Wh_Logo = this.toNumber(this.info.Wh_Logo)
     newData.Packages_Qty = this.toNumber(this.info.Packages_Qty)
-    newData.Short_Circuit = this.info.Short_Circuit
+    newData.Short_Circuit = this.info.Short_Circuit ? this.info.Short_Circuit : ''
     this.saveUnexpected_Start()
     newData.Unexpected_Start = JSON.stringify(this.info.Unexpected_Start)
     newData.Special_Require = this.toNumber(this.info.Special_Require)
     newData.Dangerous_Label = this.toNumber(this.info.Dangerous_Label)
     newData.LithiumBattery_Label = this.toNumber(this.info.LithiumBattery_Label)
-    newData.Entrust_Explain = this.info.Entrust_Explain
-
+    newData.Entrust_Explain = this.title == '维修品' ? this.info.Entrust_Repair : this.info.Entrust_Newapply
+    newData.Consignor = this.info.Consignor ? this.info.Consignor : ''
+    if (this.pageType == 0) {
+      newData.Transport_Mode = '[1,2,3,4]'
+    }
+    if (this.pageType == 2) {
+      newData.Transport_Mode = JSON.stringify(this.selectedTransport_Mode)
+    }
     Object.keys(newData).forEach(e => {
       if (typeof (newData[e]) == 'undefined') {
         newData[e] = ''
       }
     })
-
     let status = await this.http.generateTask(newData)
-    if (!status.protocol41) this.message.create('error', '详细信息保存失败')
-    else this.message.create('success', '详细资料保存成功')
-
+    if (status.code != 200 || status.hasOwnProperty('error')) {
+      this.message.create('error', '详细信息保存失败')
+      return false
+    }
+    else {
+      this.message.create('success', '详细资料保存成功')
+      return true
+    }
     // this.modalService.emitInfo({ type: 'saveNewData' })
   }
 
@@ -430,7 +497,6 @@ export class InformationComponent implements OnInit {
     if (baseData.length > 0) {
       this.message.create('success', '獲取基本信息成功')
       this.info = baseData[0]
-      console.log(this.info, 111111111111111);
       // 防意外啟動的勾选框
       this.handleUnexpected_Start()
     }
@@ -479,15 +545,15 @@ export class InformationComponent implements OnInit {
     this.info.Unexpected_Start = arr
   }
 
-  // 处理targetInfo中的Transport_Mode，为 运输方式 绑定默认勾选
+  // 处理targetInfo中的TModeArr，为运输方式 绑定默认勾选
   handleTransport_Mode() {
-    if (this.targetInfo.Transport_Mode.length > 0) {
+    if (this.targetInfo.TModeArr.length > 0) {
 
       this.transportWay.forEach(e => {
         e.checked = false
       });
 
-      this.targetInfo.Transport_Mode.forEach(e => {
+      this.targetInfo.TModeArr.forEach(e => {
         this.transportWay[e - 1].checked = true
       })
 
@@ -518,13 +584,12 @@ export class InformationComponent implements OnInit {
   }
 
   downLoad(url) {
-    // window.location.href = url
     window.open(url)
   }
 
   transportWayChange(event) {
-    console.log(event, 2222222);
-    console.log(this.info.Transport_Report, 33333333333)
+    // console.log(event, 2222222);
+    // console.log(this.info.Transport_Report, 33333333333)
   }
 
 }

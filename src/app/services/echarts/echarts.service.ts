@@ -258,7 +258,7 @@ export class EchartsService {
             color: "#2EABE6",
             width: 1
           },
-          //           areaStyle: { 
+          //           areaStyle: {
           //      //color: '#94C9EC'
           //      color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [{
           //        offset: 0,
@@ -314,8 +314,8 @@ export class EchartsService {
       textStyle: { fontWeight: 'normal', color: 'rgba(182, 195, 204, 100)', fontSize: '12' }
     }],
     tooltip: {
-      show: false, 
-      formatter: function (params) { return params.name + '：' + params.percent + ' %' }
+      show: false,
+      formatter: function (params) { return params.name + ':' + params.percent + ' %' }
     },
     legend: {
       show: false,

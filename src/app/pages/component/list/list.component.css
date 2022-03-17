@@ -3,8 +3,6 @@
   height: 20px;
 }
 
-/* ::ng-deep .ant-table tfoot>tr>td,
-::ng-deep .ant-table tfoot>tr>th, */
 ::ng-deep .ant-table-thead>tr>th {
   padding: 5px 5px;
   text-align: center;
@@ -14,7 +12,7 @@
 }
 
 ::ng-deep .ant-table-tbody>tr>td {
-  padding: 2px 5px;
+  padding: 10px 5px;
   text-align: center;
   background-color: #202E31;
   color: #FFFFFF;
@@ -24,7 +22,6 @@
 }
 
 ::ng-deep .ant-table-tbody>tr.ant-table-row:hover>td {
-  /* background-color: #202E31; */
   background-color: #355256;
 }
 
@@ -35,7 +32,6 @@
 
 ::ng-deep ::-webkit-scrollbar-track {
   background-color: #355256;
-  /* border-radius: 10px; */
 }
 
 ::ng-deep ::-webkit-scrollbar-thumb {
@@ -45,14 +41,16 @@
 
 ::ng-deep .ant-table-expanded-row-fixed {
   background-color: #1F2D31;
-  /* height: 300px; */
+}
+
+::ng-deep .ant-radio-wrapper span {
+  color: #FFFFFF;
 }
 
 .title {
   color: #4EBBBB;
   font-size: 16px;
 }
-
 
 .postpone {
   width: 50px;
@@ -116,9 +114,7 @@
 
 .airToSea {
   background-color: #51B0B0;
-  /* width: 60px; */
   font-size: 12px;
-  /* height: 20px; */
 }
 
 .cancel {
@@ -148,6 +144,10 @@
   height: 85%;
 }
 
+.noDate {
+  color: red;
+}
+
 .pmodal3Content p {
   font-size: 16px;
   color: #4EBBBB;
@@ -171,6 +171,10 @@ td {
   margin-left: -15px;
   vertical-align: middle;
   margin-right: 5px;
+}
+
+.change {
+  vertical-align: middle;
 }
 
 .transportInput {

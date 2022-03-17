@@ -1,7 +1,6 @@
 import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 
-
 @Component({
   selector: 'app-see-edit',
   templateUrl: './see-edit.component.html',
@@ -27,7 +26,6 @@ export class SeeEditComponent implements OnInit {
 
   sendPhoto(event) {
     this.photoData = event
-    console.log(event);
   }
 
 }

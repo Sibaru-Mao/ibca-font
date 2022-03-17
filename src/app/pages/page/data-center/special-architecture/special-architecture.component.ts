@@ -10,7 +10,6 @@ export class SpecialArchitectureComponent implements OnInit {
   constructor(private routerInfo: ActivatedRoute) { }
 
   ngOnInit(): void {
-    // this.index = this.routerInfo.snapshot.queryParams["id"]
   }
 
 }

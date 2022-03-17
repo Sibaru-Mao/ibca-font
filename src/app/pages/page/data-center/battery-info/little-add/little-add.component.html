@@ -12,18 +12,17 @@
       style="color: #ffffff;">
       <tr>
         <td style="width: 50%;">
-          文件名稱：
-          NO.{{baseInfo.battery_pn}}
+          文件名稱:&nbsp;&nbsp;&nbsp;{{pdfName|translateFileName}}
         </td>
         <td>
 
           <ng-container *ngIf="baseInfo.type=='鑑定書'">
-            鑑定書編碼：
+            鑑定書編碼:
             <input [(ngModel)]="testimonialInfo.Testimonial_SN" class="searchInput" type="text">
           </ng-container>
 
           <ng-container *ngIf="baseInfo.type=='UN38.3试验概要'">
-            文件編碼：
+            文件編碼:
             <input [(ngModel)]="un38.File_Encoding" class="searchInput" type="text">
           </ng-container>
 
@@ -33,21 +32,21 @@
         <td>
 
           <ng-container *ngIf="baseInfo.type=='鑑定書'">
-            使用年份：
+            使用年份:
             <select [(ngModel)]="testimonialInfo.Use_Year" class="searchSelect">
               <option *ngFor="let item of year" value={{item.Demand_Year}}>{{item.Demand_Year}}</option>
             </select>
           </ng-container>
 
           <ng-container *ngIf="baseInfo.type=='UN38.3试验概要'">
-            驗證碼：
+            驗證碼:
             <input [(ngModel)]="un38.Verification_Code" class="searchInput" type="text" style="width: 160px;">
           </ng-container>
 
         </td>
         <td>
           <ng-container *ngIf="baseInfo.type=='鑑定書'">
-            運輸方式：
+            運輸方式:
             <nz-radio-group style="margin-left: 20px;" [(ngModel)]="testimonialInfo.Transport_Mode">
               <label *ngFor="let item of transportMode" nz-radio nzValue={{item.value}}
                 [ngModel]="item.value==testimonialInfo.Transport_Mode">
@@ -59,7 +58,7 @@
       </tr>
       <tr>
         <td>
-          上傳檔案：
+          上傳檔案:
           <input type="file" (change)="pdf($event)" class="pdfUpload">
           <button class="clickUp">
             <img src="assets/imgs/upload.png" style="width: 15px;" alt="图标跑了">
@@ -74,24 +73,23 @@
     <table *ngIf="baseInfo.type=='授权书'||baseInfo.type=='其他'" border="1" width=100% height='30%' style="color: #ffffff;">
       <tr>
         <td style="width: 50%;">
-          文件名稱：
-          NO.{{baseInfo.battery_pn}}
+          文件名稱:&nbsp;&nbsp;&nbsp;{{pdfName|translateFileName}}
         </td>
         <td>
           <ng-container *ngIf="baseInfo.type=='授权书'">
-            任務日期：
+            任務日期:
             <nz-range-picker [(ngModel)]="date" (ngModelChange)="onChange($event)"></nz-range-picker>
           </ng-container>
 
           <ng-container *ngIf="baseInfo.type=='其他'">
-            備註：
+            備註:
             <input [(ngModel)]="other.Remark" class="searchInput" type="text">
           </ng-container>
         </td>
       </tr>
       <tr>
         <td>
-          上傳檔案：
+          上傳檔案:
           <input type="file" (change)="pdf($event)" class="pdfUpload">
           <button class="clickUp">
             <img src="assets/imgs/upload.png" style="width: 15px;" alt="图标跑了">

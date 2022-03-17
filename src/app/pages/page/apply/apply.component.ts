@@ -13,14 +13,11 @@ export class ApplyComponent implements OnInit {
     { name: '延期' },
     { name: '运输' }
   ]
-
   link = ['newApplication', 'repair', 'postpone', 'transport']
-
   searchInfo: any = {
     plantCode: '',
     Battery_PN: ''
   }
-
   plant: any = JSON.parse(sessionStorage.getItem('plant'))
   index: number
 

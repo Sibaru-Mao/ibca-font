@@ -38,7 +38,6 @@
   transform: translate(-50%, -50%);
 }
 
-
 .info {
   width: 60%;
   height: 100%;
@@ -62,7 +61,6 @@
 .infoNumb {
   font-size: 24px;
 }
-
 
 .info div:nth-child(1) {
   font-size: 16px;

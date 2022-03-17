@@ -4,5 +4,6 @@
     "url": "https://keycloak.wks.wistron.com.cn/auth/",
     "realm": "K8SWKSI40",
     "clientId": "healthmonitor-font"
-  }
+  },
+  "zipFtp": "http://i4ap01.wks.wistron.com.cn/IBCA_File_QAS/WaitRPA/"
 }

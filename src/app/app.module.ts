@@ -60,9 +60,14 @@ import { SeeEditTableComponent } from './pages/page/data-center/battery-info/see
 import { LittleAddComponent } from './pages/page/data-center/battery-info/little-add/little-add.component';
 import { PhotoEditComponent } from './pages/page/data-center/battery-info/photo-edit/photo-edit.component';
 import { TotalAddComponent } from './pages/page/data-center/battery-info/total-add/total-add.component';
-import { GetFileNamePipe, AddNamePipe } from './services/pipe/common-pipe.pipe';
+import {
+  GetFileNamePipe, BatteryPlacementPipe, translateFileNamePipe,
+  TranslateTransportModePipe, TranslateShipmentBooksPipe, TranslateSampleDisposePipe, TaskStatusPipe
+} from './services/pipe/common-pipe.pipe';
 import { GetIntNumDirective } from './services/directive/directive.directive';
-
+import { TasksnModalComponent } from './pages/component/tasksn-modal/tasksn-modal.component';
+import { HistoryDataComponent } from './pages/page/history-data/history-data.component';
+import { HistoryTaskComponent } from './pages/page/history-data/history-task/history-task.component';
 
 
 export function configureProvider(loader: ConfigServiceService): () => Promise<void> {
@@ -101,14 +106,13 @@ window.onload = function () {
   let time = new Date().getMinutes()
   time = time.toString().length > 1 ? time : Number('0' + time)
   if (url.indexOf('yes') == -1) {
-    window.location.href = url + `?yes=${time}`
-    // window.open(url + `?yes=${time}`)
+    window.location.href = url + `?yes`
+    sessionStorage.setItem('load', 'yes')
   }
-  // else {
-  //   let num = Number((url.substr(url.indexOf('yes') + 4, 2)))
-  //   if (time != num)
-  //     window.location.href = url + `?yes=${time}`
-  // }
+  if (!sessionStorage.getItem('load') || url.indexOf('yes') == -1) {
+    sessionStorage.setItem('load', 'yes')
+    window.location.href = url + `?yes`
+  }
 }
 
 @NgModule({
@@ -143,9 +147,17 @@ window.onload = function () {
     LittleAddComponent,
     PhotoEditComponent,
     TotalAddComponent,
+    GetIntNumDirective,
     GetFileNamePipe,
-    AddNamePipe,
-    GetIntNumDirective
+    BatteryPlacementPipe,
+    translateFileNamePipe,
+    TranslateTransportModePipe,
+    TranslateShipmentBooksPipe,
+    TranslateSampleDisposePipe,
+    TaskStatusPipe,
+    TasksnModalComponent,
+    HistoryDataComponent,
+    HistoryTaskComponent
   ],
   imports: [
     BrowserModule,

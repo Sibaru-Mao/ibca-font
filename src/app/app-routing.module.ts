@@ -21,6 +21,10 @@ const mainPart: Routes = [
     path: 'information', loadChildren: () => import('./pages/page/task-management/information/information-load.module')
       .then(e => e.InformationLoadModule)
   },
+  {
+    path: 'historyData', loadChildren: () => import('./pages/page/history-data/history-data.module')
+      .then(e => e.HistoryDataModule)
+  }
 ]
 
 const routes: Routes = [

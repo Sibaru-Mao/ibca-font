@@ -37,6 +37,9 @@
    display: none;
  }
 
+ ::-webkit-input-placeholder {
+   color: #FFFFFF;
+ }
 
  #base {
    width: 100%;
@@ -55,18 +58,6 @@
  .searchButton {
    background-color: #4EBBBB;
    width: 60px;
- }
-
- .searchSelect {
-   width: 70px;
-   height: 25px;
-   font-size: 12px;
-   background-color: rgba(48, 73, 77, 100);
-   color: rgba(255, 255, 255, 100);
-   border: 1px solid rgba(81, 87, 88, 100);
-   outline: none;
-   display: inline-block;
-   margin-right: 20px;
  }
 
  .search>div {
@@ -104,20 +95,39 @@
    margin-right: 5px;
  }
 
- .change {
-   vertical-align: middle;
+ .searchSelect {
+   width: 70px;
+   height: 25px;
+   font-size: 12px;
+   background-color: rgba(48, 73, 77, 100);
+   color: #FFFFFF;
+   border: 1px solid rgba(81, 87, 88, 100);
+   outline: none;
+   text-align: left;
+   margin-right: 20px;
+   display: inline-block;
  }
 
-
- ::-webkit-input-placeholder {
+ .searchSelect1 {
+   height: 25px;
+   font-size: 12px;
+   background-color: rgba(48, 73, 77, 100);
    color: #FFFFFF;
+   border: 1px solid rgba(81, 87, 88, 100);
+   outline: none;
+   text-align: left;
+   margin-right: 20px;
+   display: inline-block;
+ }
+
+ .change {
+   vertical-align: middle;
  }
 
  .description {
    float: right;
    margin-right: 20%;
  }
-
 
  .footContent {
    color: #FFFFFF;
@@ -131,10 +141,8 @@
  }
 
  .foot div {
-   width: 25%;
+   width: 24%;
  }
-
-
 
  .taskInfo {
    float: right;
@@ -170,13 +178,10 @@
    margin-left: 60px;
  }
 
-
-
  .transportSelect {
    display: inline-block;
    margin-left: 5%;
  }
-
 
  .transportInput {
    width: 70px;
@@ -210,12 +215,10 @@
    position: relative;
  }
 
-
  .modalTitle>img {
    float: right;
    position: absolute;
    width: 20px;
-   /* margin: 5px 10px 0 0; */
    top: 5px;
    right: 10px;
    cursor: pointer;
@@ -238,4 +241,41 @@
    width: 80px;
    background-color: #489C9C;
    margin-top: 10px;
+ }
+
+ .noDate {
+   color: red;
+ }
+
+ .modal3Content p {
+   font-size: 16px;
+   color: #4EBBBB;
+   margin-top: 20px;
+ }
+
+ .transportSelect {
+   display: inline-block;
+   margin-left: 5%;
+ }
+
+ .transportInput {
+   width: 70px;
+   height: 20px;
+   background-color: rgba(64, 78, 81, 100);
+   color: rgba(255, 255, 255, 100);
+   border: 1px solid rgba(81, 87, 88, 100);
+   outline: none;
+   text-align: center;
+   margin-left: 15px;
+   display: inline-block;
+   line-height: 1.5em;
+ }
+
+ .limit {
+   max-width: 10em;
+   overflow: hidden;
+   white-space: nowrap;
+   text-overflow: ellipsis;
+   display: inline-block;
+   vertical-align: middle;
  }

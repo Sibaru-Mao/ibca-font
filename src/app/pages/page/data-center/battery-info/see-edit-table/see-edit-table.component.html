@@ -21,7 +21,7 @@
         <span *ngIf="key=='Maintain_Time'">{{item[key]|date:'yyyy/M/dd'}} </span>
 
         <ng-container *ngIf="title=='鑑定書'">
-          <span *ngIf="i==1">{{'NO.'+item[key]}}</span>
+          <span *ngIf="i==1">{{item[key]}}</span>
           <span *ngIf="!([0,1].includes(i))&&key!='Maintain_Time'">{{item[key]}}</span>
         </ng-container>
 
@@ -36,7 +36,6 @@
         </ng-container>
 
         <ng-container *ngIf="title=='其他'">
-          <!-- <span *ngIf="i==1">{{item[key]|date:'yyyy/M/dd'}} </span> -->
           <span *ngIf="i==2">{{item[key]|date:'yyyy/M/dd'}} </span>
           <span *ngIf="!([0].includes(i))&&key!='Maintain_Time'">{{item[key]}}</span>
         </ng-container>

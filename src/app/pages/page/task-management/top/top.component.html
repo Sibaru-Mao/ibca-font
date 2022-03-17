@@ -21,7 +21,11 @@
   <div class="search">
     <div class="searchContent">
       <div>
-        <span>Project code：</span>
+        <span>任務編碼：</span>
+        <input [(ngModel)]="searchInfo.Task_SN" class="searchInput" type="text">
+      </div>
+      <div>
+        <span>產品系列：</span>
         <input [(ngModel)]="searchInfo.Project_Code" class="searchInput" type="text">
       </div>
       <div>

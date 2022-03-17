@@ -1,9 +1,12 @@
 <div class="base">
   <div class="content">
-    <app-application-repair #appRe (generateTask)="generateTask($event)" title="新申请"></app-application-repair>
+    <app-application-repair #appRe (generateTask)="generateTask($event)" (Transport_Mode)="getTransport_Mode($event)"
+      title="新申请"></app-application-repair>
     <div class="middle" [hidden]="!show"></div>
-    <app-information #information (saveNewData)="saveNewData()" pageType='2' *ngIf="show"></app-information>
+    <app-information #information (saveNewData)="saveNewData()" [selectedTransport_Mode]="selectedTransport_Mode"
+      pageType='2' title="新申请" *ngIf="show"></app-information>
   </div>
 </div>
 
+<app-tasksn-modal (back)="back()" *ngIf="showModal" [taskSn]="Task_SN"></app-tasksn-modal>
 <ngx-loading [show]="loading"></ngx-loading>

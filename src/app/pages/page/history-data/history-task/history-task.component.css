@@ -1,0 +1,116 @@
+.content {
+  width: 100%;
+  height: 100%;
+  background: rgba(32, 48, 51, 100);
+  padding: .5% 1%;
+}
+
+.tableModal {
+  width: 100%;
+  height: 80%;
+  border: 1px solid #4D5455;
+  color: #FFFFFF;
+  /* margin: 10px auto; */
+  margin-top: 15px;
+}
+
+.tableModal td {
+  width: 50%;
+  border: 1px solid #4D5455;
+}
+
+.tableModal td p {
+  text-indent: 2em;
+  display: inline-block;
+  width: 150px;
+  text-align: left;
+}
+
+.tableModal td .file {
+  display: inline-block;
+  width: 120px;
+  height: 28px;
+  border: .1px solid rgba(127, 127, 127, 100);
+  border-radius: 3px;
+  padding: 0px 30px;
+  line-height: 21px;
+  background: #404E51 url(../../../../../assets/imgs/update.png) no-repeat left;
+}
+
+.tableModal td .file:hover {
+  cursor: pointer;
+}
+
+.tableModal .file input {
+  position: absolute;
+  width: 0;
+  opacity: 0;
+}
+
+.searchInput {
+  width: 120px;
+  background-color: #203033;
+  border: .1px solid rgba(127, 127, 127, 100);
+  border-radius: 3px;
+  outline: none;
+  text-align: center;
+  color: #FFFFFF;
+}
+
+.searchSelect {
+  width: 120px;
+  height: 25px;
+  font-size: 12px;
+  /* background-color: rgba(48, 73, 77, 100); */
+  color: rgba(255, 255, 255, 100);
+  border: 1px solid rgba(81, 87, 88, 100);
+  outline: none;
+  text-align: center;
+}
+
+.backgroud-1 {
+  background: #404E51;
+}
+
+.button {
+  width: 80px;
+  background: #489C9C;
+  margin-top: 20px;
+  border: 0;
+}
+
+.color {
+  background: #3BAEE5;
+}
+
+::ng-deep .ant-picker {
+  background: #203033;
+  width: 90px;
+}
+
+::ng-deep .ant-picker,
+/* ::ng-deep .ant-picker .ant-picker-input, */
+::ng-deep .ant-picker .ng-tns-c184-0,
+::ng-deep .ant-picker .ant-picker-input input:hover {
+  cursor: pointer;
+}
+
+/*
+::ng-deep .ant-picker .ant-picker-input input:hover {
+  cursor: pointer;
+} */
+
+
+::ng-deep .ant-picker .ant-picker-input input::placeholder {
+  text-align: center;
+  color: #FFFFFF;
+}
+
+::ng-deep .ant-picker .ant-picker-input .ng-touched,
+::ng-deep .ant-picker .ant-picker-input .ng-pristine {
+  color: #FFFFFF;
+}
+
+::ng-deep .ant-checkbox-wrapper span {
+  color: #FFFFFF;
+}

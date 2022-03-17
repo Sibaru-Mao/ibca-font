@@ -14,7 +14,6 @@ const applyChild: Routes = [
 
 const route: Routes = [{ path: '', component: ApplyComponent, children: applyChild }]
 
-
 @NgModule({
   declarations: [],
   imports: [

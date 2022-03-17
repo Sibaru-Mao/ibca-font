@@ -1,7 +1,7 @@
 <div class="searchContent">
   <div>
-    <span>廠別：</span>
-    <select [(ngModel)]="searchInfo.PlantCode" class="searchSelect">
+    <span>廠別:</span>
+    <select [(ngModel)]="searchInfo.PlantCode" disabled class="searchSelect">
       <option *ngFor="let item of plant" value={{item.PlantCode}}>{{item.Plant}}</option>
     </select>
   </div>
@@ -50,7 +50,8 @@
           <td *ngFor="let key of tableKey;let i=index">
 
             <ng-container *ngIf="id=='product'">
-              <span *ngIf="!([5,6].includes(i))">{{item[key]}}</span>
+              <span *ngIf="!([3,5,6].includes(i))">{{item[key]}}</span>
+              <span *ngIf="i==3">{{item[key]|batteryPlacement}}</span>
               <span *ngIf="i==5" (click)="showPhoto('see',item)" class="examine">{{key}}</span>
               <span *ngIf="i==6">{{item.Maintain_Time|date: 'yyyy/M/dd HH:mm:ss'}}</span>
             </ng-container>
@@ -58,7 +59,7 @@
             <ng-container *ngIf="id=='declare'">
               <img *ngIf="i==0" style=" width: 13px;margin:0 5px 3px 0;" src="assets/imgs/pdf.png" alt="图片跑了">
               <span *ngIf="i!=2">{{item[key]}}</span>
-              <span *ngIf="i==2">{{item.Maintain_Time|date: 'yyyy/M/dd HH:mm:ss'}}</span>
+              <span *ngIf="i==2">{{item.Use_Year}}</span>
             </ng-container>
 
           </td>
@@ -124,8 +125,8 @@
     </div>
     <div class="modalBody">
       <div>
-        廠別：
-        <div style="display: inline-block;margin-left: 50px;width: 120px;text-align: left;">{{man.Plant}}</div>
+        廠別:
+        <div style="display: inline-block;margin-left: 50px;width: 120px;text-align: left;">{{nowPlant.Plant}}</div>
       </div>
       <div>
         {{modalInputTitle[0]}}
@@ -167,8 +168,8 @@
         <table class="newAddEditTable" border="1" width="100%">
           <tr>
 
-            <td>廠別：
-              <select *ngIf="photoModalTitle=='新增'" [(ngModel)]="photoData.Plant" class="searchSelect">
+            <td>廠別:
+              <select *ngIf="photoModalTitle=='新增'" disabled [(ngModel)]="photoData.Plant" class="searchSelect">
                 <option *ngFor="let item of plant" value={{item.PlantCode}}>{{item.Plant}}</option>
               </select>
               <select *ngIf="photoModalTitle=='編輯'" disabled [(ngModel)]="photoData.Plant" class="searchSelect">
@@ -176,14 +177,14 @@
               </select>
             </td>
 
-            <td>产品系列：
+            <td>产品系列:
               <input *ngIf="photoModalTitle=='新增'" [(ngModel)]="photoData.Project_Code"
                 class="searchInput photoModalInput" type="text">
               <input *ngIf="photoModalTitle=='編輯'" [(ngModel)]="photoData.Project_Code"
                 class="searchInput photoModalInput" type="text" disabled>
             </td>
 
-            <td>特殊架構：
+            <td>特殊架構:
               <input *ngIf="photoModalTitle=='新增'" [(ngModel)]="photoData.Special_SKU"
                 class="searchInput photoModalInput" type="text">
               <ng-container *ngIf="photoModalTitle=='新增'">&nbsp;&nbsp;&nbsp;非特殊架构请输入符号 /</ng-container>
@@ -194,7 +195,7 @@
           </tr>
           <tr>
             <td colspan="3">
-              電池放置方式：
+              電池放置方式:
               <nz-radio-group style="margin-left: 20px;" [(ngModel)]="photoData.Placement_Mode">
                 <label *ngFor="let item of batteryPlacement" nz-radio nzValue={{item.value}}
                   [ngModel]="item.value==photoData.Placement_Mode">
@@ -204,9 +205,9 @@
             </td>
           </tr>
           <tr>
-            <td colspan="3">包装内电池数量(颗)：
-              <input [(ngModel)]="photoData.Packages_Qty" (change)="handlePackages_Qty(photoData)"
-                class="searchInput photoModalInput" style="width: 40px;margin-left: 30px;" type="text">
+            <td colspan="3">包装内电池数量(颗):
+              <input [(ngModel)]="photoData.Packages_Qty" class="searchInput photoModalInput"
+                style="width: 40px;margin-left: 30px;" type="text">
             </td>
           </tr>
           <tr style="height: 60%;">
@@ -320,8 +321,8 @@
     <div class="dR">
 
       <div>
-        <div style="display: inline-block;margin-right: 28px;">廠別：</div>
-        <select [(ngModel)]="dRmodalInput.plant" class="searchSelect modalSelect">
+        <div style="display: inline-block;margin-right: 28px;">廠別:</div>
+        <select [(ngModel)]="dRmodalInput.plant" disabled class="searchSelect modalSelect">
           <option *ngFor="let item of plant" value={{item.PlantCode}}>{{item.Plant}}</option>
         </select>
       </div>
@@ -334,13 +335,13 @@
       </div>
 
       <div style="position: relative;height: 25%;">
-        PDF檔案：
+        PDF檔案:
         <input type="file" (change)="pdf($event)" class="modalSelect pdfUpload">
         <button class="clickUp">
           <img src="assets/imgs/upload.png" style="width: 15px;" alt="图标跑了">
           点击上传
         </button>
-        <div [hidden]="!pdfName" style="text-align: center;">PDF檔案：{{pdfName}}</div>
+        <div [hidden]="!pdfName" style="text-align: center;">PDF檔案:{{pdfName}}</div>
       </div>
 
       <div style="text-align: center;">

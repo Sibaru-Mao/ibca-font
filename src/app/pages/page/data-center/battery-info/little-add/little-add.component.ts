@@ -1,3 +1,4 @@
+import { EncryptService } from './../../../../../services/encrypt/encrypt.service';
 import { DataService } from 'src/app/services/data.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { ActivatedRoute } from '@angular/router';
@@ -14,7 +15,6 @@ export class LittleAddComponent implements OnInit {
   baseInfo: any
   year: any = JSON.parse(sessionStorage.getItem('year'))
   transportMode: any = [
-    // { name: '与设备包装在一起', value: 0, checked: true },
     { name: '空運', value: 1 },
     { name: '海運', value: 2 },
     { name: '公路', value: 3 },
@@ -62,21 +62,20 @@ export class LittleAddComponent implements OnInit {
   }
 
   pdfFile: any
-  pdfName: string
-  // pdfChName: string
+  pdfName: string = ''
   date = null;
 
   constructor(
     private route: ActivatedRoute,
     private message: NzMessageService,
-    private http: DataService
+    private http: DataService,
+    private enecrypt: EncryptService
   ) { }
 
   ngOnInit(): void {
     this.year.splice(0, 1)
     this.route.params.subscribe(res => {
       this.baseInfo = res
-      console.log(this.baseInfo);
     })
   }
 
@@ -85,20 +84,20 @@ export class LittleAddComponent implements OnInit {
   }
 
   pdf(event) {
-    const fileList: FileList = event.target.files
+    const fileList = event.target.files
     if (fileList.length > 0) {
-      const file: File = fileList[0]
+      const file = fileList[0]
       if (file.type != 'application/pdf') {
         this.message.create('warning', '请上传PDF文件，谢谢')
-        // event.target.files = []
         return
       }
-      this.pdfName = file.name
-      // this.pdfChName = file.name.substring(0, file.name.indexOf('.'))
+      this.pdfName = Date.now() + '^' + this.enecrypt.encrypt(file.name)
       this.pdfFile = new FormData()
       this.pdfFile.append('file', file)
-    } else this.pdfFile = ''
-    console.log(this.pdfFile);
+    } else {
+      this.pdfFile = ''
+      this.pdfName = ''
+    }
   }
 
   async sure() {
@@ -109,6 +108,7 @@ export class LittleAddComponent implements OnInit {
     this.loading = true
     let status
     let pdfStatus
+    this.pdfName = this.enecrypt.encrypt(this.pdfName)
     switch (this.baseInfo.type) {
       case '鑑定書':
         this.testimonialInfo.Plant = this.baseInfo.plant
@@ -117,8 +117,7 @@ export class LittleAddComponent implements OnInit {
         this.testimonialInfo.Battery_PN = this.baseInfo.battery_pn
         this.testimonialInfo.File_Name = this.pdfName
         status = await this.http.addTestimonial(this.testimonialInfo)
-        pdfStatus = await this.http.uploadBatteryPdf('Battery\\Testimonial', this.pdfFile)
-        console.log(status);
+        pdfStatus = await this.http.uploadBatteryPdf('Battery\\Testimonial', this.pdfFile, this.pdfName)
         break;
 
       case 'UN38.3试验概要':
@@ -128,7 +127,7 @@ export class LittleAddComponent implements OnInit {
         this.un38.Battery_PN = this.baseInfo.battery_pn
         this.un38.File_Name = this.pdfName
         status = await this.http.addUN38(this.un38)
-        pdfStatus = await this.http.uploadBatteryPdf('Battery\\UN383', this.pdfFile)
+        pdfStatus = await this.http.uploadBatteryPdf('Battery\\UN383', this.pdfFile, this.pdfName)
         break;
 
       case '授权书':
@@ -138,7 +137,7 @@ export class LittleAddComponent implements OnInit {
         this.authorization.Battery_PN = this.baseInfo.battery_pn
         this.authorization.File_Name = this.pdfName
         status = await this.http.addAuthorization(this.authorization)
-        pdfStatus = await this.http.uploadBatteryPdf('Battery\\Authorization', this.pdfFile)
+        pdfStatus = await this.http.uploadBatteryPdf('Battery\\Authorization', this.pdfFile, this.pdfName)
         break;
 
       case '其他':
@@ -148,7 +147,7 @@ export class LittleAddComponent implements OnInit {
         this.other.Battery_PN = this.baseInfo.battery_pn
         this.other.File_Name = this.pdfName
         status = await this.http.addOther(this.other)
-        pdfStatus = await this.http.uploadBatteryPdf('Battery\\Other', this.pdfFile)
+        pdfStatus = await this.http.uploadBatteryPdf('Battery\\Other', this.pdfFile, this.pdfName)
         break;
 
       default:
@@ -169,7 +168,6 @@ export class LittleAddComponent implements OnInit {
     else
       this.message.create('success', '恭喜，PDF上传成功')
     this.loading = false
-    console.log(this.testimonialInfo, this.pdfFile, 11111);
   }
 
   onChange(result: Date[]): void {

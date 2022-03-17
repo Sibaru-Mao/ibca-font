@@ -3,38 +3,41 @@
   <table border="1" width="100%" height="80px">
     <tr>
       <td width="25%">
-        廠別：
-        <select [(ngModel)]="newData.Plant" class="searchSelect">
+        廠別:
+        <select disabled [(ngModel)]="newData.Plant" class="searchSelect">
           <option *ngFor="let item of plant" value={{item.PlantCode}}>{{item.Plant}}</option>
         </select>
       </td>
       <td width="25%">
-        產品系列：
+        產品系列:
         <input class="newInput" [(ngModel)]="newData.Project_Code" type="text">
       </td>
       <td>
-        特殊架構：
+        特殊架構:
         <input (change)="changeMaterial_No(newData.Material_No)" class="newInput" [(ngModel)]="newData.Material_No"
           type="text">
       </td>
       <td>
-        電池料號：
+        電池料號:
         <input class="newInput" [(ngModel)]="newData.Battery_PN" type="text">
       </td>
     </tr>
     <tr>
       <td>
-        需求年份：
+        需求年份:
         <select [(ngModel)]="newData.Demand_Year" class="searchSelect">
           <option *ngFor="let item of year" value={{item.Demand_Year}}>{{item.Demand_Year}}</option>
         </select>
       </td>
       <td>
-        出貨賬冊：
-        <input class="newInput" [(ngModel)]="Shipment_Books" disabled type="text">
+        出貨賬冊:
+        <input *ngIf="title!='延期'" class="newInput" [(ngModel)]="Shipment_Books" disabled type="text">
+        <select *ngIf="title=='延期'" [(ngModel)]="newData.Shipment_Books" style="margin-right: 0;" class="searchSelect">
+          <option *ngFor="let item of Shipment" value={{item.value}}>{{item.name}}</option>
+        </select>
       </td>
       <td colspan="2">
-        運輸方式：
+        運輸方式:
         <nz-checkbox-group [(ngModel)]="transportWay">
         </nz-checkbox-group>
       </td>
@@ -50,14 +53,17 @@
   <ng-template #modalTitle>资料已经存在</ng-template>
 
   <ng-template #modalContent>
-    <div style="padding: 5% 0 0 30%;height: 25%;align-items: center;" *ngFor="let item of transportWay">{{item.label}}
-      &nbsp; &nbsp;:&nbsp;&nbsp;
-      {{item.Task_SN}}</div>
+    <ng-container *ngFor="let item of transportWay">
+      <div *ngIf="item.Task_SN" style="padding: 5% 0 0 30%;height: 25%;align-items: center;">
+        {{item.label}}&nbsp; &nbsp;:&nbsp;&nbsp;{{item.Task_SN}}
+      </div>
+    </ng-container>
   </ng-template>
 
   <ng-template #modalFooter>
-    <button nz-button nzType="primary" (click)="handleOk()" [nzLoading]="isConfirmLoading">继续申请</button>
-    <button nz-button nzType="default" (click)="handleCancel()">取消申请</button>
+    <button nz-button nzType="primary" style="background-color: #51B0B0" (click)="handleOk()"
+      [nzLoading]="isConfirmLoading">继续申请</button>
+    <button nz-button nzType="primary" nzDanger (click)="handleCancel()">取消申请</button>
   </ng-template>
 </nz-modal>
 
